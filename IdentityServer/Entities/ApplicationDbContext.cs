@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using static IdentityServer.Models.Constants;
 
@@ -21,11 +22,7 @@ namespace IdentityServer.Entities
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<UserTokens>(c => {
-                c.HasKey(c => c.ID);
-                c.Property(c => c.Token).IsRequired();
-                c.Property(c => c.UserID).IsRequired();
-            });
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {
@@ -52,15 +49,14 @@ namespace IdentityServer.Entities
             var consumerUser = new ApplicationUser
             {
                 Id = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
-                Email = "ebram@ebram.com",
+                Email = "consumer@consumer.com",
                 EmailConfirmed = true,
                 PhoneNumber = "01201371236",
                 UserName = "consumer",
                 NormalizedEmail = "consumer@consumer.com".ToUpper(),
-                NormalizedUserName = "consumer@consumer.com".ToUpper(),
+                NormalizedUserName = "consumer".ToUpper(),
                 LockoutEnabled = true
             };
-
             var adminUser = new ApplicationUser
             {
                 Id = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
@@ -69,7 +65,7 @@ namespace IdentityServer.Entities
                 PhoneNumber = "012111111111",
                 UserName = "admin",
                 NormalizedEmail = "admin@admin.com".ToUpper(),
-                NormalizedUserName = "admin@admin.com".ToUpper(),
+                NormalizedUserName = "admin".ToUpper(),
                 LockoutEnabled = true
             };
             var managerUser = new ApplicationUser
@@ -80,7 +76,7 @@ namespace IdentityServer.Entities
                 PhoneNumber = "012222222222",
                 UserName = "manager",
                 NormalizedEmail = "manager@manager.com".ToUpper(),
-                NormalizedUserName = "manager@manager.com".ToUpper(),
+                NormalizedUserName = "manager".ToUpper(),
                 LockoutEnabled = true
             };
             PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();

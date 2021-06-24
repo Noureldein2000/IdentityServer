@@ -1,5 +1,7 @@
 using IdentityServer.Entities;
 using IdentityServer.Helpers;
+using IdentityServer.Repositories.Base;
+using IdentityServer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -54,6 +56,9 @@ namespace IdentityServer
               //.AddCustomAuthorizeRequestValidator<CustomAuthorizeRequestValidator>()
               .AddAspNetIdentity<ApplicationUser>();
 
+            services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
+            services.AddScoped<ILoginService, LoginService>();
+
             services.AddControllers(options =>
             {
                 options.EnableEndpointRouting = false;
@@ -69,8 +74,7 @@ namespace IdentityServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseIdentityServer();
             //app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());

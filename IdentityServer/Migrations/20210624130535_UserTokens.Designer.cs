@@ -4,14 +4,16 @@ using IdentityServer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210624130535_UserTokens")]
+    partial class UserTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,18 +108,18 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "03fc6962-5971-4bcf-9369-f487c6d6506c",
+                            ConcurrencyStamp = "d3273667-3ccb-4ba0-9478-00f39c4c0646",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             MustChangePassword = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAECGKthBymTs5KSlNylpAMmQUy7iRFpkVPFchju/s0ER+8LPnreq8tzo7VUyKTlSApQ==",
+                            NormalizedUserName = "ADMIN@ADMIN.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDOkvSFWJAq/faoEwXjY04WqXcm4NW1bX+X5cC0eNuWj/VchlCH1DatGtKQHCCYMXQ==",
                             PhoneNumber = "012111111111",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5b5e8635-c665-448c-8035-3caee462bbcd",
+                            SecurityStamp = "cb0e414d-93e0-49f5-bf88-85cd868844f7",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "admin"
@@ -126,18 +128,18 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3961",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "120e48a5-9fb8-48bc-a709-b89375304ace",
+                            ConcurrencyStamp = "9df83425-a390-48c2-9dcb-fb8968ea53ca",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "manager@manager.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             MustChangePassword = false,
                             NormalizedEmail = "MANAGER@MANAGER.COM",
-                            NormalizedUserName = "MANAGER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFeX+f8LvTk6jmXf/l2MmKIDhd4HQB3uo/ea5YGncwFNN7IUbPtFOE+b2DKAVCzBwg==",
+                            NormalizedUserName = "MANAGER@MANAGER.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIc5v8RbfV8TLAbVjJAmPhJ46M1Qszecyzreg8Q6Uw5oFrIpnhkriu/n7fvdW3FaxA==",
                             PhoneNumber = "012222222222",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f5ede44e-440b-42c2-a39f-481b4d667a11",
+                            SecurityStamp = "7bc0fec3-d560-465f-b8c4-ac07b173a53f",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "manager"
@@ -146,18 +148,18 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "77bc1031-2c3e-4317-a800-0c1d9c3c5ea8",
+                            ConcurrencyStamp = "72063bd4-f5af-4bad-9424-f9dde1f9e231",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "consumer@consumer.com",
+                            Email = "ebram@ebram.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             MustChangePassword = false,
                             NormalizedEmail = "CONSUMER@CONSUMER.COM",
-                            NormalizedUserName = "CONSUMER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIWse9ypXtlnUqn860OQjau3pwY9USkEvlbhgK5hSlTggDWuTuxF9FtFg4pTUsfoYg==",
+                            NormalizedUserName = "CONSUMER@CONSUMER.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBmK3smFVoUIsbPBEFf3BjAVQ7Hw12yF6D4vgjhcWU+t+lQzjDZmpYJ0hmrqBYBV0Q==",
                             PhoneNumber = "01201371236",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "552e94ed-538c-4f30-9087-cd6e0a8e8d3e",
+                            SecurityStamp = "9a9900f7-f6bd-4ca5-a93e-97a7846fe0b8",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "consumer"

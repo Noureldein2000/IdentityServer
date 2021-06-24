@@ -74,8 +74,7 @@ namespace IdentityServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseIdentityServer();
             //app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());

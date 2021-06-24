@@ -1,5 +1,4 @@
 using IdentityServer.Entities;
-using IdentityServer.Filtres;
 using IdentityServer.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

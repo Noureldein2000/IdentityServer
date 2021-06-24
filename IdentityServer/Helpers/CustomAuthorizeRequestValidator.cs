@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityServer.Filtres
+namespace IdentityServer.Helpers
 {
     public class CustomAuthorizeRequestValidator : ICustomAuthorizeRequestValidator
     {

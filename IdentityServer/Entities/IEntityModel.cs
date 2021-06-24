@@ -7,7 +7,7 @@ namespace IdentityServer.Entities
 {
     public interface IEntityModel<T>
     {
-        public T Id { get; set; }
+        public T ID { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? LastModified { get; set; }
     }

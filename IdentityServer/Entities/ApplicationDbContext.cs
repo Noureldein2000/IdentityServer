@@ -22,9 +22,9 @@ namespace IdentityServer.Entities
         {
             base.OnModelCreating(builder);
             builder.Entity<UserTokens>(c => {
-                c.HasKey(c => c.Id);
+                c.HasKey(c => c.ID);
                 c.Property(c => c.Token).IsRequired();
-                c.Property(c => c.UserId).IsRequired();
+                c.Property(c => c.UserID).IsRequired();
             });
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole

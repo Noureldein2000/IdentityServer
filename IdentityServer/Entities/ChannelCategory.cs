@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Entities
 {
-    public class ChannelCategory
+    public class ChannelCategory:BaseEntity<int>
     {
+        public string Name { get; set; }
+        public string ArName { get; set; }
+        public ICollection<ChannelType> ChannelTypes { get; set; }
     }
 }

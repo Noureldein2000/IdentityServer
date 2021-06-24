@@ -1,4 +1,4 @@
-using IdentityServer.Data;
+using IdentityServer.Entities;
 using IdentityServer.Filtres;
 using IdentityServer.Helpers;
 using Microsoft.AspNetCore.Builder;
@@ -52,7 +52,7 @@ namespace IdentityServer
               .AddInMemoryApiResources(Config.GetApiResources())
               //.AddInMemoryApiScopes(Config.GetApiScopes())
               .AddInMemoryIdentityResources(Config.GetIdentityResources())
-              //.AddCustomTokenRequestValidator<ICustomTokenRequestValidator>()
+              //.AddCustomAuthorizeRequestValidator<CustomAuthorizeRequestValidator>()
               .AddAspNetIdentity<ApplicationUser>();
 
             services.AddControllers(options =>

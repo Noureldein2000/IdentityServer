@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityServer.Data
+namespace IdentityServer.Entities
 {
-    public interface IDateModel
+    public interface IEntityModel<T>
     {
+        public T Id { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? LastModified { get; set; }
     }

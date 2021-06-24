@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityServer.Data
+namespace IdentityServer.Entities
 {
-    public class UserTokens : IDateModel
+    public class UserTokens : IEntityModel<int>
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string UserId { get; set; }
         public string Token { get; set; }
         public bool IsValid { get; set; }

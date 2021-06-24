@@ -1,4 +1,4 @@
-﻿using IdentityServer.Data;
+﻿using IdentityServer.Entities;
 using IdentityServer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

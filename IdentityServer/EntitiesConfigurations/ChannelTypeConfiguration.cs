@@ -17,8 +17,9 @@ namespace IdentityServer.EntitiesConfigurations
             builder.Property(c=>c.ArName).IsRequired();
             builder.Property(c=>c.ChannelCategoryID).IsRequired();
 
-            builder.HasOne<ChannelCategory>(c => c.ChannelCategory)
-                .WithMany(cc => cc.ChannelTypes).HasForeignKey(c=>c.ChannelCategoryID);
+            builder.HasOne(c => c.ChannelCategory)
+                .WithMany(c => c.ChannelTypes).HasForeignKey(c=>c.ChannelCategoryID)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

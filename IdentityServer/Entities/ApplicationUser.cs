@@ -14,5 +14,6 @@ namespace IdentityServer.Entities
         public bool MustChangePassword { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? LastModified { get; set; }
+        public virtual ICollection<ChannelIdentifier> ChannelIdentifiers { get; set; }
     }
 }

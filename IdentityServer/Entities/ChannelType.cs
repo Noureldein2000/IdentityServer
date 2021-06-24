@@ -9,13 +9,12 @@ namespace IdentityServer.Entities
     {
         public string Name { get; set; }
         public string ArName { get; set; }
-        public int Version { get; set; }
+        public int? Version { get; set; }
         public int ChannelCategoryID { get; set; }
 
-        //Relational Entity
-        public ICollection<Channel> Channels { get; set; }
-        public ChannelCategory ChannelCategory { get; set; }
-        public ICollection<AccountChannelType> AccountChannelTypes { get; set; }
+        public virtual ICollection<Channel> Channels { get; set; }
+        public virtual ChannelCategory ChannelCategory { get; set; }
+        public virtual ICollection<AccountChannelType> AccountChannelTypes { get; set; }
 
     }
 }

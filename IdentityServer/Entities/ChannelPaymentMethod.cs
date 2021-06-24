@@ -9,6 +9,6 @@ namespace IdentityServer.Entities
     {
         public string Name { get; set; }
         public string ArName { get; set; }
-        public ICollection<Channel> Channels { get; set; }
+        public virtual ICollection<Channel> Channels { get; set; }
     }
 }

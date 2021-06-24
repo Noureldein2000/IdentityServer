@@ -1,5 +1,7 @@
 using IdentityServer.Entities;
 using IdentityServer.Helpers;
+using IdentityServer.Repositories.Base;
+using IdentityServer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -53,6 +55,9 @@ namespace IdentityServer
               .AddInMemoryIdentityResources(Config.GetIdentityResources())
               //.AddCustomAuthorizeRequestValidator<CustomAuthorizeRequestValidator>()
               .AddAspNetIdentity<ApplicationUser>();
+
+            services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
+            services.AddScoped<ILoginService, LoginService>();
 
             services.AddControllers(options =>
             {

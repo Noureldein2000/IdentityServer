@@ -21,7 +21,7 @@ namespace IdentityServer.Entities
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<UserTokens>(c => {
+            builder.Entity<UserToken>(c => {
                 c.HasKey(c => c.ID);
                 c.Property(c => c.Token).IsRequired();
                 c.Property(c => c.UserID).IsRequired();

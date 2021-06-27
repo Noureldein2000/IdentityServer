@@ -13,13 +13,17 @@ namespace IdentityServer.EntitiesConfigurations
         public void Configure(EntityTypeBuilder<Channel> builder)
         {
             builder.HasKey(s => s.ID);
+            
             builder.Property(s => s.Name).IsRequired();
+            
             builder.HasOne(s => s.ChannelType).WithMany(s => s.Channels)
                 .HasForeignKey(s => s.ChannelTypeID)
                 .OnDelete(DeleteBehavior.NoAction);
+            
             builder.HasOne(s => s.ChannelOwner).WithMany(s => s.Channels)
                 .HasForeignKey(s => s.ChannelOwnerID)
                 .OnDelete(DeleteBehavior.NoAction);
+           
             builder.HasOne(s => s.ChannelPaymentMethod).WithMany(s => s.Channels)
                 .HasForeignKey(s => s.PaymentMethodID)
                 .OnDelete(DeleteBehavior.NoAction);

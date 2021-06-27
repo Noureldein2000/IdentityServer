@@ -14,7 +14,8 @@ namespace IdentityServer.EntitiesConfigurations
         {
             builder.HasKey(s => s.ID);
             builder.Property(s => s.Token).IsRequired();
-            builder.Property(s => s.UserID).IsRequired();
+            builder.HasOne(s => s.User).WithMany(s => s.UserTokens).HasForeignKey(s => s.UserID)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

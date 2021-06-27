@@ -24,6 +24,13 @@ namespace IdentityServer.Entities
         public virtual DbSet<ChannelIdentifier> ChannelIdentifiers { get; set; }
         public virtual DbSet<ChannelOwner> ChannelOwners { get; set; }
         public virtual DbSet<ChannelPaymentMethod> ChannelPaymentMethods { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<AccountChannel> AccountChannels { get; set; }
+        public virtual DbSet<AccountType> AccountTypes { get; set; }
+        public virtual DbSet<AccountChannelType> AccountChannelTypes { get; set; }
+        public virtual DbSet<AccountProfile> AccountProfiles { get; set; }
+        public virtual DbSet<Profile> Profiles { get; set; }
+
         public override int SaveChanges()
         {
             var entries = ChangeTracker

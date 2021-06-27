@@ -17,8 +17,6 @@ namespace IdentityServer.EntitiesConfigurations
                 .OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(s => s.Account).WithMany(s => s.AccountChannels).HasForeignKey(s => s.AccountID)
                 .OnDelete(DeleteBehavior.NoAction);
-            builder.HasOne(s => s.User).WithMany(s => s.AccountChannels).HasForeignKey(s => s.CreatedBy)
-                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

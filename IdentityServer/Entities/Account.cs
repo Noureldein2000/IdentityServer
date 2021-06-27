@@ -34,14 +34,13 @@ namespace IdentityServer.Entities
         public string last_channel { get; set; }
         public double? TotalPoints { get; set; }
         public string Serial { get; set; }
-        public int? Centers_company_Id { get; set; }
+        //public int? Centers_company_Id { get; set; }
         public int? Parent_CenterID { get; set; }
         public double? Total_Parent_Amount { get; set; }
         public bool? ProfitDailyControl { get; set; }
         public int? AccountTypeID { get; set; }
         public int? CreatedBy { get; set; }
         public int? AccountProfileID { get; set; }
-        public virtual AccountProfile AccountProfile { get; set; }
         public virtual AccountType AccountType { get; set; }
         public virtual ICollection<AccountChannel> AccountChannels{ get; set; }
         public virtual ICollection<AccountChannelType> AccountChannelTypes { get; set; }

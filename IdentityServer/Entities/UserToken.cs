@@ -10,6 +10,6 @@ namespace IdentityServer.Entities
         public int UserID { get; set; }
         public string Token { get; set; }
         public bool IsValid { get; set; }
-        public virtual ApplicationUser User { get; set; }
+        //public virtual ApplicationUser User { get; set; }
     }
 }

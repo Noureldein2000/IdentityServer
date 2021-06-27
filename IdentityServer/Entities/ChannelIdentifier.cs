@@ -12,7 +12,7 @@ namespace IdentityServer.Entities
         public ActiveStatus Status { get; set; }
         public int ChannelID { get; set; }
         public int CreatedBy { get; set; }
-        public virtual ApplicationUser User { get; set; }
+        //public virtual ApplicationUser User { get; set; }
         public int? UpdatedBy { get; set; }
         public virtual Channel Channel{ get; set; }
     }

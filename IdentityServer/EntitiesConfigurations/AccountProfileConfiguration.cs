@@ -14,10 +14,6 @@ namespace IdentityServer.EntitiesConfigurations
         {
             builder.HasKey(ap => ap.ID);
 
-            builder.Property(ap => ap.AccountTypeID).IsRequired();
-
-            builder.Property(ap => ap.ProfileID).IsRequired();
-
             builder.HasOne(ap => ap.Profile).WithMany(ap => ap.AccountProfiles)
                 .HasForeignKey(ap => ap.ProfileID)
                 .OnDelete(DeleteBehavior.NoAction);

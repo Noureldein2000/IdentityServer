@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.EntitiesConfigurations
 {
-    public class UserTokenConfiguration : IEntityTypeConfiguration<UserToken>
+    public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
-        public void Configure(EntityTypeBuilder<UserToken> builder)
+        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.HasKey(s => s.ID);
-            builder.Property(s => s.Token).IsRequired();
+            builder.HasKey(s => s.Id);
         }
     }
 }

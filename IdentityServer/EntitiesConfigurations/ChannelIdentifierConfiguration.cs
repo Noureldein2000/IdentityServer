@@ -18,8 +18,6 @@ namespace IdentityServer.EntitiesConfigurations
             builder.HasOne(s => s.Channel).WithMany(s => s.ChannelIdentifiers)
                 .HasForeignKey(s => s.ChannelID).OnDelete(DeleteBehavior.NoAction);
             builder.Property(s => s.UpdatedBy);
-            builder.HasOne(s => s.User).WithMany(s => s.ChannelIdentifiers)
-                .HasForeignKey(s => s.CreatedBy).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

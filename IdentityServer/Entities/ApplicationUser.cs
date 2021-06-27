@@ -15,5 +15,6 @@ namespace IdentityServer.Entities
         public DateTime CreatedOn { get; set; }
         public DateTime? LastModified { get; set; }
         public virtual ICollection<ChannelIdentifier> ChannelIdentifiers { get; set; }
+        public virtual ICollection<AccountChannel> AccountChannels { get; set; }
     }
 }

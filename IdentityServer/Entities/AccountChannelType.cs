@@ -13,5 +13,6 @@ namespace IdentityServer.Entities
         public int ExpirationPeriod { get; set; }
 
         public virtual ChannelType ChannelType { get; set; }
+        public virtual Account Account { get; set; }
     }
 }

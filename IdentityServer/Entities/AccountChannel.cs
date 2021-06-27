@@ -11,8 +11,9 @@ namespace IdentityServer.Entities
         public int ChannelID { get; set; }
         public int Status { get; set; }
         public int CreatedBy { get; set; }
-        public int UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         public virtual Channel Channel { get; set; }
+        public virtual Account Account{ get; set; }
     }
 }

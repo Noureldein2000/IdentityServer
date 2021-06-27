@@ -18,7 +18,32 @@ namespace IdentityServer.Entities
         {
 
         }
+        public virtual DbSet<Channel> Channels { get; set; }
+        public virtual DbSet<ChannelType> ChannelTypes { get; set; }
+        public virtual DbSet<ChannelCategory> ChannelCategories { get; set; }
+        public virtual DbSet<ChannelIdentifier> ChannelIdentifiers { get; set; }
+        public virtual DbSet<ChannelOwner> ChannelOwners { get; set; }
+        public virtual DbSet<ChannelPaymentMethod> ChannelPaymentMethods { get; set; }
+        public override int SaveChanges()
+        {
+            var entries = ChangeTracker
+        .Entries()
+        .Where(e => e.Entity is BaseEntity<int> && (
+                e.State == EntityState.Added
+                || e.State == EntityState.Modified));
 
+            foreach (var entityEntry in entries)
+            {
+                ((BaseEntity<int>)entityEntry.Entity).UpdateDate = DateTime.Now;
+
+                if (entityEntry.State == EntityState.Added)
+                {
+                    ((BaseEntity<int>)entityEntry.Entity).CreationDate = DateTime.Now;
+                }
+            }
+
+            return base.SaveChanges();
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

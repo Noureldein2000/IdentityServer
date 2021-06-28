@@ -32,6 +32,11 @@ namespace IdentityServer.Entities
         public virtual DbSet<AccountProfile> AccountProfiles { get; set; }
         public virtual DbSet<Profile> Profiles { get; set; }
         public virtual DbSet<OTP> OTPs { get; set; }
+        public virtual DbSet<AccountOwner> AccountOwners { get; set; }
+        public virtual DbSet<AccountOwnerContact> AccountOwnerContacts { get; set; }
+        public virtual DbSet<ChannelSim> ChannelSims { get; set; }
+        public virtual DbSet<UserType> UserTypes { get; set; }
+        
 
         public override int SaveChanges()
         {

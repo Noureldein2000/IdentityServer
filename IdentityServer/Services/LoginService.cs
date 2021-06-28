@@ -55,8 +55,8 @@ namespace IdentityServer.Services
                         a.ExpirationPeriod,
                         a.HasLimitedAccess,
                         a.Account.AccountTypeID,
-                        a.Account.CenterName,
-                        a.Account.Mobile
+                        a.Account.Name,
+                        a.Account.AccountOwner.Mobile
                     }).FirstOrDefault();
             if (account == null)
                 throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
@@ -77,7 +77,7 @@ namespace IdentityServer.Services
                     act.ExpirationPeriod,
                     act.HasLimitedAccess,
                     act.Account.AccountTypeID,
-                    act.Account.CenterName,
+                    act.Account.Name,
                     act.ChannelType.Version
                 }).FirstOrDefault();
 
@@ -115,7 +115,7 @@ namespace IdentityServer.Services
                 AccountId = model.AccountId,
                 Version = accountChannelType.Version == 0 ? "" : accountChannelType.Version.ToString(),
                 ServiceListVersion = "7",
-                AccountName = account.CenterName,
+                AccountName = account.Name,
                 AccountType = account.AccountTypeID.Value,
                 ExpirationPeriod = account.ExpirationPeriod
             };

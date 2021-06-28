@@ -14,6 +14,8 @@
     <Compile Remove="Migrations\20210628120247_AddOTP.Designer.cs" />
     <Compile Remove="Migrations\20210628120353_AddOTP.cs" />
     <Compile Remove="Migrations\20210628120353_AddOTP.Designer.cs" />
+    <Compile Remove="Migrations\20210628155420_ModifyAccountEntityAccountOwnerUSerTypes.cs" />
+    <Compile Remove="Migrations\20210628155420_ModifyAccountEntityAccountOwnerUSerTypes.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

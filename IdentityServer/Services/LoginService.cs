@@ -86,7 +86,7 @@ namespace IdentityServer.Services
             if (accountChannelType != null)
             {
                 if (model.MustChangePassword)
-                    throw new AuthorizationException(Resources.MustChangePassword, ErrorCodes.Autorization.MustChangePassword);
+                    throw new OkException(Resources.MustChangePassword, ErrorCodes.Autorization.MustChangePassword);
             }
             else if (accountChannelType == null && !account.HasLimitedAccess)
             {
@@ -101,6 +101,7 @@ namespace IdentityServer.Services
                     var otp = Statics.GenerateRandomNumeric(6);
                     CreateOTP(model.UserId, channelAccountId, model.LocalIP, model.AccountIP, otp);
                     _smsService.SendMessage($"Momkn OTP: {otp}", "E", account.Mobile);
+                    throw new OkException(Resources.MustInputOTP, ErrorCodes.Autorization.MustInputOTP);
                 }
                 else
                 {

@@ -102,12 +102,16 @@ namespace IdentityServer.Controllers
             {
                 return Unauthorized(ex.ErrorCode, ex.Message);
             }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
+            }
             catch (Exception ex)
             {
                 return BadRequest(ErrorCodes.Unknown);
             }
 
-            return Unauthorized();
+            return Unauthorized(Resources.NoAuth);
         }
 
         [HttpGet]
@@ -201,6 +205,16 @@ namespace IdentityServer.Controllers
                 ErrorMessage = errorMessage
             };
             return Unauthorized(response);
+        }
+        [NonAction]
+        public IActionResult Ok(string errorCode, string errorMessage)
+        {
+            var response = new AuthorizationErrorMessages
+            {
+                ErrorCode = errorCode,
+                ErrorMessage = errorMessage
+            };
+            return Ok(response);
         }
     }
 }

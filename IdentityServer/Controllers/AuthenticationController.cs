@@ -23,9 +23,9 @@ using static IdentityServer.Models.Constants;
 
 namespace IdentityServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/authentication/[controller]")]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
@@ -132,89 +132,8 @@ namespace IdentityServer.Controllers
             }
         }
 
-        private string GetIPAddress()
-        {
-            HttpContext context = HttpContext;
-            string ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR");
+       
 
-            if (!string.IsNullOrEmpty(ipAddress))
-            {
-                string[] addresses = ipAddress.Split(',');
-                if (addresses.Length != 0)
-                {
-                    return addresses[0];
-                }
-            }
-
-            return context.GetServerVariable("REMOTE_ADDR");
-        }
-        private string GetLocalIpAddress()
-        {
-            UnicastIPAddressInformation mostSuitableIp = null;
-
-            var networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-
-            foreach (var network in networkInterfaces)
-            {
-                if (network.OperationalStatus != OperationalStatus.Up)
-                    continue;
-
-                var properties = network.GetIPProperties();
-
-                if (properties.GatewayAddresses.Count == 0)
-                    continue;
-
-                foreach (var address in properties.UnicastAddresses)
-                {
-                    if (address.Address.AddressFamily != AddressFamily.InterNetwork)
-                        continue;
-
-                    if (IPAddress.IsLoopback(address.Address))
-                        continue;
-
-                    if (!address.IsDnsEligible)
-                    {
-                        if (mostSuitableIp == null)
-                            mostSuitableIp = address;
-                        continue;
-                    }
-
-                    // The best IP is the IP got from DHCP server
-                    if (address.PrefixOrigin != PrefixOrigin.Dhcp)
-                    {
-                        if (mostSuitableIp == null || !mostSuitableIp.IsDnsEligible)
-                            mostSuitableIp = address;
-                        continue;
-                    }
-
-                    return address.Address.ToString();
-                }
-            }
-
-            return mostSuitableIp != null
-                ? mostSuitableIp.Address.ToString()
-                : "";
-        }
-
-        [NonAction]
-        public IActionResult Unauthorized(string errorCode, string errorMessage)
-        {
-            var response = new AuthorizationErrorMessages
-            {
-                ErrorCode = errorCode,
-                ErrorMessage = errorMessage
-            };
-            return Unauthorized(response);
-        }
-        [NonAction]
-        public IActionResult Ok(string errorCode, string errorMessage)
-        {
-            var response = new AuthorizationErrorMessages
-            {
-                ErrorCode = errorCode,
-                ErrorMessage = errorMessage
-            };
-            return Ok(response);
-        }
+        
     }
 }

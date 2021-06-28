@@ -16,5 +16,6 @@ namespace IdentityServer.Entities
         //public virtual ApplicationUser User { get; set; }
         public virtual Channel Channel { get; set; }
         public virtual Account Account{ get; set; }
+        public virtual ICollection<OTP> OTPs { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using IdentityServer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210628120522_AddOTP")]
+    partial class AddOTP
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +52,7 @@ namespace IdentityServer.Migrations
                     b.Property<string>("CentralName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ChgTime")
+                    b.Property<DateTime>("ChgTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CommNo")
@@ -351,7 +353,7 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b0b98889-9e08-4e22-a54c-5eec62059d53",
+                            ConcurrencyStamp = "8b312b93-70a0-4c79-b835-62c46ec54f03",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
@@ -359,10 +361,10 @@ namespace IdentityServer.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJIU+4iJzQljBBZZrJr56mPfbGdo6GF9L5hUPHbxyQnpiJKJdth1ArYtuIqv/MU2VQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECNwew74ypFxGTpcX22lSg+/cc9Vyn4dgLHDNfVIdA956pNJLC2VQ66tKKUcEipHyA==",
                             PhoneNumber = "012111111111",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a930d226-c800-428c-b132-b8d3e11fc824",
+                            SecurityStamp = "e0a2094b-f0d7-43bf-91ce-7bbb1e6252b5",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "admin"
@@ -371,7 +373,7 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3961",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "05d8be0a-3c1a-44cc-8155-2ef6eb42b1ba",
+                            ConcurrencyStamp = "366a1836-8acb-461c-b163-f4ac9739c9ec",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "manager@manager.com",
                             EmailConfirmed = true,
@@ -379,10 +381,10 @@ namespace IdentityServer.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "MANAGER@MANAGER.COM",
                             NormalizedUserName = "MANAGER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBrglkWbaf3zLWBRePyiLBqsSKCwUgSM7e+UtGQqV97S2qtpGVSNvRQO44zlbSVbog==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEO6YXk9ss++nV2TkJUjLvoQWTQCwqJnK9W0pIKqsGCSJ28EDiD60j0PEId6jLUkDzQ==",
                             PhoneNumber = "012222222222",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "52b7aaa3-d1a3-4ee2-ba00-2a651f14933d",
+                            SecurityStamp = "6554b82e-5180-4b3f-bd32-02186e58fca6",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "manager"
@@ -391,7 +393,7 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "87bc28c4-1a1b-4dfd-b191-7b9388cb5648",
+                            ConcurrencyStamp = "a6df289b-3ae0-4c11-a5ee-e9184f9e2506",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "consumer@consumer.com",
                             EmailConfirmed = true,
@@ -399,10 +401,10 @@ namespace IdentityServer.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "CONSUMER@CONSUMER.COM",
                             NormalizedUserName = "CONSUMER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC6Rx2J4Diqg/5vgIjOnuWD+0xS5JpGEzaHiKtEPjqN5/hTCwPgYfR7Af/4BcyLscg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELIYfc9SFwecNXKZK3zRIyGCmwN4stNRcIeoUvb4sZ8fau99oyi4xBT41qx4EejRLA==",
                             PhoneNumber = "01201371236",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6b213145-292b-4775-9d8d-0bce34fb05fd",
+                            SecurityStamp = "60f1b0ae-0808-4c64-9af7-f05a4d706678",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "consumer"
@@ -622,13 +624,10 @@ namespace IdentityServer.Migrations
                     b.Property<int>("SmsSequence")
                         .HasColumnType("int");
 
-                    b.Property<int>("StatusID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UpdatedBy")
+                    b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
                     b.Property<int>("UserID")

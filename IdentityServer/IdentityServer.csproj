@@ -6,6 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210628105858_AddOTP.cs" />
+    <Compile Remove="Migrations\20210628105858_AddOTP.Designer.cs" />
+    <Compile Remove="Migrations\20210628110010_AddOTP.cs" />
+    <Compile Remove="Migrations\20210628110010_AddOTP.Designer.cs" />
+    <Compile Remove="Migrations\20210628120247_AddOTP.cs" />
+    <Compile Remove="Migrations\20210628120247_AddOTP.Designer.cs" />
+    <Compile Remove="Migrations\20210628120353_AddOTP.cs" />
+    <Compile Remove="Migrations\20210628120353_AddOTP.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
@@ -15,6 +26,21 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 

@@ -18,7 +18,7 @@ namespace IdentityServer.Entities
         public string CommNo { get; set; }
         public string TaxNo { get; set; }
         public ActiveStatus Active { get; set; }
-        public DateTime ChgTime { get; set; }
+        public DateTime? ChgTime { get; set; }
         public bool? AllowTransfeer { get; set; }
         public string NationalId { get; set; }
         public string Activity { get; set; }

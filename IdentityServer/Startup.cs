@@ -34,6 +34,12 @@ namespace IdentityServer
             services.AddDbContext<ApplicationDbContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("Default")));
 
+            services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<ISMSService, VictorySMSService>();
+
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 5;
@@ -55,9 +61,6 @@ namespace IdentityServer
               .AddInMemoryIdentityResources(Config.GetIdentityResources())
               //.AddCustomAuthorizeRequestValidator<CustomAuthorizeRequestValidator>()
               .AddAspNetIdentity<ApplicationUser>();
-
-            services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
-            services.AddScoped<ILoginService, LoginService>();
 
             services.AddControllers(options =>
             {

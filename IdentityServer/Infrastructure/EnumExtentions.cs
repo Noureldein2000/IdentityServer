@@ -14,4 +14,15 @@ namespace IdentityServer.Infrastructure
         True = 1,
         False = 0
     }
+    public enum ChannelCategoryStatus
+    {
+        Web = 1,
+        API = 2,
+        Mobile = 3,
+        POS = 4
+    }
+    public enum AccountTypeStatus
+    {
+        Company = 11
+    }
 }

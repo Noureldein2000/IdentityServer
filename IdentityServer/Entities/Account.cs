@@ -10,10 +10,9 @@ namespace IdentityServer.Entities
     {
         public string Name { get; set; }
         public string Address { get; set; }
-        public string CommertialRegistrationNo { get; set; } 
+        public string CommercialRegistrationNo { get; set; } 
         public string TaxNo { get; set; }
         public ActiveStatus Active { get; set; }
-        public string NationalId { get; set; }
         public string Activity { get; set; }
         public int? UpdateBy { get; set; }
         public int? Parent_CenterID { get; set; }

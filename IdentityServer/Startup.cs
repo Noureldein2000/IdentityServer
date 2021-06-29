@@ -38,6 +38,7 @@ namespace IdentityServer
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<ISMSService, VictorySMSService>();
+            services.AddScoped<IAccountService, AccountService>();
 
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>

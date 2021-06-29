@@ -23,7 +23,7 @@ using static IdentityServer.Models.Constants;
 
 namespace IdentityServer.Controllers
 {
-    [Route("api/authentication/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : BaseController
     {

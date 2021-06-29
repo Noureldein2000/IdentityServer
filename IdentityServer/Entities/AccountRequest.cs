@@ -17,5 +17,6 @@ namespace IdentityServer.Entities
         public string TaxNo { get; set; }
         public int ActivityID { get; set; }
         public virtual Activity Activity { get; set; }
+        public bool IsApproved { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace IdentityServer.Entities
         public int? CreatedBy { get; set; }
         public int? AccountProfileID { get; set; }
         public virtual AccountType AccountType { get; set; }
-        public int AccountOwnerID { get; set; }
+        //public int AccountOwnerID { get; set; }
         public string Latitude { get; set; }
         public string longitude { get; set; }
         public virtual AccountOwner AccountOwner { get; set; }

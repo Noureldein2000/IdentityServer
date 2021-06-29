@@ -126,6 +126,9 @@
   <data name="GeneralError" xml:space="preserve">
     <value>خطأ عام</value>
   </data>
+  <data name="InvalidOTP" xml:space="preserve">
+    <value>خطأ فى رقم المصادقه</value>
+  </data>
   <data name="InvalidPasswordFormat" xml:space="preserve">
     <value>رقم سرى خطأ</value>
   </data>

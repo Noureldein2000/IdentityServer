@@ -126,6 +126,9 @@
   <data name="GeneralError" xml:space="preserve">
     <value>General Error</value>
   </data>
+  <data name="InvalidOTP" xml:space="preserve">
+    <value>Invalid OTP</value>
+  </data>
   <data name="InvalidPasswordFormat" xml:space="preserve">
     <value>Invalid password format</value>
   </data>

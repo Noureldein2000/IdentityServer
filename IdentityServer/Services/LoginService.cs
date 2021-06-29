@@ -51,70 +51,8 @@ namespace IdentityServer.Services
 
         public async Task<AuthorizationResponceDTO> ChangePassword(ChangePasswordDTO model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-            {
-                var account = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
-                        && a.ChannelTypeID == model.ChannelType).Select(a => new
-                        {
-                            a.ExpirationPeriod,
-                            a.HasLimitedAccess,
-                            a.Account.AccountTypeID,
-                            a.Account.Name,
-                            a.Account.AccountOwner.Mobile
-                        }).FirstOrDefault();
-                if (account == null)
-                    throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
-
-                var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
-                       && a.ChannelTypeID == model.ChannelType
-                       && a.Account.AccountChannels.Any(ac => ac.Status == ActiveStatus.True)
-                       && a.Account.AccountChannels.Any(ac =>
-                       ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
-                    && ci.Value == model.ChannelId
-               ))).Select(act => new
-               {
-                   act.ExpirationPeriod,
-                   act.HasLimitedAccess,
-                   act.Account.AccountTypeID,
-                   act.Account.Name,
-                   act.ChannelType.Version
-               }).FirstOrDefault();
-                IdentityResult result = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
-                if (!result.Succeeded)
-                    throw new AuthorizationException(Resources.InvalidPasswordFormat, ErrorCodes.ChangePassword.InvalidPassword);
-
-                user.MustChangePassword = false;
-                _unitOfWork.SaveChanges();
-                var tokenData = await GetUserToken(user, model.AccountId.ToString(), model.ChannelId, account.ExpirationPeriod);
-                return new AuthorizationResponceDTO
-                {
-                    Token = tokenData.Token,
-                    Privilages = tokenData.Privilages,
-                    LocalDate = DateTime.Now,
-                    ServerDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
-                    AccountId = model.AccountId,
-                    Version = accountChannelType.Version == 0 ? "" : accountChannelType.Version.ToString(),
-                    ServiceListVersion = "7",
-                    AccountName = account.Name,
-                    AccountType = account.AccountTypeID.Value,
-                    ExpirationPeriod = account.ExpirationPeriod,
-                    Code = ErrorCodes.Success,
-                    Message = Resources.Success
-                };
-            }
-            throw new OkException(Resources.CannotChangePassword, ErrorCodes.ChangePassword.CannotChangeOldPassword);
-        }
-
-        public async Task<AuthorizationResponceDTO> GetAccountChannelData(AccountChannelDTO model)
-        {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-            {
-                if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
-                    throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
-
-                var account = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
+            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
+            var account = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
                     && a.ChannelTypeID == model.ChannelType).Select(a => new
                     {
                         a.ExpirationPeriod,
@@ -123,75 +61,141 @@ namespace IdentityServer.Services
                         a.Account.Name,
                         a.Account.AccountOwner.Mobile
                     }).FirstOrDefault();
-                if (account == null)
-                    throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+            if (account == null)
+                throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
 
-                if (account.AccountTypeID == (int)AccountTypeStatus.Company && model.ChannelCategory == (int)ChannelCategoryStatus.API)
-                {
-                    model.ChannelId = model.AccountIP;
-                }
+            var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
+                   && a.ChannelTypeID == model.ChannelType
+                   && a.Account.AccountChannels.Any(ac => ac.Status == ActiveStatus.True)
+                   && a.Account.AccountChannels.Any(ac =>
+                   ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
+                && ci.Value == model.ChannelId
+           ))).Select(act => new
+           {
+               act.ExpirationPeriod,
+               act.HasLimitedAccess,
+               act.Account.AccountTypeID,
+               act.Account.Name,
+               act.ChannelType.Version
+           }).FirstOrDefault();
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+            if (!result.Succeeded)
+                throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
 
-                var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
-                    && a.ChannelTypeID == model.ChannelType
-                    && a.Account.AccountChannels.Any(ac => ac.Status == ActiveStatus.True)
-                    && a.Account.AccountChannels.Any(ac =>
-                    ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
-                        && ci.Value == model.ChannelId
-                    ))).Select(act => new
-                    {
-                        act.ExpirationPeriod,
-                        act.HasLimitedAccess,
-                        act.Account.AccountTypeID,
-                        act.Account.Name,
-                        act.ChannelType.Version
-                    }).FirstOrDefault();
+            user.MustChangePassword = false;
+            _unitOfWork.SaveChanges();
+            var tokenData = await GetUserToken(user, model.AccountId.ToString(), model.ChannelId, account.ExpirationPeriod);
+            return new AuthorizationResponceDTO
+            {
+                Token = tokenData.Token,
+                Privilages = tokenData.Privilages,
+                LocalDate = DateTime.Now,
+                ServerDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
+                AccountId = model.AccountId,
+                Version = accountChannelType.Version == 0 ? "" : accountChannelType.Version.ToString(),
+                ServiceListVersion = "7",
+                AccountName = account.Name,
+                AccountType = account.AccountTypeID.Value,
+                ExpirationPeriod = account.ExpirationPeriod,
+                Code = ErrorCodes.Success,
+                Message = Resources.Success
+            };
 
-                //if(accountChannelType == null)
-
-                if (accountChannelType != null)
-                {
-                    if (user.MustChangePassword)
-                        throw new OkException(Resources.MustChangePassword, ErrorCodes.Autorization.MustChangePassword);
-                }
-                else if (accountChannelType == null && !account.HasLimitedAccess)
-                {
-                    //check for first time login and send otp
-                    var identifier = _channelIdentifires.Getwhere(i => i.Value == model.ChannelId
-                    && i.Status == ActiveStatus.True
-                    && i.Channel.AccountChannels.Any(ac => ac.Status == ActiveStatus.True
-                    && ac.AccountID != model.AccountId)).FirstOrDefault();
-                    if (identifier == null)
-                    {
-                        var channelAccountId = CreateAccountChannel(model.AccountId, model.ChannelId, user.UserId);
-                        var otp = Statics.GenerateRandomNumeric(6);
-                        CreateOTP(user.UserId, channelAccountId, model.LocalIP, model.AccountIP, otp);
-                        _smsService.SendMessage($"Momkn OTP: {otp}", "E", account.Mobile);
-                        throw new OkException(Resources.MustInputOTP, ErrorCodes.Autorization.MustInputOTP);
-                    }
-                    else
-                    {
-                        throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
-                    }
-                }
-
-                var tokenData = await GetUserToken(user, model.AccountId.ToString(), model.ChannelId, account.ExpirationPeriod);
-                return new AuthorizationResponceDTO
-                {
-                    Token = tokenData.Token,
-                    Privilages = tokenData.Privilages,
-                    LocalDate = model.LocalDate,
-                    ServerDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
-                    AccountId = model.AccountId,
-                    Version = accountChannelType.Version == 0 ? "" : accountChannelType.Version.ToString(),
-                    ServiceListVersion = "7",
-                    AccountName = account.Name,
-                    AccountType = account.AccountTypeID.Value,
-                    ExpirationPeriod = account.ExpirationPeriod,
-                    Code = ErrorCodes.Success,
-                    Message = Resources.Success
-                };
-            }
+            //throw new AuthorizationException(Resources.InvalidPasswordFormat, ErrorCodes.ChangePassword.InvalidPassword);
+            //throw new OkException(Resources.CannotChangePassword, ErrorCodes.ChangePassword.CannotChangeOldPassword);
+        }
+        private async Task<ApplicationUser> ValidateApplicationUser(string username, string password, string accountId)
+        {
+            var user = _userManager.Users.Where(u => u.UserName == username
+                        && u.ReferenceID == accountId).FirstOrDefault();
+            if (user != null && await _userManager.CheckPasswordAsync(user, password))
+                return user;
             throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+        }
+        public async Task<AuthorizationResponceDTO> ValidateUser(AccountChannelDTO model)
+        {
+            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
+            if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
+                throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+
+            var account = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
+                && a.ChannelTypeID == model.ChannelType).Select(a => new
+                {
+                    a.ExpirationPeriod,
+                    a.HasLimitedAccess,
+                    a.Account.AccountTypeID,
+                    a.Account.Name,
+                    a.Account.AccountOwner.Mobile
+                }).FirstOrDefault();
+            if (account == null)
+                throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+
+            if (account.AccountTypeID == (int)AccountTypeStatus.Company && model.ChannelCategory == (int)ChannelCategoryStatus.API)
+            {
+                model.ChannelId = model.AccountIP;
+            }
+
+            var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
+                && a.ChannelTypeID == model.ChannelType
+                && a.Account.AccountChannels.Any(ac => ac.Status == ActiveStatus.True)
+                && a.Account.AccountChannels.Any(ac =>
+                ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
+                    && ci.Value == model.ChannelId
+                ))).Select(act => new
+                {
+                    act.ExpirationPeriod,
+                    act.HasLimitedAccess,
+                    act.Account.AccountTypeID,
+                    act.Account.Name,
+                    act.ChannelType.Version
+                }).FirstOrDefault();
+
+            //if(accountChannelType == null)
+
+            if (accountChannelType != null)
+            {
+                if (user.MustChangePassword)
+                    throw new OkException(Resources.MustChangePassword, ErrorCodes.Autorization.MustChangePassword);
+            }
+            else if (accountChannelType == null && !account.HasLimitedAccess)
+            {
+                //check for first time login and send otp
+                var identifier = _channelIdentifires.Getwhere(i => i.Value == model.ChannelId
+                && i.Status == ActiveStatus.True
+                && i.Channel.AccountChannels.Any(ac => ac.Status == ActiveStatus.True
+                && ac.AccountID != model.AccountId)).FirstOrDefault();
+                if (identifier == null)
+                {
+                    var channelAccountId = CreateAccountChannel(model.AccountId, model.ChannelId, user.UserId);
+                    var otp = Statics.GenerateRandomNumeric(6);
+                    CreateOTP(user.UserId, channelAccountId, model.LocalIP, model.AccountIP, otp);
+                    _smsService.SendMessage($"Momkn OTP: {otp}", "E", account.Mobile);
+                    throw new OkException(Resources.MustInputOTP, ErrorCodes.Autorization.MustInputOTP);
+                }
+                else
+                {
+                    throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+                }
+            }
+
+            var tokenData = await GetUserToken(user, model.AccountId.ToString(), model.ChannelId, account.ExpirationPeriod);
+            return new AuthorizationResponceDTO
+            {
+                Token = tokenData.Token,
+                Privilages = tokenData.Privilages,
+                LocalDate = model.LocalDate,
+                ServerDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
+                AccountId = model.AccountId,
+                Version = accountChannelType.Version == 0 ? "" : accountChannelType.Version.ToString(),
+                ServiceListVersion = "7",
+                AccountName = account.Name,
+                AccountType = account.AccountTypeID.Value,
+                ExpirationPeriod = account.ExpirationPeriod,
+                Code = ErrorCodes.Success,
+                Message = Resources.Success
+            };
+
+
         }
         private async Task<UserTokenRoleDTO> GetUserToken(ApplicationUser user, string accountId, string channelId, int expiry)
         {

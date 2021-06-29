@@ -41,7 +41,7 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                var authResponce = await _loginService.GetAccountChannelData(new DTOs.AccountChannelDTO
+                var authResponce = await _loginService.ValidateUser(new DTOs.AccountChannelDTO
                 {
                     AccountId = model.AccountId,
                     ChannelCategory = model.ChannelCategory,
@@ -77,8 +77,6 @@ namespace IdentityServer.Controllers
             {
                 return BadRequest(ErrorCodes.Unknown);
             }
-
-            return Unauthorized(Resources.NoAuth);
         }
 
         [HttpGet]

@@ -27,7 +27,8 @@ namespace IdentityServer.Infrastructure
     }
     public enum UserTypeStatus // to check if user related to account or employee
     {
-        Employee = 1,
-        AccountUser = 2
+        AccountUser = 1,
+        Employee = 2
+        
     }
 }

@@ -88,6 +88,15 @@ namespace IdentityServer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid OTP.
+        /// </summary>
+        public static string InvalidOTP {
+            get {
+                return ResourceManager.GetString("InvalidOTP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid password format.
         /// </summary>
         public static string InvalidPasswordFormat {

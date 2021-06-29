@@ -13,7 +13,21 @@ namespace IdentityServer.Migrations
     {
         public static void Seed(ModelBuilder builder)
         {
+            builder.Entity<UserType>().HasData(
+                new UserType
+                {
+                    ID = 1,
+                    Name = "AccountUser",
+                    CreationDate = DateTime.Now
+                });
             builder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    Name = AvaliableRoles.SuperAdmin,
+                    NormalizedName = AvaliableRoles.SuperAdmin.ToUpper(),
+                    Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf1",
+                    ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf1"
+                },
                 new IdentityRole
                 {
                     Name = AvaliableRoles.Admin,

@@ -8,7 +8,7 @@ namespace IdentityServer.Services
 {
     public interface ILoginService
     {
-        Task<AuthorizationResponceDTO> GetAccountChannelData(AccountChannelDTO model);
+        Task<AuthorizationResponceDTO> ValidateUser(AccountChannelDTO model);
         Task<AuthorizationResponceDTO> ChangePassword(ChangePasswordDTO model);
     }
 }

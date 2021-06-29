@@ -9,6 +9,7 @@ namespace IdentityServer.Infrastructure
     {
         public static string Unknown = "Unknown";
         public static string Success = "200";
+        public static string FailedTry = "-3";
         public static class Autorization
         {
             public static string MustInputOTP = "209";
@@ -19,6 +20,10 @@ namespace IdentityServer.Infrastructure
         {
             public static string CannotChangeOldPassword = "-22";
             public static string InvalidPassword = "-23";
+        }
+        public static class OTP
+        {
+            public static string InvalidOTP = "-25";
         }
     }
 }

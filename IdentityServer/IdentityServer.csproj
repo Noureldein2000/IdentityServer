@@ -16,6 +16,14 @@
     <Compile Remove="Migrations\20210628120353_AddOTP.Designer.cs" />
     <Compile Remove="Migrations\20210628155420_ModifyAccountEntityAccountOwnerUSerTypes.cs" />
     <Compile Remove="Migrations\20210628155420_ModifyAccountEntityAccountOwnerUSerTypes.Designer.cs" />
+    <Compile Remove="Migrations\20210629132744_ChangeUserConstrain.cs" />
+    <Compile Remove="Migrations\20210629132744_ChangeUserConstrain.Designer.cs" />
+    <Compile Remove="Migrations\20210629133135_ChangeUserConstrain.cs" />
+    <Compile Remove="Migrations\20210629133135_ChangeUserConstrain.Designer.cs" />
+    <Compile Remove="Migrations\20210629133315_ChangeUserConstrain.cs" />
+    <Compile Remove="Migrations\20210629133315_ChangeUserConstrain.Designer.cs" />
+    <Compile Remove="Migrations\20210629133405_ChangeUserConstrain.cs" />
+    <Compile Remove="Migrations\20210629133405_ChangeUserConstrain.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

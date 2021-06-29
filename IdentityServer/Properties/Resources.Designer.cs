@@ -61,11 +61,38 @@ namespace IdentityServer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t change password to the old password.
+        /// </summary>
+        public static string CannotChangePassword {
+            get {
+                return ResourceManager.GetString("CannotChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed Try.
+        /// </summary>
+        public static string FailedTry {
+            get {
+                return ResourceManager.GetString("FailedTry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General Error.
         /// </summary>
         public static string GeneralError {
             get {
                 return ResourceManager.GetString("GeneralError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid password format.
+        /// </summary>
+        public static string InvalidPasswordFormat {
+            get {
+                return ResourceManager.GetString("InvalidPasswordFormat", resourceCulture);
             }
         }
         
@@ -79,7 +106,7 @@ namespace IdentityServer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Must Input OTP.
+        ///   Looks up a localized string similar to Must input OTP.
         /// </summary>
         public static string MustInputOTP {
             get {
@@ -93,6 +120,15 @@ namespace IdentityServer.Properties {
         public static string NoAuth {
             get {
                 return ResourceManager.GetString("NoAuth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        public static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
             }
         }
     }

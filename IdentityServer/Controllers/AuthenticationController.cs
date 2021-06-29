@@ -19,7 +19,6 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using static IdentityServer.Models.Constants;
 
 namespace IdentityServer.Controllers
 {
@@ -42,61 +41,29 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+                var authResponce = await _loginService.GetAccountChannelData(new DTOs.AccountChannelDTO
                 {
-                    if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
-                        return BadRequest(Resources.GeneralError);
+                    AccountId = model.AccountId,
+                    ChannelCategory = model.ChannelCategory,
+                    ChannelId = model.ChannelId,
+                    ChannelType = model.ChannelType,
+                    Password = model.Password,
+                    Username = model.Username,
+                    AccountIP = GetIPAddress(),
+                    LocalIP = GetLocalIpAddress()
+                });
+                var responce = new AuthorizationResponceModel
+                {
+                    Token = authResponce.Token,
+                    Privilages = authResponce.Privilages,
+                    ServerDate = authResponce.ServerDate,
+                    LocalDate = authResponce.LocalDate,
+                    AccountId = authResponce.AccountId,
+                    AccountName = authResponce.AccountName,
+                    AccountType = authResponce.AccountType
+                };
+                return Ok(responce);
 
-                    var authResponce = _loginService.GetAccountChannelData(new DTOs.AccountChannelDTO
-                    {
-                        MustChangePassword = user.MustChangePassword,
-                        AccountId = model.AccountId,
-                        ChannelTypeId = model.ChannelType,
-                        ChannelId = model.ChannelId,
-                        UserId = user.UserId,
-                        AccountIP = GetIPAddress(),
-                        LocalIP = GetLocalIpAddress()
-                    });
-
-                    var userRoles = await _userManager.GetRolesAsync(user);
-                    var userClaims = _userManager.GetClaimsAsync(user).Result.Where(c => c.Value == AvaliableClaimValues.True);
-                    var authClaims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, user.UserId.ToString()),
-                    };
-                    foreach (var role in userRoles)
-                    {
-                        authClaims.Add(new Claim(ClaimTypes.Role, role));
-                    }
-                    foreach (var claim in userClaims)
-                    {
-                        authClaims.Add(new Claim(ClaimTypes.Role, claim.Type));
-                    }
-                    authClaims.Add(new Claim("channel_id", model.ChannelId));
-                    authClaims.Add(new Claim("account_id", model.AccountId.ToString()));
-                    var authSigninKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetValue<string>("IdentityServer:Secret")));
-                    var token = new JwtSecurityToken
-                    (
-                        issuer: _configuration.GetValue<string>("IdentityServer:Issuer"),
-                        audience: _configuration.GetValue<string>("IdentityServer:audience"),
-                        claims: authClaims,
-                        expires: DateTime.Now.AddDays(authResponce.ExpirationPeriod),
-                        signingCredentials: new SigningCredentials(authSigninKey, SecurityAlgorithms.HmacSha256)
-                     );
-                    var responce = new AuthorizationResponceModel
-                    {
-                        Token = new JwtSecurityTokenHandler().WriteToken(token),
-                        Privilages = userClaims.Where(s => s.Value == AvaliableClaimValues.True)
-                                                    .Select(s => s.Type).ToArray(),
-                        ServerDate = authResponce.ServerDate,
-                        LocalDate = authResponce.LocalDate,
-                        AccountId = authResponce.AccountId,
-                        AccountName = authResponce.AccountName,
-                        AccountType = authResponce.AccountType
-                    };
-                    return Ok(responce);
-                }
             }
             catch (AuthorizationException ex)
             {
@@ -132,8 +99,34 @@ namespace IdentityServer.Controllers
             }
         }
 
-       
 
-        
+        [HttpPost]
+        [Route("ChangePassword")]
+        public IActionResult ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            try
+            {
+                var passData = _loginService.ChangePassword(new DTOs.ChangePasswordDTO
+                {
+                    AccountId = model.AccountId,
+                    ChannelId = model.ChannelId,
+                    ChannelType = model.ChannelType,
+                    NewPassword = model.NewPassword,
+                    Password = model.Password,
+                    Username = model.UserName
+                });
+                return Ok(passData);
+            }
+            catch (AuthorizationException ex)
+            {
+                return Unauthorized(ex.ErrorCode, ex.Message);
+            }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
+            }
+        }
+
+
     }
 }

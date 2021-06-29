@@ -20,8 +20,8 @@ namespace IdentityServer.Controllers
         {
             var response = new AuthorizationErrorMessages
             {
-                ErrorCode = errorCode,
-                ErrorMessage = errorMessage
+                Code = errorCode,
+                Message = errorMessage
             };
             return Unauthorized(response);
         }
@@ -30,8 +30,8 @@ namespace IdentityServer.Controllers
         {
             var response = new AuthorizationErrorMessages
             {
-                ErrorCode = errorCode,
-                ErrorMessage = errorMessage
+                Code = errorCode,
+                Message = errorMessage
             };
             return Ok(response);
         }

@@ -9,12 +9,13 @@ namespace IdentityServer.DTOs
     {
         public int AccountId { get; set; }
         public string ChannelId { get; set; } //emi or ip
-        public int ChannelTypeId { get; set; }
-        public bool MustChangePassword { get; set; }
+        //public int ChannelTypeId { get; set; }
         public int ChannelCategory{ get; set; }
-        public int UserId { get; set; }
-        public string AccountIP { get; set; }
         public DateTime LocalDate { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public int ChannelType { get; set; }
         public string LocalIP { get; set; }
+        public string AccountIP { get; set; }
     }
 }

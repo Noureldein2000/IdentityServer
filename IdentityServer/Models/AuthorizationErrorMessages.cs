@@ -7,7 +7,7 @@ namespace IdentityServer.Models
 {
     public class AuthorizationErrorMessages
     {
-        public string ErrorCode { get; set; }
-        public string ErrorMessage { get; set; }
+        public string Code { get; set; }
+        public string Message { get; set; }
     }
 }

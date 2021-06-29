@@ -13,6 +13,9 @@ namespace IdentityServer.EntitiesConfigurations
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             builder.HasKey(s => s.Id);
+            builder.HasIndex(s => s.NormalizedUserName).IsUnique(false);
+            builder.HasIndex(s => s.NormalizedEmail).IsUnique(false);
+            builder.HasIndex(s => new { s.UserName, s.ReferenceID }).IsUnique(true);
         }
     }
 }

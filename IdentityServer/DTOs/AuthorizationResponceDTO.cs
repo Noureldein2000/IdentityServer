@@ -17,5 +17,7 @@ namespace IdentityServer.DTOs
         public string ServiceListVersion { get; set; }
         public string Version { get; set; }
         public int ExpirationPeriod { get; set; }
+        public string Token { get; set; }
+        public string[] Privilages { get; set; }
     }
 }

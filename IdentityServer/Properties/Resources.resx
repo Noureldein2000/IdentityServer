@@ -117,16 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CannotChangePassword" xml:space="preserve">
+    <value>Can't change password to the old password</value>
+  </data>
+  <data name="FailedTry" xml:space="preserve">
+    <value>Failed Try</value>
+  </data>
   <data name="GeneralError" xml:space="preserve">
     <value>General Error</value>
+  </data>
+  <data name="InvalidPasswordFormat" xml:space="preserve">
+    <value>Invalid password format</value>
   </data>
   <data name="MustChangePassword" xml:space="preserve">
     <value>You must change password</value>
   </data>
   <data name="MustInputOTP" xml:space="preserve">
-    <value>Must Input OTP</value>
+    <value>Must input OTP</value>
   </data>
   <data name="NoAuth" xml:space="preserve">
     <value>No auth</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
   </data>
 </root>

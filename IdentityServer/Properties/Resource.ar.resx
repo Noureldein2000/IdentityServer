@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CannotChangePassword" xml:space="preserve">
+    <value>لا يمكنك استخدام الرقم السرى القديم</value>
+  </data>
+  <data name="FailedTry" xml:space="preserve">
+    <value>عمليه فاشله</value>
+  </data>
   <data name="GeneralError" xml:space="preserve">
     <value>خطأ عام</value>
+  </data>
+  <data name="InvalidPasswordFormat" xml:space="preserve">
+    <value>رقم سرى خطأ</value>
   </data>
   <data name="MustChangePassword" xml:space="preserve">
     <value>يجب تغيير كلمه السر</value>
@@ -128,5 +137,8 @@
   </data>
   <data name="NoAuth" xml:space="preserve">
     <value>غير مصرح</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>عمليه ناجحه</value>
   </data>
 </root>

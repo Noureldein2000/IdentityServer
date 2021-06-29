@@ -34,7 +34,15 @@ namespace IdentityServer.Migrations
                     NormalizedName = AvaliableRoles.Consumer.ToUpper(),
                     Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf4",
                     ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf4"
+                },
+                new IdentityRole
+                {
+                    Name = AvaliableRoles.AccountAdmin,
+                    NormalizedName = AvaliableRoles.AccountAdmin.ToUpper(),
+                    Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf3",
+                    ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf3"
                 });
+
 
             var consumerUser = new ApplicationUser
             {

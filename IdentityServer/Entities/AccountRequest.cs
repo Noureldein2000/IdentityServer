@@ -15,5 +15,7 @@ namespace IdentityServer.Entities
         public string NationalID { get; set; }
         public string CommercialRegistrationNo { get; set; }
         public string TaxNo { get; set; }
+        public int ActivityID { get; set; }
+        public virtual Activity Activity { get; set; }
     }
 }

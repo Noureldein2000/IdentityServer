@@ -23,6 +23,8 @@ namespace IdentityServer.Entities
         public int? AccountProfileID { get; set; }
         public string Latitude { get; set; }
         public string longitude { get; set; }
+        //public int ActivityID { get; set; }
+        //public virtual Activity Activity { get; set; }
         public virtual AccountType AccountType { get; set; }
         public virtual AccountOwner AccountOwner { get; set; }
         public virtual ICollection<AccountChannel> AccountChannels{ get; set; }

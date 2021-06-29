@@ -13,6 +13,7 @@ namespace IdentityServer.Models
             public const string Admin = "Admin";
             public const string Manager = "Manager";
             public const string Consumer = "Consumer";
+            public const string AccountAdmin = "AccountAdmin";
         }
 
         public static class AvaliableClaims

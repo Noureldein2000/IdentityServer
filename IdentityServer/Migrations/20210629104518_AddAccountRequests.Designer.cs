@@ -4,14 +4,16 @@ using IdentityServer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210629104518_AddAccountRequests")]
+    partial class AddAccountRequests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -451,7 +453,7 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5d0215a1-0c04-4314-94be-5cdca266237c",
+                            ConcurrencyStamp = "98e148ee-5763-4310-be4f-aa627b25d4a2",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
@@ -459,10 +461,10 @@ namespace IdentityServer.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEK+b2vvoof5BIKnIpy/bRPkFuikF/VIha1NQzQD3SLgrO+5tYyf/YecFYHNGr5ehbw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELSpRwssF3zJg3hZKGDZ795i4CeayNNCcELE1cxMfbU0HrPFfl+qIHq0n/Y3hGgsPg==",
                             PhoneNumber = "012111111111",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "41611cb9-9406-4f0c-9898-4ce7fb97ea84",
+                            SecurityStamp = "36313dc7-c057-46c4-b7b5-65465a7ffdcc",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "admin"
@@ -471,7 +473,7 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3961",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e57ce46f-94f2-452e-880a-7983c3c0a630",
+                            ConcurrencyStamp = "ad95031f-ce15-408a-801f-a724392ec222",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "manager@manager.com",
                             EmailConfirmed = true,
@@ -479,10 +481,10 @@ namespace IdentityServer.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "MANAGER@MANAGER.COM",
                             NormalizedUserName = "MANAGER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMjuT1IswCqQkiypLTOhV8yBuqC41VXjuDDMH4OuHTMgAk1BtLSvq6GiE4jheLHL8w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPWzCTHQRBHF/k8dRdETJ6PolRPgBOzU8ANvW+v1d7YBoEfg7V6EaaqhtMPUQTeSIA==",
                             PhoneNumber = "012222222222",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fff6a26b-7dcc-4ab7-a48f-513e3a013b35",
+                            SecurityStamp = "245dae98-48cc-4979-88c5-ee0e93ba19cc",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "manager"
@@ -491,7 +493,7 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "821fe04a-b76c-4305-a150-2fd28b315b59",
+                            ConcurrencyStamp = "f1613391-f7b1-41a6-8753-32faab4aac2c",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "consumer@consumer.com",
                             EmailConfirmed = true,
@@ -499,10 +501,10 @@ namespace IdentityServer.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "CONSUMER@CONSUMER.COM",
                             NormalizedUserName = "CONSUMER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHo8LNczNIft0G/PUkdNDVKX9w01vVV1PzANuTui1xUGBNOzq/t48JqEm0zwcq2nrA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEK5mFxds7T8sVsQuq76xp55dyLiSkJA/A9hb7lmKVsLAoYp3G62SuO6Pr6laszTL2g==",
                             PhoneNumber = "01201371236",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f6a5ad7a-ee68-428c-b969-5c6143d99146",
+                            SecurityStamp = "961e3081-9d9c-4cb9-baaa-975e3d9fab2d",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "consumer"
@@ -890,13 +892,6 @@ namespace IdentityServer.Migrations
                             ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf4",
                             Name = "Consumer",
                             NormalizedName = "CONSUMER"
-                        },
-                        new
-                        {
-                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf3",
-                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf3",
-                            Name = "AccountAdmin",
-                            NormalizedName = "ACCOUNTADMIN"
                         });
                 });
 

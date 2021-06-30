@@ -28,7 +28,7 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                     return BadRequest("102", string.Join(", ", ModelState.Values));
 
                 var result = _accountService.Add(new AccountRequestDTO
@@ -48,20 +48,20 @@ namespace IdentityServer.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);                
+                return BadRequest(ex);
             }
         }
 
         [HttpGet]
         [Route("Get/{status}")]
-        public IActionResult Get(AccountRequestStatus status)
+        public IActionResult Get([FromQuery]AccountRequestStatus status)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest("102", string.Join(", ", ModelState.Values));
 
-                var result = _accountService.GetAccountRequests(status).Select(ard=> new AccountRequestModel
+                var result = _accountService.GetAccountRequests(status).Select(ard => new AccountRequestModel
                 {
                     Id = ard.Id,
                     OwnerName = ard.OwnerName,
@@ -73,9 +73,9 @@ namespace IdentityServer.Controllers
                     CommercialRegistrationNo = ard.CommercialRegistrationNo,
                     TaxNo = ard.TaxNo,
                     ActivityID = ard.ActivityID,
-                    ActivityNameAr =ard.ActivityNameAr
+                    ActivityNameAr = ard.ActivityName
                 });
-                
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -101,7 +101,7 @@ namespace IdentityServer.Controllers
                 TaxNo = model.TaxNo,
                 ActivityID = model.ActivityID
             };
-        } 
+        }
         #endregion
     }
 }

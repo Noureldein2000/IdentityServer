@@ -25,6 +25,7 @@ namespace IdentityServer.Infrastructure
         {
             public static string InvalidOTP = "-25";
             public static string TheTimeExceededLimit = "-24";
+            public static string Trialshaveexceededthelimit  = "-26";
         }
     }
 }

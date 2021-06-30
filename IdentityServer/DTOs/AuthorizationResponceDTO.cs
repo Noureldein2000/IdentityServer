@@ -7,6 +7,7 @@ namespace IdentityServer.DTOs
 {
     public class AuthorizationResponceDTO
     {
+        public int Id { get; set; }
         public string Message { get; set; }
         public string Code { get; set; }
         public int AccountId { get; set; }

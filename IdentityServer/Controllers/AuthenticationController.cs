@@ -161,7 +161,7 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                var passData = _loginService.ConfirmOTP(new DTOs.ConfirmOTPDTO
+                var passData = _loginService.ResendOTP(new DTOs.ConfirmOTPDTO
                 {
                     AccountId = model.AccountId,
                     ChannelId = model.ChannelId,

@@ -120,6 +120,7 @@ namespace IdentityServer.Services
         }
         public async Task<AuthorizationResponceDTO> ValidateUser(AccountChannelDTO model)
         {
+            int otpId = 0;
             var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
             var tryAccount = int.TryParse(model.AccountId, out var accountId);
             var tryChannelType = int.TryParse(model.ChannelType, out var channelType);
@@ -177,7 +178,7 @@ namespace IdentityServer.Services
                 if (identifier == null)
                 {
                     var channelAccountId = CreateAccountChannel(accountId, model.ChannelId, user.UserId);
-                    SendOTP(user.UserId, channelAccountId, model.LocalIP, model.AccountIP, account.Mobile);
+                    otpId = SendOTP(user.UserId, channelAccountId, model.LocalIP, model.AccountIP, account.Mobile);
                     throw new OkException(Resources.MustInputOTP, ErrorCodes.Autorization.MustInputOTP);
                 }
                 else
@@ -189,6 +190,7 @@ namespace IdentityServer.Services
             var tokenData = await GetUserToken(user, model.AccountId.ToString(), model.ChannelId, account.ExpirationPeriod);
             return new AuthorizationResponceDTO
             {
+                Id = otpId,
                 Token = tokenData.Token,
                 Privilages = tokenData.Privilages,
                 LocalDate = model.LocalDate,
@@ -251,9 +253,9 @@ namespace IdentityServer.Services
             _unitOfWork.SaveChanges();
             return channelAccount.ID;
         }
-        private void CreateOTP(int userId, int accountChannelId, string localIP, string accountIP, string otpCode, int sequence = 1, int? originalID = null)
+        private int CreateOTP(int userId, int accountChannelId, string localIP, string accountIP, string otpCode, int sequence = 1, int? originalID = null)
         {
-            _otps.Add(new OTP
+            var opt = _otps.Add(new OTP
             {
                 AccountChannelID = accountChannelId,
                 AccountIP = accountIP,
@@ -266,12 +268,14 @@ namespace IdentityServer.Services
                 OriginalOTPID = originalID
             });
             _unitOfWork.SaveChanges();
+            return opt.ID;
         }
-        private void SendOTP(int userId, int accountChannelId, string localIP, string accountIP, string mobile, int sequence = 1, int? originalID = null)
+        private int SendOTP(int userId, int accountChannelId, string localIP, string accountIP, string mobile, int sequence = 1, int? originalID = null)
         {
             var otp = Statics.GenerateRandomNumeric(6);
-            CreateOTP(userId, accountChannelId, localIP, accountIP, otp, sequence, originalID);
+            int otpId = CreateOTP(userId, accountChannelId, localIP, accountIP, otp, sequence, originalID);
             _smsService.SendMessage($"Momkn OTP: {otp}", "E", mobile);
+            return otpId;
         }
         public async Task<AuthorizationResponceDTO> ConfirmOTP(ConfirmOTPDTO model)
         {
@@ -309,8 +313,8 @@ namespace IdentityServer.Services
             _unitOfWork.SaveChanges();
 
             var expiry = _accountChannelTypes.Getwhere(ac => ac.AccountID == accountId)
-                .Select(ac => ac.ExpirationPeriod)
-                .FirstOrDefault();
+                .Select(ac => ac.ExpirationPeriod).FirstOrDefault();
+
             var tokenData = await GetUserToken(user, model.AccountId.ToString(), model.ChannelId, expiry);
             return new AuthorizationResponceDTO
             {
@@ -321,12 +325,18 @@ namespace IdentityServer.Services
                 Privilages = tokenData.Privilages,
             };
         }
-        public Task<AuthorizationResponceDTO> ResendOTP(ConfirmOTPDTO model)
+        public async Task<AuthorizationResponceDTO> ResendOTP(ConfirmOTPDTO model)
         {
             if (!int.TryParse(model.Id, out var otpId) || !int.TryParse(model.AccountId, out var accountId))
                 throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
 
             var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId);
+
+            var otp = _otps.Getwhere(o => o.OriginalOTPID == otpId && o.UserID == user.UserId)
+                .FirstOrDefault();
+
+            if(otp != null)
+                throw new OkException(Resources.Trialshaveexceededthelimit, ErrorCodes.OTP.Trialshaveexceededthelimit);
 
             var accountChannel = _accountChannels.Getwhere(ac =>
                 ac.Channel.ChannelIdentifiers.Any(ci => ci.Value == model.ChannelId))
@@ -335,9 +345,19 @@ namespace IdentityServer.Services
                     ac.Account.AccountOwner.Mobile
                 }).FirstOrDefault();
 
-
             SendOTP(user.UserId, accountChannel.ID, model.LocalIP, model.AccountIP, accountChannel.Mobile, 2, otpId);
-            return null;
+            var expiry = _accountChannelTypes.Getwhere(ac => ac.AccountID == accountId)
+                .Select(ac => ac.ExpirationPeriod).FirstOrDefault();
+            var tokenData = await GetUserToken(user, model.AccountId.ToString(), model.ChannelId, expiry);
+            return new AuthorizationResponceDTO
+            {
+                Id = otpId,
+                AccountId = accountId,
+                Code = ErrorCodes.Success,
+                Message = Resources.Success,
+                Token = tokenData.Token,
+                Privilages = tokenData.Privilages,
+            };
         }
     }
 }

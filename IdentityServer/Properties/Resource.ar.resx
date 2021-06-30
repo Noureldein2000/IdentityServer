@@ -147,4 +147,7 @@
   <data name="Thetimehasexceedetthelimit" xml:space="preserve">
     <value>لقد تجاوز الوقت الحد المسموح به</value>
   </data>
+  <data name="Trialshaveexceededthelimit" xml:space="preserve">
+    <value>لقد تجاوزت عدد الرسائل المسموح به</value>
+  </data>
 </root>

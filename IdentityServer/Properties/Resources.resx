@@ -145,6 +145,9 @@
     <value>Success</value>
   </data>
   <data name="Thetimehasexceedetthelimit" xml:space="preserve">
-    <value>The time has exceeded the limit.</value>
+    <value>The time has exceeded the limit</value>
+  </data>
+  <data name="Trialshaveexceededthelimit" xml:space="preserve">
+    <value>Trials have exceeded the limit</value>
   </data>
 </root>

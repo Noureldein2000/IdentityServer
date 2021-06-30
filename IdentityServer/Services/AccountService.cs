@@ -24,7 +24,6 @@ namespace IdentityServer.Services
         {
           var entityRequest=  _accountRequests.Add(new AccountRequest
             {
-                ID = accountRequestDto.Id,
                 OwnerName = accountRequestDto.OwnerName,
                 AccountName = accountRequestDto.AccountName,
                 Mobile = accountRequestDto.Mobile,
@@ -53,19 +52,6 @@ namespace IdentityServer.Services
 
         #region Helper Method
         //Helper Method
-        private AccountRequest MapDtoToEntity(AccountRequestDTO addRequestDTO) => new AccountRequest
-    {
-        ID = addRequestDTO.Id,
-        OwnerName = addRequestDTO.OwnerName,
-        AccountName = addRequestDTO.AccountName,
-        Mobile = addRequestDTO.Mobile,
-        Address = addRequestDTO.Address,
-        Email = addRequestDTO.Email,
-        NationalID = addRequestDTO.NationalID,
-        CommercialRegistrationNo = addRequestDTO.CommercialRegistrationNo,
-        TaxNo = addRequestDTO.TaxNo,
-        ActivityID = addRequestDTO.ActivityID,
-    };
 
         private AccountRequestDTO MapEntityToDto(AccountRequest entityRequest) => new AccountRequestDTO
         {

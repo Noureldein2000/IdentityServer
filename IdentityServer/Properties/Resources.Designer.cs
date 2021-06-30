@@ -142,11 +142,20 @@ namespace IdentityServer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The time has exceeded the limit..
+        ///   Looks up a localized string similar to The time has exceeded the limit.
         /// </summary>
         public static string Thetimehasexceedetthelimit {
             get {
                 return ResourceManager.GetString("Thetimehasexceedetthelimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trials have exceeded the limit.
+        /// </summary>
+        public static string Trialshaveexceededthelimit {
+            get {
+                return ResourceManager.GetString("Trialshaveexceededthelimit", resourceCulture);
             }
         }
     }

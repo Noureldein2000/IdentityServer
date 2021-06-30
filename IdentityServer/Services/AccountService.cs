@@ -22,7 +22,7 @@ namespace IdentityServer.Services
 
         public AccountRequestDTO Add(AccountRequestDTO accountRequestDto)
         {
-          var entityRequest=  _accountRequests.Add(new AccountRequest
+            var entityRequest = _accountRequests.Add(new AccountRequest
             {
                 ID = accountRequestDto.Id,
                 OwnerName = accountRequestDto.OwnerName,
@@ -47,25 +47,39 @@ namespace IdentityServer.Services
 
         public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status = AccountRequestStatus.UnderProcessing)
         {
-            throw new NotImplementedException();
+            var accountRequestLst = _accountRequests.Getwhere(x => x.AccountRequestStatus == status).ToList();
+            return accountRequestLst.Select(entityRequest => new AccountRequestDTO
+            {
+                Id = entityRequest.ID,
+                OwnerName = entityRequest.OwnerName,
+                AccountName = entityRequest.AccountName,
+                Mobile = entityRequest.Mobile,
+                Address = entityRequest.Address,
+                Email = entityRequest.Email,
+                NationalID = entityRequest.NationalID,
+                CommercialRegistrationNo = entityRequest.CommercialRegistrationNo,
+                TaxNo = entityRequest.TaxNo,
+                ActivityID = entityRequest.ActivityID,
+                ActivityNameAr = _accountRequests.Getwhere(x => x.ID == entityRequest.ID).Select(x => x.Activity.NameAr).FirstOrDefault()
+            });
         }
 
 
         #region Helper Method
         //Helper Method
         private AccountRequest MapDtoToEntity(AccountRequestDTO addRequestDTO) => new AccountRequest
-    {
-        ID = addRequestDTO.Id,
-        OwnerName = addRequestDTO.OwnerName,
-        AccountName = addRequestDTO.AccountName,
-        Mobile = addRequestDTO.Mobile,
-        Address = addRequestDTO.Address,
-        Email = addRequestDTO.Email,
-        NationalID = addRequestDTO.NationalID,
-        CommercialRegistrationNo = addRequestDTO.CommercialRegistrationNo,
-        TaxNo = addRequestDTO.TaxNo,
-        ActivityID = addRequestDTO.ActivityID,
-    };
+        {
+            ID = addRequestDTO.Id,
+            OwnerName = addRequestDTO.OwnerName,
+            AccountName = addRequestDTO.AccountName,
+            Mobile = addRequestDTO.Mobile,
+            Address = addRequestDTO.Address,
+            Email = addRequestDTO.Email,
+            NationalID = addRequestDTO.NationalID,
+            CommercialRegistrationNo = addRequestDTO.CommercialRegistrationNo,
+            TaxNo = addRequestDTO.TaxNo,
+            ActivityID = addRequestDTO.ActivityID,
+        };
 
         private AccountRequestDTO MapEntityToDto(AccountRequest entityRequest) => new AccountRequestDTO
         {

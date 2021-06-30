@@ -1,4 +1,5 @@
 ﻿using IdentityServer.DTOs;
+using IdentityServer.Infrastructure;
 using IdentityServer.Models;
 using IdentityServer.Services;
 using Microsoft.AspNetCore.Http;
@@ -51,12 +52,56 @@ namespace IdentityServer.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("Get/{status}")]
+        public IActionResult Get(AccountRequestStatus status)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("102", string.Join(", ", ModelState.Values));
+
+                var result = _accountService.GetAccountRequests(status).Select(ard=> new AccountRequestModel
+                {
+                    Id = ard.Id,
+                    OwnerName = ard.OwnerName,
+                    AccountName = ard.AccountName,
+                    Mobile = ard.Mobile,
+                    Address = ard.Address,
+                    Email = ard.Email,
+                    NationalID = ard.NationalID,
+                    CommercialRegistrationNo = ard.CommercialRegistrationNo,
+                    TaxNo = ard.TaxNo,
+                    ActivityID = ard.ActivityID,
+                    ActivityNameAr =ard.ActivityNameAr
+                });
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        #region Helper Method
+        //Helper Method
         private AccountRequestModel Map(AccountRequestDTO model)
         {
             return new AccountRequestModel
             {
-
+                Id = model.Id,
+                OwnerName = model.OwnerName,
+                AccountName = model.AccountName,
+                Mobile = model.Mobile,
+                Address = model.Address,
+                Email = model.Email,
+                NationalID = model.NationalID,
+                CommercialRegistrationNo = model.CommercialRegistrationNo,
+                TaxNo = model.TaxNo,
+                ActivityID = model.ActivityID
             };
-        }
+        } 
+        #endregion
     }
 }

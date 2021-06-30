@@ -5,6 +5,7 @@ using IdentityServer.Infrastructure;
 using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -176,9 +177,7 @@ namespace IdentityServer.Services
                 if (identifier == null)
                 {
                     var channelAccountId = CreateAccountChannel(accountId, model.ChannelId, user.UserId);
-                    var otp = Statics.GenerateRandomNumeric(6);
-                    CreateOTP(user.UserId, channelAccountId, model.LocalIP, model.AccountIP, otp);
-                    _smsService.SendMessage($"Momkn OTP: {otp}", "E", account.Mobile);
+                    SendOTP(user.UserId, channelAccountId, model.LocalIP, model.AccountIP, account.Mobile);
                     throw new OkException(Resources.MustInputOTP, ErrorCodes.Autorization.MustInputOTP);
                 }
                 else
@@ -252,7 +251,7 @@ namespace IdentityServer.Services
             _unitOfWork.SaveChanges();
             return channelAccount.ID;
         }
-        private void CreateOTP(int userId, int accountChannelId, string localIP, string accountIP, string otpCode)
+        private void CreateOTP(int userId, int accountChannelId, string localIP, string accountIP, string otpCode, int sequence = 1, int? originalID = null)
         {
             _otps.Add(new OTP
             {
@@ -261,13 +260,19 @@ namespace IdentityServer.Services
                 LocalIP = localIP,
                 CreatedBy = userId,
                 OTPCode = otpCode,
-                SmsSequence = 1,
+                SmsSequence = sequence,
                 UserID = userId,
-                StatusID = 1
+                StatusID = 1,
+                OriginalOTPID = originalID
             });
             _unitOfWork.SaveChanges();
         }
-
+        private void SendOTP(int userId, int accountChannelId, string localIP, string accountIP, string mobile, int sequence = 1, int? originalID = null)
+        {
+            var otp = Statics.GenerateRandomNumeric(6);
+            CreateOTP(userId, accountChannelId, localIP, accountIP, otp);
+            _smsService.SendMessage($"Momkn OTP: {otp}", "E", mobile);
+        }
         public async Task<AuthorizationResponceDTO> ConfirmOTP(ConfirmOTPDTO model)
         {
             var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
@@ -317,5 +322,23 @@ namespace IdentityServer.Services
             };
         }
 
+        public Task<AuthorizationResponceDTO> ResendOTP(ConfirmOTPDTO model)
+        {
+            if (!int.TryParse(model.AccountId, out var accountId))
+                throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
+
+            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId);
+
+            var accountChannel = _accountChannels.Getwhere(ac =>
+            ac.Channel.ChannelIdentifiers.Any(ci => ci.Value == model.ChannelId))
+                .Select(ac => new { 
+                    ac.ID,
+                    ac.Account.AccountOwner.Mobile
+                }).FirstOrDefault();
+
+
+            SendOTP(user.UserId, accountChannel.ID, model.LocalIP, model.AccountIP, accountChannel.Mobile, 2, model.Id);
+
+        }
     }
 }

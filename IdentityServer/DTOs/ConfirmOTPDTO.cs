@@ -16,5 +16,7 @@ namespace IdentityServer.DTOs
         public string Latitude { get; set; }
         public string OTP { get; set; }
         public string Id { get; set; }
+        public string LocalIP { get; set; }
+        public string AccountIP { get; set; }
     }
 }

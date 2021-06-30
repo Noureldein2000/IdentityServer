@@ -20,6 +20,16 @@ namespace IdentityServer.Migrations
                     Name = "AccountUser",
                     CreationDate = DateTime.Now
                 });
+
+            builder.Entity<Activity>().HasData(
+                new Activity
+                {
+                    ID = 1,
+                    Name = "SuperMarket",
+                    NameAr = "سوبرماركت",
+                    CreationDate = DateTime.Now
+                });
+
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {

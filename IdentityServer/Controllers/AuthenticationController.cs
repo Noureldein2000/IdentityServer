@@ -60,7 +60,11 @@ namespace IdentityServer.Controllers
                     LocalDate = authResponce.LocalDate,
                     AccountId = authResponce.AccountId,
                     AccountName = authResponce.AccountName,
-                    AccountType = authResponce.AccountType
+                    AccountType = authResponce.AccountType,
+                    Code = authResponce.Code,
+                    Message = authResponce.Message,
+                    ServiceListVersion = authResponce.ServiceListVersion,
+                    Version = authResponce.Version
                 };
                 return Ok(responce);
 
@@ -111,7 +115,7 @@ namespace IdentityServer.Controllers
                     ChannelType = model.ChannelType,
                     NewPassword = model.NewPassword,
                     Password = model.Password,
-                    Username = model.UserName
+                    Username = model.Username,
                 });
                 return Ok(passData);
             }
@@ -124,7 +128,59 @@ namespace IdentityServer.Controllers
                 return Ok(ex.ErrorCode, ex.Message);
             }
         }
-
-
+        [HttpPost]
+        [Route("ConfirmOTP")]
+        public IActionResult ConfirmOTP([FromBody] ConfirmOTPModel model)
+        {
+            try
+            {
+                var passData = _loginService.ConfirmOTP(new DTOs.ConfirmOTPDTO
+                {
+                    AccountId = model.AccountId,
+                    ChannelId = model.ChannelId,
+                    ChannelType = model.ChannelType,
+                    Password = model.Password,
+                    Username = model.Username,
+                    Id = model.Id,
+                    OTP = model.OTP
+                });
+                return Ok(passData);
+            }
+            catch (AuthorizationException ex)
+            {
+                return Unauthorized(ex.ErrorCode, ex.Message);
+            }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
+            }
+        }
+        [HttpPost]
+        [Route("ResendOTP")]
+        public IActionResult ResendOTP([FromBody] ConfirmOTPModel model)
+        {
+            try
+            {
+                var passData = _loginService.ConfirmOTP(new DTOs.ConfirmOTPDTO
+                {
+                    AccountId = model.AccountId,
+                    ChannelId = model.ChannelId,
+                    ChannelType = model.ChannelType,
+                    Password = model.Password,
+                    Username = model.Username,
+                    Id = model.Id,
+                    OTP = model.OTP
+                });
+                return Ok(passData);
+            }
+            catch (AuthorizationException ex)
+            {
+                return Unauthorized(ex.ErrorCode, ex.Message);
+            }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
+            }
+        }
     }
 }

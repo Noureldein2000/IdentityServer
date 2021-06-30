@@ -140,5 +140,14 @@ namespace IdentityServer.Properties {
                 return ResourceManager.GetString("Success", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time has exceeded the limit..
+        /// </summary>
+        public static string Thetimehasexceedetthelimit {
+            get {
+                return ResourceManager.GetString("Thetimehasexceedetthelimit", resourceCulture);
+            }
+        }
     }
 }

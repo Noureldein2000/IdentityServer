@@ -13,17 +13,18 @@ namespace IdentityServer.Infrastructure
         public static class Autorization
         {
             public static string MustInputOTP = "209";
-            public static string MustChangePassword = "-8";
             public static string NoAuth = "0";
         }
         public static class ChangePassword
         {
             public static string CannotChangeOldPassword = "-22";
             public static string InvalidPassword = "-23";
+            public static string MustChangePassword = "-8";
         }
         public static class OTP
         {
             public static string InvalidOTP = "-25";
+            public static string TheTimeExceededLimit = "-24";
         }
     }
 }

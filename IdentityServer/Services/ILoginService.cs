@@ -10,5 +10,6 @@ namespace IdentityServer.Services
     {
         Task<AuthorizationResponceDTO> ValidateUser(AccountChannelDTO model);
         Task<AuthorizationResponceDTO> ChangePassword(ChangePasswordDTO model);
+        Task<AuthorizationResponceDTO> ConfirmOTP(ConfirmOTPDTO model);
     }
 }

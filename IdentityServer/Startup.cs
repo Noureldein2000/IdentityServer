@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -40,6 +41,10 @@ namespace IdentityServer
             services.AddScoped<ISMSService, VictorySMSService>();
             services.AddScoped<IAccountService, AccountService>();
 
+            services.Replace(new ServiceDescriptor(
+               serviceType: typeof(IPasswordHasher<ApplicationUser>),
+               implementationType: typeof(MD5PasswordHasher<ApplicationUser>),
+               ServiceLifetime.Scoped));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {

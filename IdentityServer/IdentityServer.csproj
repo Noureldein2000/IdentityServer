@@ -5,6 +5,10 @@
     <Configurations>Debug;Release;Testing</Configurations>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Migrations\20210628105858_AddOTP.cs" />
     <Compile Remove="Migrations\20210628105858_AddOTP.Designer.cs" />

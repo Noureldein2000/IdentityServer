@@ -144,4 +144,7 @@
   <data name="Success" xml:space="preserve">
     <value>عمليه ناجحه</value>
   </data>
+  <data name="Thetimehasexceedetthelimit" xml:space="preserve">
+    <value>لقد تجاوز الوقت الحد المسموح به</value>
+  </data>
 </root>

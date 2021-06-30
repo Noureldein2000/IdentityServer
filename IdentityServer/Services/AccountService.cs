@@ -22,7 +22,7 @@ namespace IdentityServer.Services
 
         public AccountRequestDTO Add(AccountRequestDTO accountRequestDto)
         {
-          var entityRequest=  _accountRequests.Add(new AccountRequest
+            var entityRequest = _accountRequests.Add(new AccountRequest
             {
                 OwnerName = accountRequestDto.OwnerName,
                 AccountName = accountRequestDto.AccountName,
@@ -46,7 +46,21 @@ namespace IdentityServer.Services
 
         public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status = AccountRequestStatus.UnderProcessing)
         {
-            throw new NotImplementedException();
+            var accountRequestLst = _accountRequests.Getwhere(x => x.AccountRequestStatus == status).ToList();
+            return accountRequestLst.Select(entityRequest => new AccountRequestDTO
+            {
+                Id = entityRequest.ID,
+                OwnerName = entityRequest.OwnerName,
+                AccountName = entityRequest.AccountName,
+                Mobile = entityRequest.Mobile,
+                Address = entityRequest.Address,
+                Email = entityRequest.Email,
+                NationalID = entityRequest.NationalID,
+                CommercialRegistrationNo = entityRequest.CommercialRegistrationNo,
+                TaxNo = entityRequest.TaxNo,
+                ActivityID = entityRequest.ActivityID,
+                ActivityNameAr = _accountRequests.Getwhere(x => x.ID == entityRequest.ID).Select(x => x.Activity.NameAr).FirstOrDefault()
+            });
         }
 
 

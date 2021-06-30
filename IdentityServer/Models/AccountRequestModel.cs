@@ -17,5 +17,6 @@ namespace IdentityServer.Models
         public string CommercialRegistrationNo { get; set; }
         public string TaxNo { get; set; }
         public int ActivityID { get; set; }
+        public string ActivityNameAr { get; set; }
     }
 }

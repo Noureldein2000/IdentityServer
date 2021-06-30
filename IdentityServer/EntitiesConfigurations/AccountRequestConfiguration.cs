@@ -1,4 +1,5 @@
 ﻿using IdentityServer.Entities;
+using IdentityServer.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -14,13 +15,15 @@ namespace IdentityServer.EntitiesConfigurations
         {
             builder.HasKey(s => s.ID);
             builder.Property(s => s.Email).HasMaxLength(255);
-            builder.Property(s => s.Address).HasMaxLength(255);
-            builder.Property(s => s.Mobile).HasMaxLength(15);
-            builder.Property(s => s.NationalID).HasMaxLength(255);
-            builder.Property(s => s.AccountName).HasMaxLength(255);
-            builder.Property(s => s.OwnerName).HasMaxLength(255);
-            builder.Property(s => s.CommercialRegistrationNo).HasMaxLength(50);
-            builder.Property(s => s.TaxNo).HasMaxLength(50);
+            builder.Property(s => s.Address).HasMaxLength(255).IsRequired();
+            builder.Property(s => s.Mobile).HasMaxLength(15).IsRequired(); 
+            builder.Property(s => s.NationalID).HasMaxLength(255).IsRequired();
+            builder.Property(s => s.AccountName).HasMaxLength(255).IsRequired();
+            builder.Property(s => s.OwnerName).HasMaxLength(255).IsRequired();
+            builder.Property(s => s.CommercialRegistrationNo).HasMaxLength(50).IsRequired();
+            builder.Property(s => s.TaxNo).HasMaxLength(50).IsRequired();
+            builder.Property(s => s.AccountRequestStatus).HasDefaultValue(AccountRequestStatus.UnderProcessing).IsRequired();
+
             builder.HasOne(s => s.Activity).WithMany(s => s.AccountRequests).HasForeignKey(s => s.ActivityID)
                 .OnDelete(DeleteBehavior.NoAction);
         }

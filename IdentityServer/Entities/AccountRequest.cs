@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IdentityServer.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,6 @@ namespace IdentityServer.Entities
         public string TaxNo { get; set; }
         public int ActivityID { get; set; }
         public virtual Activity Activity { get; set; }
-        public bool IsApproved { get; set; }
+        public AccountRequestStatus AccountRequestStatus { get; set; }
     }
 }

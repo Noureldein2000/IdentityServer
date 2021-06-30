@@ -31,4 +31,11 @@ namespace IdentityServer.Infrastructure
         Employee = 2
         
     }
+
+    public enum AccountRequestStatus
+    {
+        UnderProcessing=1,
+        Approved = 2,
+        Rejected = 3,
+    }
 }

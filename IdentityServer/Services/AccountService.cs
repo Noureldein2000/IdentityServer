@@ -1,5 +1,6 @@
 ﻿using IdentityServer.DTOs;
 using IdentityServer.Entities;
+using IdentityServer.Infrastructure;
 using IdentityServer.Repositories.Base;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace IdentityServer.Services
             _accountRequests = accountRequests;
         }
 
-        public AddRequestDTO AddRequest(AddRequestDTO accountRequestDto)
+        public AccountRequestDTO Add(AccountRequestDTO accountRequestDto)
         {
           var entityRequest=  _accountRequests.Add(new AccountRequest
             {
@@ -39,10 +40,20 @@ namespace IdentityServer.Services
             return MapEntityToDto(entityRequest);
         }
 
+        public AccountRequestStatus ChangeAccountRequestStatus(AccountRequestStatus status, int id)
+        {
+            throw new NotImplementedException();
+        }
 
-    #region Helper Method
-    //Helper Method
-    private AccountRequest MapDtoToEntity(AddRequestDTO addRequestDTO) => new AccountRequest
+        public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status = AccountRequestStatus.UnderProcessing)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        #region Helper Method
+        //Helper Method
+        private AccountRequest MapDtoToEntity(AccountRequestDTO addRequestDTO) => new AccountRequest
     {
         ID = addRequestDTO.Id,
         OwnerName = addRequestDTO.OwnerName,
@@ -56,7 +67,7 @@ namespace IdentityServer.Services
         ActivityID = addRequestDTO.ActivityID,
     };
 
-        private AddRequestDTO MapEntityToDto(AccountRequest entityRequest) => new AddRequestDTO
+        private AccountRequestDTO MapEntityToDto(AccountRequest entityRequest) => new AccountRequestDTO
         {
             Id = entityRequest.ID,
             OwnerName = entityRequest.OwnerName,

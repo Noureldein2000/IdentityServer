@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.DTOs
 {
-    public class AddRequestDTO
+    public class AccountRequestDTO
     {
         public int Id { get; set; }
         public string OwnerName { get; set; }

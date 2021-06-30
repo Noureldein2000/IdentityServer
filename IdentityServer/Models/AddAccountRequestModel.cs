@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Models
 {
-    public class AddRequestModel
+    public class AddAccountRequestModel
     {
         [Required]
         public string OwnerName { get; set; }

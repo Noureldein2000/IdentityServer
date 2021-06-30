@@ -1,5 +1,6 @@
 ﻿using IdentityServer.DTOs;
 using IdentityServer.Entities;
+using IdentityServer.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace IdentityServer.Services
 {
     public interface IAccountService
     {
-        AddRequestDTO AddRequest(AddRequestDTO addRequestDTO);
+        AccountRequestDTO Add(AccountRequestDTO addDTO);
+        IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status = AccountRequestStatus.UnderProcessing);
+        AccountRequestStatus ChangeAccountRequestStatus(AccountRequestStatus status, int id);
     }
 }

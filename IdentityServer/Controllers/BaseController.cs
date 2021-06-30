@@ -26,6 +26,16 @@ namespace IdentityServer.Controllers
             return Unauthorized(response);
         }
         [NonAction]
+        public IActionResult BadRequest(string errorCode, string errorMessage)
+        {
+            var response = new AuthorizationErrorMessages
+            {
+                Code = errorCode,
+                Message = errorMessage
+            };
+            return BadRequest(response);
+        }
+        [NonAction]
         public IActionResult Ok(string errorCode, string errorMessage)
         {
             var response = new AuthorizationErrorMessages

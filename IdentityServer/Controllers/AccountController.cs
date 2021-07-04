@@ -79,6 +79,25 @@ namespace IdentityServer.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("ChangeStatus/{Id}/{status}")]
+        public IActionResult ChangeStatus(int Id, AccountRequestStatus status)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("102", string.Join(", ", ModelState.Values));
+
+                var result = _accountService.ChangeAccountRequestStatus(Id, status);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
         #region Helper Method
         //Helper Method
         private AccountRequestModel Map(AccountRequestDTO model)

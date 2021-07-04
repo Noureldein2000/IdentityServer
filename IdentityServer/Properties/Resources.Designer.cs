@@ -167,5 +167,14 @@ namespace IdentityServer.Properties {
                 return ResourceManager.GetString("Trialshaveexceededthelimit", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unavailable status.
+        /// </summary>
+        public static string UnavailableStatus {
+            get {
+                return ResourceManager.GetString("UnavailableStatus", resourceCulture);
+            }
+        }
     }
 }

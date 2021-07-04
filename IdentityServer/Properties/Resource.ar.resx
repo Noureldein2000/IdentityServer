@@ -153,4 +153,7 @@
   <data name="Trialshaveexceededthelimit" xml:space="preserve">
     <value>لقد تجاوزت عدد الرسائل المسموح به</value>
   </data>
+  <data name="UnavailableStatus" xml:space="preserve">
+    <value>حالة طلب العميل غير موجوده</value>
+  </data>
 </root>

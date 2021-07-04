@@ -15,7 +15,6 @@ namespace IdentityServer.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IBaseRepository<AccountRequest, int> _accountRequests;
         private readonly IBaseRepository<AccountOwner, int> _accountOwner;
         private readonly IBaseRepository<Account, int> _account;
@@ -57,36 +56,42 @@ namespace IdentityServer.Services
             return MapEntityToDto(entityRequest);
         }
 
-        public AccountRequestStatus ChangeAccountRequestStatus(int id, AccountRequestStatus status)
+        public AccountRequestStatus ChangeAccountRequestStatus(int id, AccountRequestStatus status, int createdBy)
         {
             var currentAccountRequest = _accountRequests.GetById(id);
-            currentAccountRequest.AccountRequestStatus = status;
 
-            if (status == AccountRequestStatus.Approved)
+            switch (status)
             {
-                Account account = new Account();
-                account.Address = currentAccountRequest.Address;
-                account.Active = 0;
-                account.TaxNo = currentAccountRequest.TaxNo;
-                account.CommercialRegistrationNo = currentAccountRequest.CommercialRegistrationNo;
-                account.Name = currentAccountRequest.AccountName;
+                case AccountRequestStatus.UnderProcessing:
+                    throw new AuthorizationException(Resources.UnavailableStatus, ErrorCodes.Admin.UnavailableStatus);
 
-                account.Activity = _activity.GetById(currentAccountRequest.ActivityID).NameAr;
-                //account.Activity = currentAccountRequest.Activity.NameAr; //error object null refrence
+                case AccountRequestStatus.Approved:
+                    currentAccountRequest.AccountRequestStatus = AccountRequestStatus.Approved;
+                    var account = _account.Add(new Account
+                    {
+                        Address = currentAccountRequest.TaxNo,
+                        TaxNo = currentAccountRequest.TaxNo,
+                        ActivityID = currentAccountRequest.ActivityID,
+                        CommercialRegistrationNo = currentAccountRequest.CommercialRegistrationNo,
+                        Name = currentAccountRequest.AccountName,
+                        CreatedBy = createdBy,
+                    });
 
-                //account.CreatedBy = _userManager // we need find current user Id to add it
-                account = _account.Add(account);
-
-                _unitOfWork.SaveChanges();
-
-                AccountOwner accountOwner = new AccountOwner();
-                accountOwner.Name = currentAccountRequest.OwnerName;
-                accountOwner.Address = currentAccountRequest.Address;
-                accountOwner.Email = currentAccountRequest.Email;
-                accountOwner.Mobile = currentAccountRequest.Mobile;
-                accountOwner.NationalID = currentAccountRequest.NationalID;
-                accountOwner.AccountID = account.ID;
-                _accountOwner.Add(accountOwner);
+                    _accountOwner.Add(new AccountOwner
+                    {
+                        Name = currentAccountRequest.OwnerName,
+                        Address = currentAccountRequest.Address,
+                        Email = currentAccountRequest.Email,
+                        Mobile = currentAccountRequest.Mobile,
+                        NationalID = currentAccountRequest.NationalID,
+                        AccountID = account.ID,
+                    });
+                    break;
+                case AccountRequestStatus.Rejected:
+                    currentAccountRequest.AccountRequestStatus = AccountRequestStatus.Rejected;
+                    break;
+                default:
+                    throw new AuthorizationException(Resources.UnavailableStatus, ErrorCodes.Admin.UnavailableStatus);
             }
 
             _unitOfWork.SaveChanges();

@@ -28,6 +28,8 @@
     <Compile Remove="Migrations\20210629133315_ChangeUserConstrain.Designer.cs" />
     <Compile Remove="Migrations\20210629133405_ChangeUserConstrain.cs" />
     <Compile Remove="Migrations\20210629133405_ChangeUserConstrain.Designer.cs" />
+    <Compile Remove="Migrations\20210704091324_AddActivityToAccountModel.cs" />
+    <Compile Remove="Migrations\20210704091324_AddActivityToAccountModel.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

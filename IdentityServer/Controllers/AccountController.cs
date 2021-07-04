@@ -3,6 +3,7 @@ using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
 using IdentityServer.Models;
 using IdentityServer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +15,7 @@ namespace IdentityServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AccountController : BaseController
     {
         private readonly IAccountService _accountService;
@@ -63,6 +65,7 @@ namespace IdentityServer.Controllers
 
         [HttpGet]
         [Route("Get/{status}")]
+        [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         public IActionResult Get([FromQuery] AccountRequestStatus status = AccountRequestStatus.UnderProcessing)
         {
             try
@@ -79,17 +82,22 @@ namespace IdentityServer.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("ChangeStatus/{Id}/{status}")]
-        public IActionResult ChangeStatus(int Id, AccountRequestStatus status)
+        [Authorize(Roles = Constants.AvaliableRoles.Admin +","+ Constants.AvaliableRoles.SuperAdmin)]
+        public IActionResult ChangeStatus([FromQuery] int Id, AccountRequestStatus status)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest("102", string.Join(", ", ModelState.Values));
 
-                var result = _accountService.ChangeAccountRequestStatus(Id, status);
+                var result = _accountService.ChangeAccountRequestStatus(Id, status, UserIdentity);
                 return Ok(result);
+            }
+            catch (AuthorizationException ex)
+            {
+                return BadRequest(ex.ErrorCode, ex.Message);
             }
             catch (Exception ex)
             {

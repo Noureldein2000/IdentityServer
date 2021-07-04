@@ -12,6 +12,6 @@ namespace IdentityServer.Services
     {
         AccountRequestDTO Add(AccountRequestDTO addDTO);
         IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status = AccountRequestStatus.UnderProcessing);
-        AccountRequestStatus ChangeAccountRequestStatus( int id, AccountRequestStatus status);
+        AccountRequestStatus ChangeAccountRequestStatus( int id, AccountRequestStatus status, int createdBy);
     }
 }

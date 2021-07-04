@@ -45,7 +45,13 @@ namespace IdentityServer.Controllers
             };
             return Ok(response);
         }
-
+        public int UserIdentity
+        {
+            get
+            {
+                return int.Parse(User.Identity.Name);
+            }
+        }
         protected string GetIPAddress()
         {
             HttpContext context = HttpContext;

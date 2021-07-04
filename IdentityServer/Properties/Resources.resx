@@ -153,4 +153,7 @@
   <data name="Trialshaveexceededthelimit" xml:space="preserve">
     <value>Trials have exceeded the limit</value>
   </data>
+  <data name="UnavailableStatus" xml:space="preserve">
+    <value>Unavailable status</value>
+  </data>
 </root>

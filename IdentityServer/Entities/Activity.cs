@@ -10,6 +10,6 @@ namespace IdentityServer.Entities
         public string Name { get; set; }
         public string NameAr { get; set; }
         public virtual ICollection<AccountRequest> AccountRequests { get; set; }
-        //public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
     }
 }

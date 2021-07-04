@@ -28,5 +28,9 @@ namespace IdentityServer.Infrastructure
             public static string TheTimeExceededLimit = "-24";
             public static string Trialshaveexceededthelimit  = "-26";
         }
+        public static class Admin
+        {
+            public static string UnavailableStatus = "25";
+        }
     }
 }

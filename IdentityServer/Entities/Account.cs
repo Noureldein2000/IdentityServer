@@ -13,7 +13,6 @@ namespace IdentityServer.Entities
         public string CommercialRegistrationNo { get; set; } 
         public string TaxNo { get; set; }
         public ActiveStatus Active { get; set; }
-        public string Activity { get; set; }
         public int? UpdateBy { get; set; }
         public int? Parent_CenterID { get; set; }
         public double? Total_Parent_Amount { get; set; }
@@ -23,8 +22,8 @@ namespace IdentityServer.Entities
         public int? AccountProfileID { get; set; }
         public string Latitude { get; set; }
         public string longitude { get; set; }
-        //public int ActivityID { get; set; }
-        //public virtual Activity Activity { get; set; }
+        public int? ActivityID { get; set; }
+        public virtual Activity Activity { get; set; }
         public virtual AccountType AccountType { get; set; }
         public virtual AccountOwner AccountOwner { get; set; }
         public virtual ICollection<AccountChannel> AccountChannels{ get; set; }

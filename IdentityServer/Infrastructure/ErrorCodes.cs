@@ -20,6 +20,7 @@ namespace IdentityServer.Infrastructure
             public static string CannotChangeOldPassword = "-22";
             public static string InvalidPassword = "-23";
             public static string MustChangePassword = "-8";
+            public static string MobileNumberExists = "-18";
         }
         public static class OTP
         {

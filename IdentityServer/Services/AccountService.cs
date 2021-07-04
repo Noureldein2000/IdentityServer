@@ -1,6 +1,8 @@
 ﻿using IdentityServer.DTOs;
 using IdentityServer.Entities;
+using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
+using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,6 +25,10 @@ namespace IdentityServer.Services
 
         public AccountRequestDTO Add(AccountRequestDTO accountRequestDto)
         {
+            var checkExist = _accountRequests.Any(c => c.Mobile == accountRequestDto.Mobile);
+            if(checkExist)
+                throw new OkException(Resources.Thismobilenumberalreadyexists, ErrorCodes.ChangePassword.MobileNumberExists);
+
             var entityRequest = _accountRequests.Add(new AccountRequest
             {
                 OwnerName = accountRequestDto.OwnerName,

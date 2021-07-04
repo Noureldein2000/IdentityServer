@@ -26,6 +26,8 @@ namespace IdentityServer.EntitiesConfigurations
 
             builder.HasOne(s => s.Activity).WithMany(s => s.AccountRequests).HasForeignKey(s => s.ActivityID)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasIndex(s => s.Mobile).IsUnique();
         }
     }
 }

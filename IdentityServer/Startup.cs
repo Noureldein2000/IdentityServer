@@ -49,7 +49,8 @@ namespace IdentityServer
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 5;
-                options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = false;
+                
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

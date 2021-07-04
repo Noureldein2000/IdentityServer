@@ -1,4 +1,5 @@
 ﻿using IdentityServer.DTOs;
+using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
 using IdentityServer.Models;
 using IdentityServer.Services;
@@ -45,6 +46,14 @@ namespace IdentityServer.Controllers
                 });
 
                 return Ok(Map(result));
+            }
+            catch (AuthorizationException ex)
+            {
+                return Unauthorized(ex.ErrorCode, ex.Message);
+            }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
             }
             catch (Exception ex)
             {

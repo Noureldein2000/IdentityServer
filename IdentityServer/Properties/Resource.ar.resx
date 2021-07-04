@@ -147,6 +147,9 @@
   <data name="Thetimehasexceedetthelimit" xml:space="preserve">
     <value>لقد تجاوز الوقت الحد المسموح به</value>
   </data>
+  <data name="Thismobilenumberalreadyexists" xml:space="preserve">
+    <value>رقم تليفون العميل موجود بالفعل</value>
+  </data>
   <data name="Trialshaveexceededthelimit" xml:space="preserve">
     <value>لقد تجاوزت عدد الرسائل المسموح به</value>
   </data>

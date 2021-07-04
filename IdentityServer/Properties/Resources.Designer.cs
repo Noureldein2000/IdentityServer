@@ -151,6 +151,15 @@ namespace IdentityServer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This mobile number already exists.
+        /// </summary>
+        public static string Thismobilenumberalreadyexists {
+            get {
+                return ResourceManager.GetString("Thismobilenumberalreadyexists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trials have exceeded the limit.
         /// </summary>
         public static string Trialshaveexceededthelimit {

@@ -147,6 +147,9 @@
   <data name="Thetimehasexceedetthelimit" xml:space="preserve">
     <value>The time has exceeded the limit</value>
   </data>
+  <data name="Thismobilenumberalreadyexists" xml:space="preserve">
+    <value>This mobile number already exists</value>
+  </data>
   <data name="Trialshaveexceededthelimit" xml:space="preserve">
     <value>Trials have exceeded the limit</value>
   </data>

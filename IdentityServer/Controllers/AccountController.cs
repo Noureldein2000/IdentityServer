@@ -24,9 +24,9 @@ namespace IdentityServer.Controllers
             _accountService = accountService;
         }
 
-
         [HttpPost]
         [Route("AddAccountRequest")]
+        [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         public IActionResult AddAccountRequest([FromBody] AddAccountRequestModel addRequestModel)
         {
             try
@@ -34,7 +34,7 @@ namespace IdentityServer.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest("102", string.Join(", ", ModelState.Values));
 
-                var result = _accountService.Add(new AccountRequestDTO
+                var result = _accountService.AddAccountRequest(new AccountRequestDTO
                 {
                     OwnerName = addRequestModel.OwnerName,
                     AccountName = addRequestModel.AccountName,
@@ -63,9 +63,9 @@ namespace IdentityServer.Controllers
             }
         }
         [HttpGet]
-        [Route("Get/{id}")]
+        [Route("GetAccountRequestById/{id}")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
-        public IActionResult Get([FromQuery] int id)
+        public IActionResult GetAccountRequestById([FromRoute] int id)
         {
             try
             {
@@ -78,9 +78,9 @@ namespace IdentityServer.Controllers
             }
         }
         [HttpGet]
-        [Route("Get/{status}")]
+        [Route("GetAccountRequestByStatus/{status}")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
-        public IActionResult Get([FromQuery] AccountRequestStatus status = AccountRequestStatus.UnderProcessing)
+        public IActionResult GetAccountRequestByStatus([FromRoute] AccountRequestStatus status = AccountRequestStatus.UnderProcessing)
         {
             try
             {
@@ -94,9 +94,9 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet]
-        [Route("ChangeStatus/{Id}/{status}")]
+        [Route("ChangeAccountRequestStatus/{Id}/{status}")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin +","+ Constants.AvaliableRoles.SuperAdmin)]
-        public IActionResult ChangeStatus([FromQuery] int Id, AccountRequestStatus status)
+        public IActionResult ChangeAccountRequestStatus([FromRoute] int Id, AccountRequestStatus status)
         {
             try
             {

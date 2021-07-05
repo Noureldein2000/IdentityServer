@@ -22,7 +22,7 @@ namespace IdentityServer.Repositories.Base
 
         public bool Any(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _context.Set<TEntity>().Any(predicate);
         }
 
         public TEntity Delete(TKey key)

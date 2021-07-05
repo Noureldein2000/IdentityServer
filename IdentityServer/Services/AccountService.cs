@@ -33,9 +33,9 @@ namespace IdentityServer.Services
             _unitOfWork = unitOfWork;
         }
 
-        public AccountRequestDTO Add(AccountRequestDTO accountRequestDto)
+        public AccountRequestDTO AddAccountRequest(AccountRequestDTO accountRequestDto)
         {
-            var checkExist = _accountRequests.Any(c => c.Mobile == accountRequestDto.Mobile);
+            var checkExist = _accountRequests.Any(c => c.Mobile == accountRequestDto.Mobile && c.AccountRequestStatus != AccountRequestStatus.Rejected);
             if(checkExist)
                 throw new OkException(Resources.Thismobilenumberalreadyexists, ErrorCodes.ChangePassword.MobileNumberExists);
 
@@ -67,7 +67,7 @@ namespace IdentityServer.Services
 
                 case AccountRequestStatus.Approved:
                     currentAccountRequest.AccountRequestStatus = AccountRequestStatus.Approved;
-                    var account = _account.Add(new Account
+                    _account.Add(new Account
                     {
                         Address = currentAccountRequest.TaxNo,
                         TaxNo = currentAccountRequest.TaxNo,
@@ -75,16 +75,14 @@ namespace IdentityServer.Services
                         CommercialRegistrationNo = currentAccountRequest.CommercialRegistrationNo,
                         Name = currentAccountRequest.AccountName,
                         CreatedBy = createdBy,
-                    });
-
-                    _accountOwner.Add(new AccountOwner
-                    {
-                        Name = currentAccountRequest.OwnerName,
-                        Address = currentAccountRequest.Address,
-                        Email = currentAccountRequest.Email,
-                        Mobile = currentAccountRequest.Mobile,
-                        NationalID = currentAccountRequest.NationalID,
-                        AccountID = account.ID,
+                        AccountOwner = new AccountOwner
+                        {
+                            Name = currentAccountRequest.OwnerName,
+                            Address = currentAccountRequest.Address,
+                            Email = currentAccountRequest.Email,
+                            Mobile = currentAccountRequest.Mobile,
+                            NationalID = currentAccountRequest.NationalID,
+                        }
                     });
                     break;
                 case AccountRequestStatus.Rejected:

@@ -38,8 +38,8 @@ namespace IdentityServer
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILoginService, LoginService>();
-            services.AddScoped<ISMSService, VictorySMSService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ISMSService, VictorySMSService>();
 
             services.Replace(new ServiceDescriptor(
                serviceType: typeof(IPasswordHasher<ApplicationUser>),

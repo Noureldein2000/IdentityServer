@@ -49,7 +49,7 @@ namespace IdentityServer.Controllers
         {
             get
             {
-                return int.Parse(User.Identity.Name);
+                return int.Parse(User.Identity.Name ?? "1");
             }
         }
         protected string GetIPAddress()

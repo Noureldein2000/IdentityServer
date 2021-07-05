@@ -119,6 +119,25 @@ namespace IdentityServer.Services
             return accountRequestLst;
         }
 
+        public AccountRequestDTO GetAccountRequestsById(int id)
+        {
+            return _accountRequests.Getwhere(x => x.ID == id).AsNoTracking()
+                .Select(ar => new AccountRequestDTO
+                {
+                    Id = ar.ID,
+                    OwnerName = ar.OwnerName,
+                    AccountName = ar.AccountName,
+                    Mobile = ar.Mobile,
+                    Address = ar.Address,
+                    Email = ar.Email,
+                    NationalID = ar.NationalID,
+                    CommercialRegistrationNo = ar.CommercialRegistrationNo,
+                    TaxNo = ar.TaxNo,
+                    ActivityID = ar.ActivityID,
+                    ActivityName = ar.Activity.NameAr
+                }).FirstOrDefault();
+        }
+
 
         #region Helper Method
         //Helper Method

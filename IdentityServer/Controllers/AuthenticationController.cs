@@ -77,7 +77,7 @@ namespace IdentityServer.Controllers
             {
                 return Ok(ex.ErrorCode, ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest(ErrorCodes.Unknown);
             }

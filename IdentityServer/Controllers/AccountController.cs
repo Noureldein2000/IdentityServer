@@ -26,8 +26,8 @@ namespace IdentityServer.Controllers
 
 
         [HttpPost]
-        [Route("Add")]
-        public IActionResult Add(AddAccountRequestModel addRequestModel)
+        [Route("AddAccountRequest")]
+        public IActionResult AddAccountRequest([FromBody] AddAccountRequestModel addRequestModel)
         {
             try
             {
@@ -62,7 +62,21 @@ namespace IdentityServer.Controllers
                 return BadRequest(ex);
             }
         }
-
+        [HttpGet]
+        [Route("Get/{id}")]
+        [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        public IActionResult Get([FromQuery] int id)
+        {
+            try
+            {
+                var result = _accountService.GetAccountRequestsById(id);
+                return Ok(Map(result));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
         [HttpGet]
         [Route("Get/{status}")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
@@ -70,9 +84,6 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest("102", string.Join(", ", ModelState.Values));
-
                 var result = _accountService.GetAccountRequests(status).Select(ard => Map(ard));
                 return Ok(result);
             }
@@ -89,9 +100,6 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest("102", string.Join(", ", ModelState.Values));
-
                 var result = _accountService.ChangeAccountRequestStatus(Id, status, UserIdentity);
                 return Ok(result);
             }

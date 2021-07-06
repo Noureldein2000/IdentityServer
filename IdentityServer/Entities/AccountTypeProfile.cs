@@ -12,5 +12,6 @@ namespace IdentityServer.Entities
 
         public virtual AccountType AccountType { get; set; }
         public virtual Profile Profile { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
     }
 }

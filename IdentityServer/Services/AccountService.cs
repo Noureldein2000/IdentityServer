@@ -81,7 +81,7 @@ namespace IdentityServer.Services
                             Address = currentAccountRequest.Address,
                             Email = currentAccountRequest.Email,
                             Mobile = currentAccountRequest.Mobile,
-                            NationalID = currentAccountRequest.NationalID,
+                            NationalID = currentAccountRequest.NationalID
                         }
                     });
                     break;
@@ -96,7 +96,7 @@ namespace IdentityServer.Services
             return status;
         }
 
-        public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pagenumber, int pageSize)
+        public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pageNumber, int pageSize)
         {
             var accountRequestLst = _accountRequests.Getwhere(x => x.AccountRequestStatus == status).AsNoTracking()
                 .Select(ar => new AccountRequestDTO
@@ -113,7 +113,7 @@ namespace IdentityServer.Services
                     ActivityID = ar.ActivityID,
                     ActivityName = ar.Activity.NameAr,
                     CreationDate = ar.CreationDate
-                }).OrderBy(ar => ar.CreationDate).Skip(pagenumber - 1).Take(pageSize).ToList();
+                }).OrderBy(ar => ar.CreationDate).Skip(pageNumber - 1).Take(pageSize).ToList();
             return accountRequestLst;
         }
 

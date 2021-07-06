@@ -17,7 +17,6 @@ namespace IdentityServer.Entities
         public int? Parent_CenterID { get; set; }
         public double? Total_Parent_Amount { get; set; }
         public bool? ProfitDailyControl { get; set; }
-        //public int? AccountTypeID { get; set; }
         public int? CreatedBy { get; set; }
         public int? AccountTypeProfileID { get; set; }
         public string Latitude { get; set; }

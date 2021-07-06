@@ -13,7 +13,6 @@ namespace IdentityServer.Entities
         public ActiveStatus Status { get; set; }
         public int? TreeLevel { get; set; }
 
-        public virtual ICollection<Account> Accounts{ get; set; }
         public virtual ICollection<AccountTypeProfile> AccountTypeProfiles { get; set; }
     }
 }

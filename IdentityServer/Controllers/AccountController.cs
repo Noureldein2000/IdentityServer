@@ -81,11 +81,11 @@ namespace IdentityServer.Controllers
         [HttpGet]
         [Route("GetAccountRequestByStatus/{status}")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
-        public IActionResult GetAccountRequestByStatus([FromRoute] AccountRequestStatus status = AccountRequestStatus.UnderProcessing, int pagenumber = 1, int pageSize = 10)
+        public IActionResult GetAccountRequestByStatus([FromRoute] AccountRequestStatus status = AccountRequestStatus.UnderProcessing, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var result = _accountService.GetAccountRequests(status, pagenumber, pageSize).Select(ard => Map(ard));
+                var result = _accountService.GetAccountRequests(status, pageNumber, pageSize).Select(ard => Map(ard));
                 return Ok(result);
             }
             catch (Exception ex)

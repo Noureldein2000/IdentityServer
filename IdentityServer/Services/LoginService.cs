@@ -50,74 +50,6 @@ namespace IdentityServer.Services
             _otps = otps;
         }
 
-        public async Task<AuthorizationResponceDTO> ChangePassword(ChangePasswordDTO model)
-        {
-            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
-            var account = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
-                    && a.ChannelTypeID == model.ChannelType).Select(a => new
-                    {
-                        a.ExpirationPeriod,
-                        a.HasLimitedAccess,
-                        a.Account.AccountTypeProfile.AccountTypeID,
-                        a.Account.Name,
-                        a.Account.AccountOwner.Mobile
-                    }).FirstOrDefault();
-            if (account == null)
-                throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
-
-            var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
-                   && a.ChannelTypeID == model.ChannelType
-                   && a.Account.AccountChannels.Any(ac => ac.Status == ActiveStatus.True)
-                   && a.Account.AccountChannels.Any(ac =>
-                   ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
-                && ci.Value == model.ChannelId
-           ))).Select(act => new
-           {
-               act.ExpirationPeriod,
-               act.HasLimitedAccess,
-               act.Account.AccountTypeProfile.AccountTypeID,
-               act.Account.Name,
-               act.ChannelType.Version
-           }).FirstOrDefault();
-            IdentityResult result = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
-            if (!result.Succeeded)
-                throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
-
-            user.MustChangePassword = false;
-            _unitOfWork.SaveChanges();
-            var tokenData = await GetUserToken(user, model.AccountId.ToString(), model.ChannelId, account.ExpirationPeriod);
-            return new AuthorizationResponceDTO
-            {
-                Token = tokenData.Token,
-                Privilages = tokenData.Privilages,
-                LocalDate = DateTime.Now,
-                ServerDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
-                AccountId = model.AccountId,
-                Version = accountChannelType.Version == 0 ? "" : accountChannelType.Version.ToString(),
-                ServiceListVersion = "7",
-                AccountName = account.Name,
-                AccountType = account.AccountTypeID,
-                ExpirationPeriod = account.ExpirationPeriod,
-                Code = ErrorCodes.Success,
-                Message = Resources.Success
-            };
-
-            //throw new AuthorizationException(Resources.InvalidPasswordFormat, ErrorCodes.ChangePassword.InvalidPassword);
-            //throw new OkException(Resources.CannotChangePassword, ErrorCodes.ChangePassword.CannotChangeOldPassword);
-        }
-        private ApplicationUser ValidateApplicationUser(string username, string password, string accountId)
-        {
-            var user = _userManager.Users.Where(u => u.UserName == username
-                        && u.ReferenceID == accountId).FirstOrDefault();
-            var result = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
-            if (user != null && result == PasswordVerificationResult.Success)
-            {
-                if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
-                    throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
-                return user;
-            }
-            throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
-        }
         public async Task<AuthorizationResponceDTO> ValidateUser(AccountChannelDTO model)
         {
             int otpId = 0;
@@ -207,75 +139,60 @@ namespace IdentityServer.Services
 
 
         }
-        private async Task<UserTokenRoleDTO> GetUserToken(ApplicationUser user, string accountId, string channelId, int expiry)
+        public async Task<AuthorizationResponceDTO> ChangePassword(ChangePasswordDTO model)
         {
-            var userRoles = await _userManager.GetRolesAsync(user);
-            var userClaims = _userManager.GetClaimsAsync(user).Result.Where(c => c.Value == AvaliableClaimValues.True);
-            var authClaims = new List<Claim>
+            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
+            var account = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
+                    && a.ChannelTypeID == model.ChannelType).Select(a => new
                     {
-                        new Claim(ClaimTypes.Name, user.UserId.ToString()),
-                    };
-            foreach (var role in userRoles)
+                        a.ExpirationPeriod,
+                        a.HasLimitedAccess,
+                        a.Account.AccountTypeProfile.AccountTypeID,
+                        a.Account.Name,
+                        a.Account.AccountOwner.Mobile
+                    }).FirstOrDefault();
+            if (account == null)
+                throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+
+            var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
+                   && a.ChannelTypeID == model.ChannelType
+                   && a.Account.AccountChannels.Any(ac => ac.Status == ActiveStatus.True)
+                   && a.Account.AccountChannels.Any(ac =>
+                   ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
+                && ci.Value == model.ChannelId
+           ))).Select(act => new
+           {
+               act.ExpirationPeriod,
+               act.HasLimitedAccess,
+               act.Account.AccountTypeProfile.AccountTypeID,
+               act.Account.Name,
+               act.ChannelType.Version
+           }).FirstOrDefault();
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+            if (!result.Succeeded)
+                throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
+
+            user.MustChangePassword = false;
+            _unitOfWork.SaveChanges();
+            var tokenData = await GetUserToken(user, model.AccountId.ToString(), model.ChannelId, account.ExpirationPeriod);
+            return new AuthorizationResponceDTO
             {
-                authClaims.Add(new Claim(ClaimTypes.Role, role));
-            }
-            foreach (var claim in userClaims)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, claim.Type));
-            }
-            authClaims.Add(new Claim("channel_id", channelId));
-            authClaims.Add(new Claim("account_id", accountId));
-            var authSigninKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetValue<string>("IdentityServer:Secret")));
-            var token = new JwtSecurityToken
-            (
-                issuer: _configuration.GetValue<string>("IdentityServer:Issuer"),
-                audience: _configuration.GetValue<string>("IdentityServer:audience"),
-                claims: authClaims,
-                expires: DateTime.Now.AddDays(expiry),
-                signingCredentials: new SigningCredentials(authSigninKey, SecurityAlgorithms.HmacSha256)
-             );
-            return new UserTokenRoleDTO
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Privilages = userClaims.Where(s => s.Value == AvaliableClaimValues.True)
-                                                    .Select(s => s.Type).ToArray()
+                Token = tokenData.Token,
+                Privilages = tokenData.Privilages,
+                LocalDate = DateTime.Now,
+                ServerDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
+                AccountId = model.AccountId,
+                Version = accountChannelType.Version == 0 ? "" : accountChannelType.Version.ToString(),
+                ServiceListVersion = "7",
+                AccountName = account.Name,
+                AccountType = account.AccountTypeID,
+                ExpirationPeriod = account.ExpirationPeriod,
+                Code = ErrorCodes.Success,
+                Message = Resources.Success
             };
-        }
-        private int CreateAccountChannel(int accountId, string channelIdValue, int userId)
-        {
-            var channelId = _channelIdentifires.Getwhere(ci => ci.Value == channelIdValue).Select(ci => ci.ChannelID).FirstOrDefault();
-            var channelAccount = _accountChannels.Add(new AccountChannel
-            {
-                AccountID = accountId,
-                ChannelID = channelId,
-                CreatedBy = userId,
-            });
-            _unitOfWork.SaveChanges();
-            return channelAccount.ID;
-        }
-        private int CreateOTP(int userId, int accountChannelId, string localIP, string accountIP, string otpCode, int sequence = 1, int? originalID = null)
-        {
-            var opt = _otps.Add(new OTP
-            {
-                AccountChannelID = accountChannelId,
-                AccountIP = accountIP,
-                LocalIP = localIP,
-                CreatedBy = userId,
-                OTPCode = otpCode,
-                SmsSequence = sequence,
-                UserID = userId,
-                StatusID = 1,
-                OriginalOTPID = originalID
-            });
-            _unitOfWork.SaveChanges();
-            return opt.ID;
-        }
-        private int SendOTP(int userId, int accountChannelId, string localIP, string accountIP, string mobile, int sequence = 1, int? originalID = null)
-        {
-            var otp = Statics.GenerateRandomNumeric(6);
-            int otpId = CreateOTP(userId, accountChannelId, localIP, accountIP, otp, sequence, originalID);
-            _smsService.SendMessage($"Momkn OTP: {otp}", "E", mobile);
-            return otpId;
+
+            //throw new AuthorizationException(Resources.InvalidPasswordFormat, ErrorCodes.ChangePassword.InvalidPassword);
+            //throw new OkException(Resources.CannotChangePassword, ErrorCodes.ChangePassword.CannotChangeOldPassword);
         }
         public async Task<AuthorizationResponceDTO> ConfirmOTP(ConfirmOTPDTO model)
         {
@@ -359,5 +276,92 @@ namespace IdentityServer.Services
                 Privilages = tokenData.Privilages,
             };
         }
-    }
+
+        //Helper Method
+        #region Helper Method
+        private ApplicationUser ValidateApplicationUser(string username, string password, string accountId)
+        {
+            var user = _userManager.Users.Where(u => u.UserName == username
+                        && u.ReferenceID == accountId).FirstOrDefault();
+            var result = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
+            if (user != null && result == PasswordVerificationResult.Success)
+            {
+                if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
+                    throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+                return user;
+            }
+            throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+        }
+        private async Task<UserTokenRoleDTO> GetUserToken(ApplicationUser user, string accountId, string channelId, int expiry)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var userClaims = _userManager.GetClaimsAsync(user).Result.Where(c => c.Value == AvaliableClaimValues.True);
+            var authClaims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.UserId.ToString()),
+                    };
+            foreach (var role in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            foreach (var claim in userClaims)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, claim.Type));
+            }
+            authClaims.Add(new Claim("channel_id", channelId));
+            authClaims.Add(new Claim("account_id", accountId));
+            var authSigninKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetValue<string>("IdentityServer:Secret")));
+            var token = new JwtSecurityToken
+            (
+                issuer: _configuration.GetValue<string>("IdentityServer:Issuer"),
+                audience: _configuration.GetValue<string>("IdentityServer:audience"),
+                claims: authClaims,
+                expires: DateTime.Now.AddDays(expiry),
+                signingCredentials: new SigningCredentials(authSigninKey, SecurityAlgorithms.HmacSha256)
+             );
+            return new UserTokenRoleDTO
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Privilages = userClaims.Where(s => s.Value == AvaliableClaimValues.True)
+                                                    .Select(s => s.Type).ToArray()
+            };
+        }
+        private int CreateAccountChannel(int accountId, string channelIdValue, int userId)
+        {
+            var channelId = _channelIdentifires.Getwhere(ci => ci.Value == channelIdValue).Select(ci => ci.ChannelID).FirstOrDefault();
+            var channelAccount = _accountChannels.Add(new AccountChannel
+            {
+                AccountID = accountId,
+                ChannelID = channelId,
+                CreatedBy = userId,
+            });
+            _unitOfWork.SaveChanges();
+            return channelAccount.ID;
+        }
+        private int CreateOTP(int userId, int accountChannelId, string localIP, string accountIP, string otpCode, int sequence = 1, int? originalID = null)
+        {
+            var opt = _otps.Add(new OTP
+            {
+                AccountChannelID = accountChannelId,
+                AccountIP = accountIP,
+                LocalIP = localIP,
+                CreatedBy = userId,
+                OTPCode = otpCode,
+                SmsSequence = sequence,
+                UserID = userId,
+                StatusID = 1,
+                OriginalOTPID = originalID
+            });
+            _unitOfWork.SaveChanges();
+            return opt.ID;
+        }
+        private int SendOTP(int userId, int accountChannelId, string localIP, string accountIP, string mobile, int sequence = 1, int? originalID = null)
+        {
+            var otp = Statics.GenerateRandomNumeric(6);
+            int otpId = CreateOTP(userId, accountChannelId, localIP, accountIP, otp, sequence, originalID);
+            _smsService.SendMessage($"Momkn OTP: {otp}", "E", mobile);
+            return otpId;
+        }
+    } 
+    #endregion
 }

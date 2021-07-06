@@ -20,7 +20,7 @@ namespace IdentityServer.Entities
         public int? CreatedBy { get; set; }
         public int? AccountTypeProfileID { get; set; }
         public string Latitude { get; set; }
-        public string longitude { get; set; }
+        public string Longitude { get; set; }
         public int? ActivityID { get; set; }
         public int? RegionID { get; set; }
         public virtual Region Region { get; set; }

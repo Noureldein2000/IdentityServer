@@ -16,20 +16,14 @@ namespace IdentityServer.Services
     public class AccountService : IAccountService
     {
         private readonly IBaseRepository<AccountRequest, int> _accountRequests;
-        private readonly IBaseRepository<AccountOwner, int> _accountOwner;
         private readonly IBaseRepository<Account, int> _account;
-        private readonly IBaseRepository<Activity, int> _activity;
         private readonly IUnitOfWork _unitOfWork;
         public AccountService(IBaseRepository<AccountRequest, int> accountRequests,
-            IBaseRepository<AccountOwner, int> accountOwner,
             IBaseRepository<Account, int> account,
-                IBaseRepository<Activity, int> activity,
             IUnitOfWork unitOfWork)
         {
             _accountRequests = accountRequests;
-            _accountOwner = accountOwner;
             _account = account;
-            _activity = activity;
             _unitOfWork = unitOfWork;
         }
 

@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.EntitiesConfigurations
 {
-    public class AccountConfiguration : IEntityTypeConfiguration<Account>
+    public class GovernorateConfiguration : IEntityTypeConfiguration<Governorate>
     {
-        public void Configure(EntityTypeBuilder<Account> builder)
+        public void Configure(EntityTypeBuilder<Governorate> builder)
         {
-            builder.HasKey(a => a.ID);
-
-            builder.HasOne(a => a.Activity).WithMany(a => a.Accounts).HasForeignKey(a => a.ActivityID)
+            builder.HasKey(s => s.ID);
+            builder.Property(s => s.Name).IsRequired();
+            builder.HasMany(s => s.Regions).WithOne(s => s.Governorate).HasForeignKey(s => s.GovernorateID)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

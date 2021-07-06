@@ -45,6 +45,7 @@ namespace IdentityServer.Controllers
                     CommercialRegistrationNo = addRequestModel.CommercialRegistrationNo,
                     TaxNo = addRequestModel.TaxNo,
                     ActivityID = addRequestModel.ActivityID,
+                    CreatedBy = UserIdentityId
                 });
 
                 return Ok(Map(result));
@@ -80,11 +81,11 @@ namespace IdentityServer.Controllers
         [HttpGet]
         [Route("GetAccountRequestByStatus/{status}")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
-        public IActionResult GetAccountRequestByStatus([FromRoute] AccountRequestStatus status = AccountRequestStatus.UnderProcessing)
+        public IActionResult GetAccountRequestByStatus([FromRoute] AccountRequestStatus status = AccountRequestStatus.UnderProcessing, int pagenumber = 1, int pageSize = 10)
         {
             try
             {
-                var result = _accountService.GetAccountRequests(status).Select(ard => Map(ard));
+                var result = _accountService.GetAccountRequests(status, pagenumber, pageSize).Select(ard => Map(ard));
                 return Ok(result);
             }
             catch (Exception ex)
@@ -100,7 +101,7 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                var result = _accountService.ChangeAccountRequestStatus(Id, status, UserIdentity);
+                var result = _accountService.ChangeAccountRequestStatus(Id, status, UserIdentityId);
                 return Ok(result);
             }
             catch (AuthorizationException ex)

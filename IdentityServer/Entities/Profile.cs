@@ -12,6 +12,6 @@ namespace IdentityServer.Entities
         public string NameAr{ get; set; }
         public ActiveStatus Status { get; set; }
 
-        public virtual ICollection<AccountProfile> AccountProfiles { get; set; }
+        public virtual ICollection<AccountTypeProfile> AccountTypeProfiles { get; set; }
     }
 }

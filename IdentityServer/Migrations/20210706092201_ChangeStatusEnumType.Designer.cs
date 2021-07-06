@@ -4,14 +4,16 @@ using IdentityServer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210706092201_ChangeStatusEnumType")]
+    partial class ChangeStatusEnumType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,10 +28,10 @@ namespace IdentityServer.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountTypeID")
+                    b.Property<int?>("AccountProfileID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AccountTypeProfileID")
+                    b.Property<int?>("AccountTypeID")
                         .HasColumnType("int");
 
                     b.Property<short>("Active")
@@ -62,9 +64,6 @@ namespace IdentityServer.Migrations
                     b.Property<bool?>("ProfitDailyControl")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("RegionID")
-                        .HasColumnType("int");
-
                     b.Property<string>("TaxNo")
                         .HasColumnType("nvarchar(max)");
 
@@ -84,11 +83,7 @@ namespace IdentityServer.Migrations
 
                     b.HasIndex("AccountTypeID");
 
-                    b.HasIndex("AccountTypeProfileID");
-
                     b.HasIndex("ActivityID");
-
-                    b.HasIndex("RegionID");
 
                     b.ToTable("Accounts");
                 });
@@ -234,6 +229,34 @@ namespace IdentityServer.Migrations
                     b.ToTable("AccountOwnerContacts");
                 });
 
+            modelBuilder.Entity("IdentityServer.Entities.AccountProfile", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountTypeID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProfileID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AccountTypeID");
+
+                    b.HasIndex("ProfileID");
+
+                    b.ToTable("AccountProfiles");
+                });
+
             modelBuilder.Entity("IdentityServer.Entities.AccountRequest", b =>
                 {
                     b.Property<int>("ID")
@@ -264,9 +287,6 @@ namespace IdentityServer.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
@@ -289,9 +309,6 @@ namespace IdentityServer.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
-                    b.Property<int?>("RegionID")
-                        .HasColumnType("int");
-
                     b.Property<string>("TaxNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
@@ -306,8 +323,6 @@ namespace IdentityServer.Migrations
 
                     b.HasIndex("Mobile")
                         .IsUnique();
-
-                    b.HasIndex("RegionID");
 
                     b.ToTable("AccountRequest");
                 });
@@ -342,34 +357,6 @@ namespace IdentityServer.Migrations
                     b.ToTable("AccountTypes");
                 });
 
-            modelBuilder.Entity("IdentityServer.Entities.AccountTypeProfile", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccountTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProfileID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("AccountTypeID");
-
-                    b.HasIndex("ProfileID");
-
-                    b.ToTable("AccountTypeProfiles");
-                });
-
             modelBuilder.Entity("IdentityServer.Entities.Activity", b =>
                 {
                     b.Property<int>("ID")
@@ -397,7 +384,7 @@ namespace IdentityServer.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 7, 6, 12, 18, 40, 81, DateTimeKind.Local).AddTicks(1487),
+                            CreationDate = new DateTime(2021, 7, 6, 11, 22, 0, 616, DateTimeKind.Local).AddTicks(8803),
                             Name = "SuperMarket",
                             NameAr = "سوبرماركت"
                         });
@@ -497,7 +484,7 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "41f0f0ef-cf9d-4b97-b662-699f04b12651",
+                            ConcurrencyStamp = "42dbf8b7-a9a4-4f08-a699-b5af0aa42f22",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
@@ -505,10 +492,10 @@ namespace IdentityServer.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELlYWotD4SRkCslwfDF/xFlMCJAi50RV01StuarPuvT4MkcJ0Tc2vJfjMrRFIvbztQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEO88LejUOMlqjQkK+Rlv5vCcJmtC4ERWO6L4bUB5+u6QaNQNgrAHSp0sZSoo2PSFwQ==",
                             PhoneNumber = "012111111111",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4db3939f-6ad8-49b7-b6e2-11b9083dcebc",
+                            SecurityStamp = "67b699a6-ec34-4061-98fe-4360bf60d540",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "admin"
@@ -517,7 +504,7 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3961",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a3e0f19e-9a39-4773-9896-455ac26c4fe0",
+                            ConcurrencyStamp = "dca9ee21-baa0-41c3-a7f1-7a83ff361b30",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "manager@manager.com",
                             EmailConfirmed = true,
@@ -525,10 +512,10 @@ namespace IdentityServer.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "MANAGER@MANAGER.COM",
                             NormalizedUserName = "MANAGER",
-                            PasswordHash = "AQAAAAEAACcQAAAAELcUTjALFMb62lR0/GqsyVNNWDIbpEq/RRnaGLpXwm+oJCOp48log2/b0YBEozYXxw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEN2y/XN6v+6UvHtYKfYT6LWX6P8e2utQvaTgNa4u53Ho5nsnzEsIor5+zvHq9/16xg==",
                             PhoneNumber = "012222222222",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "afd821ed-d7ed-4eda-9ee9-3e17aeddcbd8",
+                            SecurityStamp = "35345a9b-3a75-49fb-97b1-bbd034ad72ac",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "manager"
@@ -537,7 +524,7 @@ namespace IdentityServer.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f9ac523a-66c1-46b2-9959-3fbd2bb2f59b",
+                            ConcurrencyStamp = "77c82310-300b-4de9-b5f6-1936c77cf524",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "consumer@consumer.com",
                             EmailConfirmed = true,
@@ -545,10 +532,10 @@ namespace IdentityServer.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "CONSUMER@CONSUMER.COM",
                             NormalizedUserName = "CONSUMER",
-                            PasswordHash = "AQAAAAEAACcQAAAAECQlE0WS4f1PSOgM685u2+jCfm158RAobWHas8RgWldNAQwih1lp7K3e5ubAz9cvzg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAMYUM8XA92ZezoQlNy5E8V8livuR4eOQBXPKJoMAzf1iKhgKVkx9gbpnOBRyPWymw==",
                             PhoneNumber = "01201371236",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2e95c235-089e-48ae-92cc-324129051071",
+                            SecurityStamp = "a707ae96-f50e-4e5d-9870-8a72610f72e2",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "consumer"
@@ -763,28 +750,6 @@ namespace IdentityServer.Migrations
                     b.ToTable("ChannelTypes");
                 });
 
-            modelBuilder.Entity("IdentityServer.Entities.Governorate", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Governorates");
-                });
-
             modelBuilder.Entity("IdentityServer.Entities.OTP", b =>
                 {
                     b.Property<int>("ID")
@@ -862,32 +827,6 @@ namespace IdentityServer.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("IdentityServer.Entities.Region", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GovernorateID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("GovernorateID");
-
-                    b.ToTable("Regions");
-                });
-
             modelBuilder.Entity("IdentityServer.Entities.UserToken", b =>
                 {
                     b.Property<int>("ID")
@@ -940,7 +879,7 @@ namespace IdentityServer.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 7, 6, 12, 18, 40, 79, DateTimeKind.Local).AddTicks(2671),
+                            CreationDate = new DateTime(2021, 7, 6, 11, 22, 0, 614, DateTimeKind.Local).AddTicks(8095),
                             Name = "AccountUser"
                         });
                 });
@@ -1162,22 +1101,15 @@ namespace IdentityServer.Migrations
 
             modelBuilder.Entity("IdentityServer.Entities.Account", b =>
                 {
-                    b.HasOne("IdentityServer.Entities.AccountType", null)
+                    b.HasOne("IdentityServer.Entities.AccountType", "AccountType")
                         .WithMany("Accounts")
-                        .HasForeignKey("AccountTypeID");
-
-                    b.HasOne("IdentityServer.Entities.AccountTypeProfile", "AccountTypeProfile")
-                        .WithMany()
-                        .HasForeignKey("AccountTypeProfileID");
+                        .HasForeignKey("AccountTypeID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("IdentityServer.Entities.Activity", "Activity")
                         .WithMany("Accounts")
                         .HasForeignKey("ActivityID")
                         .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("IdentityServer.Entities.Region", "Region")
-                        .WithMany("Accounts")
-                        .HasForeignKey("RegionID");
                 });
 
             modelBuilder.Entity("IdentityServer.Entities.AccountChannel", b =>
@@ -1228,30 +1160,26 @@ namespace IdentityServer.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("IdentityServer.Entities.AccountRequest", b =>
-                {
-                    b.HasOne("IdentityServer.Entities.Activity", "Activity")
-                        .WithMany("AccountRequests")
-                        .HasForeignKey("ActivityID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("IdentityServer.Entities.Region", "Region")
-                        .WithMany("AccountRequests")
-                        .HasForeignKey("RegionID");
-                });
-
-            modelBuilder.Entity("IdentityServer.Entities.AccountTypeProfile", b =>
+            modelBuilder.Entity("IdentityServer.Entities.AccountProfile", b =>
                 {
                     b.HasOne("IdentityServer.Entities.AccountType", "AccountType")
-                        .WithMany("AccountTypeProfiles")
+                        .WithMany("AccountProfiles")
                         .HasForeignKey("AccountTypeID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("IdentityServer.Entities.Profile", "Profile")
-                        .WithMany("AccountTypeProfiles")
+                        .WithMany("AccountProfiles")
                         .HasForeignKey("ProfileID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("IdentityServer.Entities.AccountRequest", b =>
+                {
+                    b.HasOne("IdentityServer.Entities.Activity", "Activity")
+                        .WithMany("AccountRequests")
+                        .HasForeignKey("ActivityID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -1317,15 +1245,6 @@ namespace IdentityServer.Migrations
                     b.HasOne("IdentityServer.Entities.AccountChannel", "AccountChannel")
                         .WithMany("OTPs")
                         .HasForeignKey("AccountChannelID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("IdentityServer.Entities.Region", b =>
-                {
-                    b.HasOne("IdentityServer.Entities.Governorate", "Governorate")
-                        .WithMany("Regions")
-                        .HasForeignKey("GovernorateID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });

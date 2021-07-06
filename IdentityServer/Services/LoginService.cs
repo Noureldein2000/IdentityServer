@@ -58,7 +58,7 @@ namespace IdentityServer.Services
                     {
                         a.ExpirationPeriod,
                         a.HasLimitedAccess,
-                        a.Account.AccountTypeID,
+                        a.Account.AccountTypeProfile.AccountTypeID,
                         a.Account.Name,
                         a.Account.AccountOwner.Mobile
                     }).FirstOrDefault();
@@ -75,7 +75,7 @@ namespace IdentityServer.Services
            {
                act.ExpirationPeriod,
                act.HasLimitedAccess,
-               act.Account.AccountTypeID,
+               act.Account.AccountTypeProfile.AccountTypeID,
                act.Account.Name,
                act.ChannelType.Version
            }).FirstOrDefault();
@@ -96,7 +96,7 @@ namespace IdentityServer.Services
                 Version = accountChannelType.Version == 0 ? "" : accountChannelType.Version.ToString(),
                 ServiceListVersion = "7",
                 AccountName = account.Name,
-                AccountType = account.AccountTypeID.Value,
+                AccountType = account.AccountTypeID,
                 ExpirationPeriod = account.ExpirationPeriod,
                 Code = ErrorCodes.Success,
                 Message = Resources.Success
@@ -134,7 +134,7 @@ namespace IdentityServer.Services
                 {
                     a.ExpirationPeriod,
                     a.HasLimitedAccess,
-                    a.Account.AccountTypeID,
+                    a.Account.AccountTypeProfile.AccountTypeID,
                     a.Account.Name,
                     a.Account.AccountOwner.Mobile
                 }).FirstOrDefault();
@@ -156,7 +156,7 @@ namespace IdentityServer.Services
                 {
                     act.ExpirationPeriod,
                     act.HasLimitedAccess,
-                    act.Account.AccountTypeID,
+                    act.Account.AccountTypeProfile.AccountTypeID,
                     act.Account.Name,
                     act.ChannelType.Version
                 }).FirstOrDefault();
@@ -199,7 +199,7 @@ namespace IdentityServer.Services
                 Version = accountChannelType.Version == 0 ? "" : accountChannelType.Version.ToString(),
                 ServiceListVersion = "7",
                 AccountName = account.Name,
-                AccountType = account.AccountTypeID.Value,
+                AccountType = account.AccountTypeID,
                 ExpirationPeriod = account.ExpirationPeriod,
                 Code = ErrorCodes.Success,
                 Message = Resources.Success

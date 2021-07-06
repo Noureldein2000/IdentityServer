@@ -9,7 +9,7 @@ namespace IdentityServer.Infrastructure
     {
     }
 
-    public enum ActiveStatus
+    public enum ActiveStatus : short
     {
         True = 1,
         False = 0
@@ -25,14 +25,14 @@ namespace IdentityServer.Infrastructure
     {
         Company = 11
     }
-    public enum UserTypeStatus // to check if user related to account or employee
+    public enum UserTypeStatus : short // to check if user related to account or employee
     {
         AccountUser = 1,
         Employee = 2
         
     }
 
-    public enum AccountRequestStatus
+    public enum AccountRequestStatus : short
     {
         UnderProcessing=1,
         Approved = 2,

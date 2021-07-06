@@ -18,5 +18,7 @@ namespace IdentityServer.DTOs
         public string TaxNo { get; set; }
         public int ActivityID { get; set; }
         public string ActivityName { get; set; }
+        public DateTime CreationDate { get; set; }
+        public int CreatedBy { get; set; }
     }
 }

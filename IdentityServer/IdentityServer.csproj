@@ -30,6 +30,12 @@
     <Compile Remove="Migrations\20210629133405_ChangeUserConstrain.Designer.cs" />
     <Compile Remove="Migrations\20210704091324_AddActivityToAccountModel.cs" />
     <Compile Remove="Migrations\20210704091324_AddActivityToAccountModel.Designer.cs" />
+    <Compile Remove="Migrations\20210706090922_ChangeStatusEnumType.cs" />
+    <Compile Remove="Migrations\20210706090922_ChangeStatusEnumType.Designer.cs" />
+    <Compile Remove="Migrations\20210706091338_ChangeStatusEnumType.cs" />
+    <Compile Remove="Migrations\20210706091338_ChangeStatusEnumType.Designer.cs" />
+    <Compile Remove="Migrations\20210706101449_AddRegions.cs" />
+    <Compile Remove="Migrations\20210706101449_AddRegions.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

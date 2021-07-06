@@ -45,7 +45,7 @@ namespace IdentityServer.Controllers
             };
             return Ok(response);
         }
-        public int UserIdentity
+        public int UserIdentityId
         {
             get
             {

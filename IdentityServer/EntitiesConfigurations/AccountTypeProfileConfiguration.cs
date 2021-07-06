@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.EntitiesConfigurations
 {
-    public class AccountProfileConfiguration : IEntityTypeConfiguration<AccountProfile>
+    public class AccountTypeProfileConfiguration : IEntityTypeConfiguration<AccountTypeProfile>
     {
-        public void Configure(EntityTypeBuilder<AccountProfile> builder)
+        public void Configure(EntityTypeBuilder<AccountTypeProfile> builder)
         {
             builder.HasKey(ap => ap.ID);
 
-            builder.HasOne(ap => ap.Profile).WithMany(ap => ap.AccountProfiles)
+            builder.HasOne(ap => ap.Profile).WithMany(ap => ap.AccountTypeProfiles)
                 .HasForeignKey(ap => ap.ProfileID)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(ap => ap.AccountType).WithMany(ap => ap.AccountProfiles)
+            builder.HasOne(ap => ap.AccountType).WithMany(ap => ap.AccountTypeProfiles)
                 .HasForeignKey(ap => ap.AccountTypeID)
                 .OnDelete(DeleteBehavior.NoAction);
         }

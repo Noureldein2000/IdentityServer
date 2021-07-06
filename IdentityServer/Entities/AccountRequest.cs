@@ -19,5 +19,8 @@ namespace IdentityServer.Entities
         public int ActivityID { get; set; }
         public virtual Activity Activity { get; set; }
         public AccountRequestStatus AccountRequestStatus { get; set; }
+        public int? CreatedBy { get; set; }
+        public int? RegionID { get; set; }
+        public virtual Region Region { get; set; }
     }
 }

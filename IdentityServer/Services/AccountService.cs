@@ -96,7 +96,7 @@ namespace IdentityServer.Services
             return status;
         }
 
-        public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status = AccountRequestStatus.UnderProcessing)
+        public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pagenumber, int pageSize)
         {
             var accountRequestLst = _accountRequests.Getwhere(x => x.AccountRequestStatus == status).AsNoTracking()
                 .Select(ar => new AccountRequestDTO
@@ -111,9 +111,9 @@ namespace IdentityServer.Services
                     CommercialRegistrationNo = ar.CommercialRegistrationNo,
                     TaxNo = ar.TaxNo,
                     ActivityID = ar.ActivityID,
-                    ActivityName = ar.Activity.NameAr
-                }).ToList();
-
+                    ActivityName = ar.Activity.NameAr,
+                    CreationDate = ar.CreationDate
+                }).OrderBy(ar => ar.CreationDate).Skip(pagenumber - 1).Take(pageSize).ToList();
             return accountRequestLst;
         }
 

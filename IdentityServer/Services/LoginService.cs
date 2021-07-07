@@ -1,5 +1,5 @@
-﻿using IdentityServer.DTOs;
-using IdentityServer.Entities;
+﻿using IdentityServer.Data.Entities;
+using IdentityServer.DTOs;
 using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
 using IdentityServer.Properties;
@@ -14,7 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using static IdentityServer.Models.Constants;
+using static IdentityServer.Infrastructure.Constants;
 
 namespace IdentityServer.Services
 {

@@ -7,6 +7,7 @@ using IdentityServer.Repositories.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace IdentityServer.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
         private readonly ISMSService _smsService;
+        private readonly IStringLocalizer<LoginService> _localizer;
         public LoginService(IBaseRepository<UserToken, int> userTokens,
             UserManager<ApplicationUser> userManager,
             IBaseRepository<AccountChannelType, int> accountChannelTypes,
@@ -37,7 +39,8 @@ namespace IdentityServer.Services
             IBaseRepository<OTP, int> otps,
             IUnitOfWork unitOfWork,
             IConfiguration configuration,
-            ISMSService smsService)
+            ISMSService smsService,
+            IStringLocalizer<LoginService> localizer)
         {
             _userTokens = userTokens;
             _userManager = userManager;
@@ -48,6 +51,7 @@ namespace IdentityServer.Services
             _unitOfWork = unitOfWork;
             _smsService = smsService;
             _otps = otps;
+            _localizer = localizer;
         }
 
         public async Task<AuthorizationResponceDTO> ValidateUser(AccountChannelDTO model)
@@ -59,7 +63,7 @@ namespace IdentityServer.Services
             var tryChannelCategory = int.TryParse(model.ChannelCategory, out var channelCategory);
 
             if (!tryAccount || !tryChannelType || !tryChannelCategory)
-                throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
+                throw new OkException(_localizer[nameof(Resources.FailedTry)], ErrorCodes.FailedTry);
 
             var account = _accountChannelTypes.Getwhere(a => a.AccountID == accountId
                 && a.ChannelTypeID == channelType).Select(a => new

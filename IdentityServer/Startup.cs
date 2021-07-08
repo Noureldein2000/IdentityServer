@@ -6,11 +6,14 @@ using IdentityServer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using System.Globalization;
 
 namespace IdentityServer
 {
@@ -26,6 +29,7 @@ namespace IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddDbContext<ApplicationDbContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("Default")));
 
@@ -70,6 +74,17 @@ namespace IdentityServer
                 options.EnableEndpointRouting = false;
                 //options.Filters.Add(typeof(ValidateModelAttribute));
             });
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedLanguages = new[]
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("ar-EG")
+                };
+                options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+                options.SupportedCultures = supportedLanguages;
+                options.SupportedUICultures = supportedLanguages;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,6 +97,9 @@ namespace IdentityServer
 
             //app.UseHttpsRedirection();
             app.UseRouting();
+            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(locOptions.Value);
+
             app.UseIdentityServer();
             //app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseAuthorization();

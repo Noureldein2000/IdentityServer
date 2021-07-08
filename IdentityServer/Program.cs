@@ -1,7 +1,9 @@
+using IdentityServer.Data;
 using IdentityServer.Data.Entities;
 using IdentityServer.Data.Seeding;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,10 +24,16 @@ namespace IdentityServer
             var services = scope.ServiceProvider;
             try
             {
-                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                await DefaultRoles.SeedAsync(roleManager);
-                await DefaultUsers.SeedSuperAdminAsync(userManager, roleManager);
+                var environment = services.GetRequiredService<IWebHostEnvironment>();
+                if (environment.IsDevelopment())
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    context.Database.Migrate();
+                }
+                //    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                //    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                //    await DefaultRoles.SeedAsync(roleManager);
+                //    await DefaultUsers.SeedSuperAdminAsync(userManager, roleManager);
             }
             catch (Exception)
             {

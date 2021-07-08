@@ -1,4 +1,4 @@
-﻿using IdentityServer.Entities;
+﻿using IdentityServer.Data.Entities;
 using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
 using IdentityServer.Models;

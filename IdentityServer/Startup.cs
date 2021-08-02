@@ -29,7 +29,7 @@ namespace IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddDbContext<ApplicationDbContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("Default")));
 
@@ -73,15 +73,15 @@ namespace IdentityServer
             {
                 options.EnableEndpointRouting = false;
                 //options.Filters.Add(typeof(ValidateModelAttribute));
-            });
+            }).AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix);
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedLanguages = new[]
                 {
-                    new CultureInfo("en-US"),
-                    new CultureInfo("ar-EG")
+                    new CultureInfo("en"),
+                    new CultureInfo("ar")
                 };
-                options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+                options.DefaultRequestCulture = new RequestCulture(culture: "en", uiCulture: "en");
                 options.SupportedCultures = supportedLanguages;
                 options.SupportedUICultures = supportedLanguages;
             });

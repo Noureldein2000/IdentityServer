@@ -30,13 +30,15 @@ namespace IdentityServer.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly ILoginService _loginService;
-        
+        private readonly IStringLocalizer<AuthenticationResource> _localizer;
         public AuthenticationController(UserManager<ApplicationUser> userManager,
-            IConfiguration configuration, ILoginService loginService)
+            IConfiguration configuration, ILoginService loginService,
+            IStringLocalizer<AuthenticationResource> localizer)
         {
             _userManager = userManager;
             _configuration = configuration;
             _loginService = loginService;
+            _localizer = localizer;
         }
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginModel model)

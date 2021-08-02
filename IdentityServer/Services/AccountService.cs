@@ -6,6 +6,7 @@ using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,20 +19,23 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<AccountRequest, int> _accountRequests;
         private readonly IBaseRepository<Account, int> _account;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IStringLocalizer<AuthenticationResource> _localizer;
         public AccountService(IBaseRepository<AccountRequest, int> accountRequests,
             IBaseRepository<Account, int> account,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IStringLocalizer<AuthenticationResource> localizer)
         {
             _accountRequests = accountRequests;
             _account = account;
             _unitOfWork = unitOfWork;
+            _localizer = localizer;
         }
 
         public AccountRequestDTO AddAccountRequest(AccountRequestDTO accountRequestDto)
         {
             var checkExist = _accountRequests.Any(c => c.Mobile == accountRequestDto.Mobile && c.AccountRequestStatus != AccountRequestStatus.Rejected);
             if(checkExist)
-                throw new OkException(Resources.Thismobilenumberalreadyexists, ErrorCodes.ChangePassword.MobileNumberExists);
+                throw new OkException(_localizer["Thismobilenumberalreadyexists"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
 
             var entityRequest = _accountRequests.Add(new AccountRequest
             {
@@ -57,7 +61,7 @@ namespace IdentityServer.Services
             switch (status)
             {
                 case AccountRequestStatus.UnderProcessing:
-                    throw new AuthorizationException(Resources.UnavailableStatus, ErrorCodes.Admin.UnavailableStatus);
+                    throw new AuthorizationException(_localizer["UnavailableStatus"].Value, ErrorCodes.Admin.UnavailableStatus);
 
                 case AccountRequestStatus.Approved:
                     currentAccountRequest.AccountRequestStatus = AccountRequestStatus.Approved;
@@ -83,7 +87,7 @@ namespace IdentityServer.Services
                     currentAccountRequest.AccountRequestStatus = AccountRequestStatus.Rejected;
                     break;
                 default:
-                    throw new AuthorizationException(Resources.UnavailableStatus, ErrorCodes.Admin.UnavailableStatus);
+                    throw new AuthorizationException(_localizer["UnavailableStatus"].Value, ErrorCodes.Admin.UnavailableStatus);
             }
 
             _unitOfWork.SaveChanges();

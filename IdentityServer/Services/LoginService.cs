@@ -2,10 +2,8 @@
 using IdentityServer.DTOs;
 using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
-using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
@@ -30,7 +28,7 @@ namespace IdentityServer.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
         private readonly ISMSService _smsService;
-        private readonly IStringLocalizer<LoginService> _localizer;
+        private readonly IStringLocalizer<AuthenticationResource> _localizer;
         public LoginService(IBaseRepository<UserToken, int> userTokens,
             UserManager<ApplicationUser> userManager,
             IBaseRepository<AccountChannelType, int> accountChannelTypes,
@@ -40,7 +38,7 @@ namespace IdentityServer.Services
             IUnitOfWork unitOfWork,
             IConfiguration configuration,
             ISMSService smsService,
-            IStringLocalizer<LoginService> localizer)
+            IStringLocalizer<AuthenticationResource> localizer)
         {
             _userTokens = userTokens;
             _userManager = userManager;
@@ -62,8 +60,11 @@ namespace IdentityServer.Services
             var tryChannelType = int.TryParse(model.ChannelType, out var channelType);
             var tryChannelCategory = int.TryParse(model.ChannelCategory, out var channelCategory);
 
-            if (!tryAccount || !tryChannelType || !tryChannelCategory)
-                throw new OkException(_localizer[nameof(Resources.FailedTry)], ErrorCodes.FailedTry);
+            if (!tryAccount || !tryChannelType || tryChannelCategory)
+            {
+                throw new OkException(_localizer["FailedTry"].Value, ErrorCodes.FailedTry);
+            }
+                
 
             var account = _accountChannelTypes.Getwhere(a => a.AccountID == accountId
                 && a.ChannelTypeID == channelType).Select(a => new
@@ -75,7 +76,7 @@ namespace IdentityServer.Services
                     a.Account.AccountOwner.Mobile
                 }).FirstOrDefault();
             if (account == null)
-                throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+                throw new AuthorizationException(_localizer["NoAuth"].Value, ErrorCodes.Autorization.NoAuth);
 
             if (account.AccountTypeID == (int)AccountTypeStatus.Company && channelCategory == (int)ChannelCategoryStatus.API)
             {
@@ -102,7 +103,7 @@ namespace IdentityServer.Services
             if (accountChannelType != null)
             {
                 if (user.MustChangePassword)
-                    throw new OkException(Resources.MustChangePassword, ErrorCodes.ChangePassword.MustChangePassword);
+                    throw new OkException(_localizer["MustChangePassword"].Value, ErrorCodes.ChangePassword.MustChangePassword);
             }
             else if (accountChannelType == null && !account.HasLimitedAccess)
             {
@@ -115,11 +116,11 @@ namespace IdentityServer.Services
                 {
                     var channelAccountId = CreateAccountChannel(accountId, model.ChannelId, user.UserId);
                     otpId = SendOTP(user.UserId, channelAccountId, model.LocalIP, model.AccountIP, account.Mobile);
-                    throw new OkException(Resources.MustInputOTP, ErrorCodes.Autorization.MustInputOTP);
+                    throw new OkException(_localizer["MustInputOTP"], ErrorCodes.Autorization.MustInputOTP);
                 }
                 else
                 {
-                    throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+                    throw new AuthorizationException(_localizer["NoAuth"].Value, ErrorCodes.Autorization.NoAuth);
                 }
             }
 
@@ -138,7 +139,7 @@ namespace IdentityServer.Services
                 AccountType = account.AccountTypeID,
                 ExpirationPeriod = account.ExpirationPeriod,
                 Code = ErrorCodes.Success,
-                Message = Resources.Success
+                Message = _localizer["Success"].Value
             };
 
 
@@ -156,7 +157,7 @@ namespace IdentityServer.Services
                         a.Account.AccountOwner.Mobile
                     }).FirstOrDefault();
             if (account == null)
-                throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+                throw new AuthorizationException(_localizer["NoAuth"].Value, ErrorCodes.Autorization.NoAuth);
 
             var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
                    && a.ChannelTypeID == model.ChannelType
@@ -174,7 +175,7 @@ namespace IdentityServer.Services
            }).FirstOrDefault();
             IdentityResult result = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
             if (!result.Succeeded)
-                throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
+                throw new OkException(_localizer["FailedTry"].Value, ErrorCodes.FailedTry);
 
             user.MustChangePassword = false;
             _unitOfWork.SaveChanges();
@@ -192,7 +193,7 @@ namespace IdentityServer.Services
                 AccountType = account.AccountTypeID,
                 ExpirationPeriod = account.ExpirationPeriod,
                 Code = ErrorCodes.Success,
-                Message = Resources.Success
+                Message = _localizer["Success"].Value
             };
 
             //throw new AuthorizationException(Resources.InvalidPasswordFormat, ErrorCodes.ChangePassword.InvalidPassword);
@@ -203,10 +204,10 @@ namespace IdentityServer.Services
             var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
 
             if(user.MustChangePassword)
-                throw new OkException(Resources.MustChangePassword, ErrorCodes.ChangePassword.MustChangePassword);
+                throw new OkException(_localizer["MustChangePassword"].Value, ErrorCodes.ChangePassword.MustChangePassword);
 
             if (!int.TryParse(model.Id, out var otpId) || !int.TryParse(model.AccountId, out var accountId))
-                throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
+                throw new OkException(_localizer["FailedTry"].Value, ErrorCodes.FailedTry);
 
             var otp = _otps.Getwhere(o => o.ID == otpId
             && o.OTPCode == model.OTP && o.StatusID == 1
@@ -214,10 +215,10 @@ namespace IdentityServer.Services
             && o.AccountChannel.Channel.ChannelIdentifiers.Any(ci => ci.Value == model.ChannelId))
                 .FirstOrDefault();
             if(otp == null)
-                throw new OkException(Resources.Thetimehasexceedetthelimit, ErrorCodes.OTP.TheTimeExceededLimit);
+                throw new OkException(_localizer["Thetimehasexceedetthelimit"].Value, ErrorCodes.OTP.TheTimeExceededLimit);
 
-            if(otp.CreationDate.Subtract(DateTime.Now).Seconds > 60)
-                throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
+            if (otp.CreationDate.Subtract(DateTime.Now).Seconds > 60)
+                throw new OkException(_localizer["FailedTry"].Value, ErrorCodes.FailedTry);
 
             var channelIdentifier = _channelIdentifires.Getwhere(ch => ch.Value == model.ChannelId).FirstOrDefault();
             channelIdentifier.Status = ActiveStatus.True;
@@ -241,7 +242,7 @@ namespace IdentityServer.Services
             {
                 AccountId = accountId,
                 Code = ErrorCodes.Success,
-                Message = Resources.Success,
+                Message = _localizer["Success"].Value,
                 Token = tokenData.Token,
                 Privilages = tokenData.Privilages,
             };
@@ -249,7 +250,7 @@ namespace IdentityServer.Services
         public async Task<AuthorizationResponceDTO> ResendOTP(ConfirmOTPDTO model)
         {
             if (!int.TryParse(model.Id, out var otpId) || !int.TryParse(model.AccountId, out var accountId))
-                throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
+                throw new OkException(_localizer["FailedTry"].Value, ErrorCodes.FailedTry);
 
             var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId);
 
@@ -257,7 +258,7 @@ namespace IdentityServer.Services
                 .FirstOrDefault();
 
             if(otp != null)
-                throw new OkException(Resources.Trialshaveexceededthelimit, ErrorCodes.OTP.Trialshaveexceededthelimit);
+                throw new OkException(_localizer["Trialshaveexceededthelimit"].Value, ErrorCodes.OTP.Trialshaveexceededthelimit);
 
             var accountChannel = _accountChannels.Getwhere(ac =>
                 ac.Channel.ChannelIdentifiers.Any(ci => ci.Value == model.ChannelId))
@@ -275,7 +276,7 @@ namespace IdentityServer.Services
                 Id = otpId,
                 AccountId = accountId,
                 Code = ErrorCodes.Success,
-                Message = Resources.Success,
+                Message = _localizer["Success"].Value,
                 Token = tokenData.Token,
                 Privilages = tokenData.Privilages,
             };
@@ -291,10 +292,10 @@ namespace IdentityServer.Services
             if (user != null && result == PasswordVerificationResult.Success)
             {
                 if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
-                    throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+                    throw new AuthorizationException(_localizer["NoAuth"].Value, ErrorCodes.Autorization.NoAuth);
                 return user;
             }
-            throw new AuthorizationException(Resources.NoAuth, ErrorCodes.Autorization.NoAuth);
+            throw new AuthorizationException(_localizer["NoAuth"].Value, ErrorCodes.Autorization.NoAuth);
         }
         private async Task<UserTokenRoleDTO> GetUserToken(ApplicationUser user, string accountId, string channelId, int expiry)
         {

@@ -17,20 +17,55 @@ namespace IdentityServer.Services
     {
         private readonly IBaseRepository<AccountRequest, int> _accountRequests;
         private readonly IBaseRepository<Account, int> _account;
+        private readonly IBaseRepository<AccountOwner, int> _accountOwner;
         private readonly IUnitOfWork _unitOfWork;
         public AccountService(IBaseRepository<AccountRequest, int> accountRequests,
             IBaseRepository<Account, int> account,
+             IBaseRepository<AccountOwner, int> accountOwner,
             IUnitOfWork unitOfWork)
         {
             _accountRequests = accountRequests;
             _account = account;
+            _accountOwner = accountOwner;
             _unitOfWork = unitOfWork;
+        }
+
+        public AccountDTO AddAccount(AccountDTO addAccountDTO)
+        {
+
+            var checkExist = _accountOwner.Any(c => c.Mobile == addAccountDTO.Mobile || c.NationalID == addAccountDTO.NationalID);
+            if (checkExist)
+                throw new OkException(Resources.ThisMobileNumberOrNationalIdAlreadyExists, ErrorCodes.ChangePassword.MobileNumberExists);
+
+            var account = _account.Add(new Account
+            {
+                Address = addAccountDTO.TaxNo,
+                TaxNo = addAccountDTO.TaxNo,
+                ActivityID = addAccountDTO.ActivityID,
+                CommercialRegistrationNo = addAccountDTO.CommercialRegistrationNo,
+                Name = addAccountDTO.AccountName,
+                CreatedBy = addAccountDTO.CreatedBy,
+                AccountTypeProfileID = addAccountDTO.AccountTypeProfileID,
+                RegionID = addAccountDTO.RegionID,
+                EntityID = addAccountDTO.EntityID,
+                AccountOwner = new AccountOwner
+                {
+                    Name = addAccountDTO.OwnerName,
+                    Address = addAccountDTO.Address,
+                    Email = addAccountDTO.Email,
+                    Mobile = addAccountDTO.Mobile,
+                    NationalID = addAccountDTO.NationalID
+                }
+            });
+
+            _unitOfWork.SaveChanges();
+            return MapEntityToDto(account);
         }
 
         public AccountRequestDTO AddAccountRequest(AccountRequestDTO accountRequestDto)
         {
             var checkExist = _accountRequests.Any(c => c.Mobile == accountRequestDto.Mobile && c.AccountRequestStatus != AccountRequestStatus.Rejected);
-            if(checkExist)
+            if (checkExist)
                 throw new OkException(Resources.Thismobilenumberalreadyexists, ErrorCodes.ChangePassword.MobileNumberExists);
 
             var entityRequest = _accountRequests.Add(new AccountRequest
@@ -146,6 +181,21 @@ namespace IdentityServer.Services
             CommercialRegistrationNo = entityRequest.CommercialRegistrationNo,
             TaxNo = entityRequest.TaxNo,
             ActivityID = entityRequest.ActivityID,
+        };
+
+        private AccountDTO MapEntityToDto(Account entityRequest) => new AccountDTO
+        {
+            Id = entityRequest.ID,
+            Address = entityRequest.Address,
+            CommercialRegistrationNo = entityRequest.CommercialRegistrationNo,
+            TaxNo = entityRequest.TaxNo,
+            OwnerName = entityRequest.AccountOwner.Name,
+            AccountName = entityRequest.Name,
+            Mobile = entityRequest.AccountOwner.Mobile,
+            NationalID = entityRequest.AccountOwner.NationalID,
+            Email = entityRequest.AccountOwner.Email,
+            ActivityID = (int)entityRequest.ActivityID
+            //ActivityName=entityRequest.Activity.Name
         };
         #endregion
     }

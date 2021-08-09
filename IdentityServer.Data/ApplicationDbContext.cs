@@ -34,6 +34,8 @@ namespace IdentityServer.Data
         public virtual DbSet<UserType> UserTypes { get; set; }
         public virtual DbSet<Governorate> Governorates { get; set; }
         public virtual DbSet<Region> Regions { get; set; }
+        public virtual DbSet<Entity> Entities { get; set; }
+        public virtual DbSet<DemonationEntity> DemonationEntities { get; set; }
 
 
         public override int SaveChanges()

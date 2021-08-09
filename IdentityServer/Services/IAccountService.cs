@@ -11,6 +11,7 @@ namespace IdentityServer.Services
     public interface IAccountService
     {
         AccountRequestDTO AddAccountRequest(AccountRequestDTO addDTO);
+        AccountDTO AddAccount(AccountDTO addDTO);
         IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pagenumber, int pageSize);
         AccountRequestDTO GetAccountRequestsById(int id);
         AccountRequestStatus ChangeAccountRequestStatus( int id, AccountRequestStatus status, int createdBy);

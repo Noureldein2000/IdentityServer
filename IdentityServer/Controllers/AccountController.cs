@@ -63,6 +63,51 @@ namespace IdentityServer.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpPost]
+        [Route("AddAccount")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
+        [AllowAnonymous]
+        public IActionResult AddAccount([FromBody] AddAccountModel addAccountModel)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("102", string.Join(", ", ModelState.Values));
+
+                var result = _accountService.AddAccount(new AccountDTO
+                {
+                    OwnerName = addAccountModel.OwnerName,
+                    AccountName = addAccountModel.AccountName,
+                    Mobile = addAccountModel.Mobile,
+                    Address = addAccountModel.Address,
+                    Email = addAccountModel.Email,
+                    NationalID = addAccountModel.NationalID,
+                    CommercialRegistrationNo = addAccountModel.CommercialRegistrationNo,
+                    TaxNo = addAccountModel.TaxNo,
+                    ActivityID = addAccountModel.ActivityID,
+                    CreatedBy = UserIdentityId,
+                    AccountTypeProfileID=addAccountModel.AccountTypeProfileID,
+                    RegionID=addAccountModel.RegionID,
+                    EntityID=addAccountModel.EntityID
+                });
+
+                return Ok(Map(result));
+            }
+            catch (AuthorizationException ex)
+            {
+                return Unauthorized(ex.ErrorCode, ex.Message);
+            }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet]
         [Route("GetAccountRequestById/{id}")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
@@ -120,6 +165,24 @@ namespace IdentityServer.Controllers
         private AccountRequestModel Map(AccountRequestDTO model)
         {
             return new AccountRequestModel
+            {
+                Id = model.Id,
+                OwnerName = model.OwnerName,
+                AccountName = model.AccountName,
+                Mobile = model.Mobile,
+                Address = model.Address,
+                Email = model.Email,
+                NationalID = model.NationalID,
+                CommercialRegistrationNo = model.CommercialRegistrationNo,
+                TaxNo = model.TaxNo,
+                ActivityID = model.ActivityID,
+                ActivityName = model.ActivityName
+            };
+        }
+
+        private AccountModel Map(AccountDTO model)
+        {
+            return new AccountModel
             {
                 Id = model.Id,
                 OwnerName = model.OwnerName,

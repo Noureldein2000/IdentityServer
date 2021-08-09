@@ -4,14 +4,16 @@ using IdentityServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210809111041_CreateEntityTable")]
+    partial class CreateEntityTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -397,7 +399,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 9, 13, 35, 50, 678, DateTimeKind.Local).AddTicks(9072),
+                            CreationDate = new DateTime(2021, 8, 9, 13, 10, 40, 291, DateTimeKind.Local).AddTicks(257),
                             Name = "SuperMarket",
                             NameAr = "سوبرماركت"
                         });
@@ -497,7 +499,7 @@ namespace IdentityServer.Data.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eaaeb5c1-8ef5-4f52-9154-4fcca85253c2",
+                            ConcurrencyStamp = "423619d7-beed-4929-8f39-013858d5123c",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
@@ -505,10 +507,10 @@ namespace IdentityServer.Data.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELrRA/XSA4r+T6WBL7hxXgln7pkHMedXsyRSV60ywCNvY2csEp8qqynrmesNFue+Jg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGqTF+tPjToIhvUsawfSZZoobrweTRJgRfP5tSWuJ+1KMaJBHN5UgMqTm2B4asMX5Q==",
                             PhoneNumber = "012111111111",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0809f281-7d52-4fdd-8f66-bce59a38cf54",
+                            SecurityStamp = "7a2292fd-6b77-46da-b4fe-6ba94a186784",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "admin"
@@ -517,7 +519,7 @@ namespace IdentityServer.Data.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3961",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b4f366d1-6822-4844-b848-871ebd549aa3",
+                            ConcurrencyStamp = "e4cfb5c5-5638-4743-afc1-fc2269e28687",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "manager@manager.com",
                             EmailConfirmed = true,
@@ -525,10 +527,10 @@ namespace IdentityServer.Data.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "MANAGER@MANAGER.COM",
                             NormalizedUserName = "MANAGER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEG7PIAV2FosSMnrQa5NMhugdhwM1L91AzIJc8TvjsHVV80KY+Fv7D/VuLC/5rFpO9Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEG1eRnVMN+lojbxNijLNO4kYsIdeygvInKy2rX6qyHucrt+dXe1I8mwoI3TLSnjNSg==",
                             PhoneNumber = "012222222222",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "987ef20f-9d53-4c0a-be30-549ac33b7983",
+                            SecurityStamp = "14a9e229-fe6b-43d8-9369-e7c981a94d22",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "manager"
@@ -537,7 +539,7 @@ namespace IdentityServer.Data.Migrations
                         {
                             Id = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "673322ca-3ac6-4e1b-8ee1-7a53e0a98df0",
+                            ConcurrencyStamp = "b3a176a3-b4e5-44fe-a5a5-dc44ac1cd760",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "consumer@consumer.com",
                             EmailConfirmed = true,
@@ -545,10 +547,10 @@ namespace IdentityServer.Data.Migrations
                             MustChangePassword = false,
                             NormalizedEmail = "CONSUMER@CONSUMER.COM",
                             NormalizedUserName = "CONSUMER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBipe4oBqPUNi0NxCM/ZqkXFYIf6VdIdDbRbPMxDI4GuRjG1V/Vl3XLEQ5zGorjYAA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGBlbfiwYWYZ1cpnVRWY5y2V2bTH2mfW6ebhn6nlS9UHghmqyMTrp9v7Cg9Mm3+RFQ==",
                             PhoneNumber = "01201371236",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4f9c319e-521d-4fc0-917a-bb8b8d361712",
+                            SecurityStamp = "ae3ab22b-7192-4ebb-9559-5e1c4197c3ae",
                             TwoFactorEnabled = false,
                             UserId = 0,
                             UserName = "consumer"
@@ -800,24 +802,12 @@ namespace IdentityServer.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NameAr")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
 
                     b.ToTable("Entities");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            CreationDate = new DateTime(2021, 8, 9, 13, 35, 50, 679, DateTimeKind.Local).AddTicks(495),
-                            Name = "Momkn",
-                            NameAr = "ممكن"
-                        });
                 });
 
             modelBuilder.Entity("IdentityServer.Data.Entities.Governorate", b =>
@@ -997,7 +987,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 9, 13, 35, 50, 676, DateTimeKind.Local).AddTicks(3612),
+                            CreationDate = new DateTime(2021, 8, 9, 13, 10, 40, 288, DateTimeKind.Local).AddTicks(2938),
                             Name = "AccountUser"
                         });
                 });

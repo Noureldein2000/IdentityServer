@@ -28,6 +28,15 @@ namespace IdentityServer.Data
                     CreationDate = DateTime.Now
                 });
 
+            builder.Entity<Entity>().HasData(
+               new Entity
+               {
+                   ID = 1,
+                   Name = "Momkn",
+                   NameAr = "ممكن",
+                   CreationDate = DateTime.Now
+               });
+
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {

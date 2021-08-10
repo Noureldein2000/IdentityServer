@@ -44,6 +44,8 @@ namespace IdentityServer.Services
                 ActivityID = addAccountDTO.ActivityID,
                 CommercialRegistrationNo = addAccountDTO.CommercialRegistrationNo,
                 Name = addAccountDTO.AccountName,
+                Longitude = addAccountDTO.Longitude,
+                Latitude = addAccountDTO.Latitude,
                 CreatedBy = addAccountDTO.CreatedBy,
                 AccountTypeProfileID = addAccountDTO.AccountTypeProfileID,
                 RegionID = addAccountDTO.RegionID,
@@ -125,6 +127,52 @@ namespace IdentityServer.Services
             return status;
         }
 
+        public bool ChangeAccountStatus(int id, int updatedBy)
+        {
+            var currentAccount = _account.GetById(id);
+
+            currentAccount.Active = !currentAccount.Active;
+            currentAccount.UpdateBy = updatedBy;
+
+            _unitOfWork.SaveChanges();
+            return currentAccount.Active;
+        }
+
+        public AccountDTO EditAccount(AccountDTO editAccountDTO)
+        {
+            var checkAccountExist = _account.Any(c => c.ID == editAccountDTO.Id);
+            if (!checkAccountExist)
+                throw new OkException(Resources.ThisAccountIsNotExists, ErrorCodes.ChangePassword.MobileNumberExists);
+
+            var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).FirstOrDefault();
+
+            account.Address = editAccountDTO.Address;
+            account.TaxNo = editAccountDTO.TaxNo;
+            account.ActivityID = editAccountDTO.ActivityID;
+            account.CommercialRegistrationNo = editAccountDTO.CommercialRegistrationNo;
+            account.Name = editAccountDTO.AccountName;
+            account.Longitude = editAccountDTO.Longitude;
+            account.Latitude = editAccountDTO.Latitude;
+            account.UpdateBy = editAccountDTO.UpdatedBy;
+            account.AccountTypeProfileID = editAccountDTO.AccountTypeProfileID;
+            account.RegionID = editAccountDTO.RegionID;
+            account.EntityID = editAccountDTO.EntityID;
+
+            account.AccountOwner.Name = editAccountDTO.OwnerName;
+            account.AccountOwner.Address = editAccountDTO.Address;
+            account.AccountOwner.Email = editAccountDTO.Email;
+            account.AccountOwner.Mobile = editAccountDTO.Mobile;
+            account.AccountOwner.NationalID = editAccountDTO.NationalID;
+
+            _unitOfWork.SaveChanges();
+            return MapEntityToDto(account);
+        }
+
+        public AccountDTO GetAccountById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pageNumber, int pageSize)
         {
             var accountRequestLst = _accountRequests.Getwhere(x => x.AccountRequestStatus == status).AsNoTracking()
@@ -163,6 +211,11 @@ namespace IdentityServer.Services
                     ActivityID = ar.ActivityID,
                     ActivityName = ar.Activity.NameAr
                 }).FirstOrDefault();
+        }
+
+        public IEnumerable<AccountDTO> GetAccounts(int pagenumber, int pageSize)
+        {
+            throw new NotImplementedException();
         }
 
 

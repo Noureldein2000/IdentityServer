@@ -12,6 +12,8 @@ namespace IdentityServer.DTOs
         public string AccountName { get; set; }
         public string Mobile { get; set; }
         public string Address { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
         public string Email { get; set; }
         public string NationalID { get; set; }
         public string CommercialRegistrationNo { get; set; }
@@ -20,6 +22,7 @@ namespace IdentityServer.DTOs
         public string ActivityName { get; set; }
         public DateTime CreationDate { get; set; }
         public int CreatedBy { get; set; }
+        public int UpdatedBy { get; set; }
         public int? AccountTypeProfileID { get; set; }
         public int? RegionID { get; set; }
         public int? EntityID { get; set; }

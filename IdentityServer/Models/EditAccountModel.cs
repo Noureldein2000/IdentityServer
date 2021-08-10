@@ -6,28 +6,21 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Models
 {
-    public class AddAccountModel
+    public class EditAccountModel
     {
         [Required]
+        public int Id { get; set; }
         public string OwnerName { get; set; }
-        [Required]
         public string AccountName { get; set; }
-        [Required]
         public string Mobile { get; set; }
-        [Required]
         public string Address { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public string Email { get; set; }
-        [Required]
         public string NationalID { get; set; }
-        [Required]
         public string CommercialRegistrationNo { get; set; }
-        [Required]
         public string TaxNo { get; set; }
-        [Required]
         public int ActivityID { get; set; }
-        [Required]
         public int? AccountTypeProfileID { get; set; }
         public int? RegionID { get; set; }
         public int? EntityID { get; set; }

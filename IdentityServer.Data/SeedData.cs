@@ -23,10 +23,17 @@ namespace IdentityServer.Data
                 new Activity
                 {
                     ID = 1,
-                    Name = "SuperMarket",
-                    NameAr = "سوبرماركت",
+                    Name = "General",
+                    NameAr = "عام",
                     CreationDate = DateTime.Now
-                });
+                },
+                 new Activity
+                 {
+                     ID = 2,
+                     Name = "SuperMarket",
+                     NameAr = "سوبرماركت",
+                     CreationDate = DateTime.Now
+                 });
 
             builder.Entity<Entity>().HasData(
                new Entity

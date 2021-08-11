@@ -170,7 +170,26 @@ namespace IdentityServer.Services
 
         public AccountDTO GetAccountById(int id)
         {
-            throw new NotImplementedException();
+            return _account.Getwhere(x => x.ID == id).Include(a => a.AccountOwner).AsNoTracking()
+               .Select(ar => new AccountDTO
+               {
+                   Id = ar.ID,
+                   OwnerName = ar.AccountOwner.Name,
+                   AccountName = ar.Name,
+                   Mobile = ar.AccountOwner.Mobile,
+                   Address = ar.AccountOwner.Address,
+                   Email = ar.AccountOwner.Email,
+                   NationalID = ar.AccountOwner.NationalID,
+                   CommercialRegistrationNo = ar.CommercialRegistrationNo,
+                   TaxNo = ar.TaxNo,
+                   Longitude = ar.Longitude,
+                   Latitude = ar.Latitude,
+                   ActivityID = (int)ar.ActivityID,
+                   ActivityName = ar.Activity.NameAr,
+                   RegionID = ar.RegionID,
+                   AccountTypeProfileID = ar.AccountTypeProfileID,
+                   EntityID = ar.EntityID
+               }).FirstOrDefault();
         }
 
         public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pageNumber, int pageSize)

@@ -7,8 +7,8 @@ namespace IdentityServer.DTOs
 {
     public class AccountChannelDTO
     {
-        public string AccountId { get; set; }
-        public string ChannelId { get; set; } //emi or ip
+        public string? AccountId { get; set; }
+        public string? ChannelId { get; set; } //emi or ip
         //public int ChannelTypeId { get; set; }
         public string ChannelCategory{ get; set; }
         public DateTime LocalDate { get; set; }

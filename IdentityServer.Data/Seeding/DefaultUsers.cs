@@ -12,7 +12,7 @@ namespace IdentityServer.Data.Seeding
 {
     public static class DefaultUsers
     {
-        public static async Task SeedSuperAdminAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedSuperAdminUsersAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             var adminUser = new ApplicationUser
             {
@@ -20,19 +20,19 @@ namespace IdentityServer.Data.Seeding
                 Email = "admin@momkn.org",
                 EmailConfirmed = true,
                 PhoneNumber = "012111111111",
-                UserName = "superadmin",
+                UserName = "momknAdmin",
                 NormalizedEmail = "admin@momkn.org".ToUpper(),
                 NormalizedUserName = "superadmin".ToUpper(),
                 LockoutEnabled = true
             };
-            var user = userManager.FindByEmailAsync(adminUser.Email);
+            var user = await userManager.FindByNameAsync(adminUser.UserName);
             if (user == null)
             {
-                await userManager.CreateAsync(adminUser, "P@$$w0rd");
+                await userManager.CreateAsync(adminUser);
+                var hashedPassword = userManager.PasswordHasher.HashPassword(adminUser, "P@$$w0rd123");
+                adminUser.PasswordHash = hashedPassword;
                 await userManager.AddToRolesAsync(adminUser, new List<string> {
-                    Roles.SuperAdmin.ToString(),
-                    Roles.Admin.ToString(),
-                    Roles.Manager.ToString()
+                    Roles.SuperAdmin.ToString()
                 });
             }
             await roleManager.SeedClaimsForSuperAdmin();
@@ -40,13 +40,13 @@ namespace IdentityServer.Data.Seeding
         public static async Task SeedClaimsForSuperAdmin(this RoleManager<IdentityRole> roleManager)
         {
             var adminRole = await roleManager.FindByNameAsync(Roles.SuperAdmin.ToString());
-            await roleManager.AddPermissionsClaims(adminRole, "DoTransaction"); // Permission.DoTransaction.View
+            await roleManager.AddPermissionsClaims(adminRole, Modules.Account.ToString()); // Permission.Account.View
         }
 
         public static async Task AddPermissionsClaims(this RoleManager<IdentityRole> roleManager, IdentityRole role, string module)
         {
             var claims = await roleManager.GetClaimsAsync(role);
-            var newClaims = Permissions.GetPermisions(module);
+            var newClaims = Permissions.GeneratePermissionsList(module);
             foreach (var claim in newClaims)
             {
                 if (!claims.Any(c => c.Type == "Permission" && c.Value == claim))

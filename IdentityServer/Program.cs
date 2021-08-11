@@ -29,17 +29,19 @@ namespace IdentityServer
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     context.Database.Migrate();
+                    
                 }
-                //    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-                //    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                //    await DefaultRoles.SeedAsync(roleManager);
-                //    await DefaultUsers.SeedSuperAdminAsync(userManager, roleManager);
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                await DefaultRoles.SeedRolesAsync(roleManager);
+                //await DefaultUsers.SeedConsumerUsersAsync(userManager);
+                await DefaultUsers.SeedSuperAdminUsersAsync(userManager, roleManager);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
             }
+
             host.Run();
         }
 

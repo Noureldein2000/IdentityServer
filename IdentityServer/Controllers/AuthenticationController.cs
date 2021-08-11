@@ -55,7 +55,7 @@ namespace IdentityServer.Controllers
                 var responce = new AuthorizationResponceModel
                 {
                     Token = authResponce.Token,
-                    Privilages = authResponce.Privilages,
+                    Permissions = authResponce.Permissions,
                     ServerDate = authResponce.ServerDate,
                     LocalDate = authResponce.LocalDate,
                     AccountId = authResponce.AccountId,

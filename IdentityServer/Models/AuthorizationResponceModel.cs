@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace IdentityServer.Models
@@ -19,6 +20,6 @@ namespace IdentityServer.Models
         public decimal Balance { get; set; }
         public decimal AvailableBalance { get; set; }
         public string Token { get; set; }
-        public string[] Privilages { get; set; }
+        public string[] Permissions { get; set; }
     }
 }

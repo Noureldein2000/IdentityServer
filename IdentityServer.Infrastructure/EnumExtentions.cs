@@ -38,4 +38,17 @@ namespace IdentityServer.Infrastructure
         Approved = 2,
         Rejected = 3,
     }
+    public enum Roles : short
+    {
+        SuperAdmin = 1,
+        Admin = 2,
+        Manager = 3,
+        Sales = 4,
+        Consumer = 5
+    }
+
+    public enum Modules : short
+    {
+        Account = 1
+    }
 }

@@ -12,7 +12,13 @@ namespace IdentityServer.Helpers
     {
         public override string HashPassword(TUser user, string password)
         {
-            return base.HashPassword(user, password);
+            byte[] keyByte2 = StringToByteArray("AF62343B314631632D663137362D342144332D615134392D39653163397533B3373762AF");
+
+            HMACSHA256 hmacsha256 = new HMACSHA256(keyByte2);
+            byte[] messageBytes = Encoding.UTF8.GetBytes(password);
+            byte[] hashmessage = hmacsha256.ComputeHash(messageBytes);
+            return ByteToString(hashmessage).ToLower();
+            //return base.HashPassword(user, password);
         }
         public override PasswordVerificationResult VerifyHashedPassword(TUser user, string hashedPassword, string providedPassword)
         {

@@ -26,11 +26,13 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<AccountChannel, int> _accountChannels;
         private readonly IBaseRepository<OTP, int> _otps;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
         private readonly ISMSService _smsService;
         public LoginService(IBaseRepository<UserToken, int> userTokens,
             UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             IBaseRepository<AccountChannelType, int> accountChannelTypes,
             IBaseRepository<ChannelIdentifier, int> channelIdentifires,
             IBaseRepository<AccountChannel, int> accountChannels,
@@ -48,12 +50,13 @@ namespace IdentityServer.Services
             _unitOfWork = unitOfWork;
             _smsService = smsService;
             _otps = otps;
+            _roleManager = roleManager;
         }
 
         public async Task<AuthorizationResponceDTO> ValidateUser(AccountChannelDTO model)
         {
             int otpId = 0;
-            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
+            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
             var tryAccount = int.TryParse(model.AccountId, out var accountId);
             var tryChannelType = int.TryParse(model.ChannelType, out var channelType);
             var tryChannelCategory = int.TryParse(model.ChannelCategory, out var channelCategory);
@@ -78,7 +81,7 @@ namespace IdentityServer.Services
                 model.ChannelId = model.AccountIP;
             }
 
-            var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID ==accountId
+            var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == accountId
                 && a.ChannelTypeID == channelType
                 && a.Account.AccountChannels.Any(ac => ac.Status == ActiveStatus.True)
                 && a.Account.AccountChannels.Any(ac =>
@@ -124,7 +127,7 @@ namespace IdentityServer.Services
             {
                 Id = otpId,
                 Token = tokenData.Token,
-                Privilages = tokenData.Privilages,
+                Permissions = tokenData.Permissions,
                 LocalDate = model.LocalDate,
                 ServerDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                 AccountId = accountId,
@@ -141,7 +144,7 @@ namespace IdentityServer.Services
         }
         public async Task<AuthorizationResponceDTO> ChangePassword(ChangePasswordDTO model)
         {
-            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
+            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
             var account = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
                     && a.ChannelTypeID == model.ChannelType).Select(a => new
                     {
@@ -178,7 +181,7 @@ namespace IdentityServer.Services
             return new AuthorizationResponceDTO
             {
                 Token = tokenData.Token,
-                Privilages = tokenData.Privilages,
+                Permissions = tokenData.Permissions,
                 LocalDate = DateTime.Now,
                 ServerDate = DateTime.Parse(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")),
                 AccountId = model.AccountId,
@@ -196,9 +199,9 @@ namespace IdentityServer.Services
         }
         public async Task<AuthorizationResponceDTO> ConfirmOTP(ConfirmOTPDTO model)
         {
-            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
+            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
 
-            if(user.MustChangePassword)
+            if (user.MustChangePassword)
                 throw new OkException(Resources.MustChangePassword, ErrorCodes.ChangePassword.MustChangePassword);
 
             if (!int.TryParse(model.Id, out var otpId) || !int.TryParse(model.AccountId, out var accountId))
@@ -209,19 +212,19 @@ namespace IdentityServer.Services
             && o.UserID == user.UserId
             && o.AccountChannel.Channel.ChannelIdentifiers.Any(ci => ci.Value == model.ChannelId))
                 .FirstOrDefault();
-            if(otp == null)
+            if (otp == null)
                 throw new OkException(Resources.Thetimehasexceedetthelimit, ErrorCodes.OTP.TheTimeExceededLimit);
 
-            if(otp.CreationDate.Subtract(DateTime.Now).Seconds > 60)
+            if (otp.CreationDate.Subtract(DateTime.Now).Seconds > 60)
                 throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
 
             var channelIdentifier = _channelIdentifires.Getwhere(ch => ch.Value == model.ChannelId).FirstOrDefault();
             channelIdentifier.Status = ActiveStatus.True;
             channelIdentifier.UpdatedBy = user.UserId;
 
-            var accountChannel = _accountChannels.Getwhere(ac => 
+            var accountChannel = _accountChannels.Getwhere(ac =>
                 ac.Channel.ChannelIdentifiers.Any(ci => ci.ID == channelIdentifier.ID))
-              
+
                 .FirstOrDefault();
             accountChannel.Status = ActiveStatus.True;
 
@@ -239,7 +242,7 @@ namespace IdentityServer.Services
                 Code = ErrorCodes.Success,
                 Message = Resources.Success,
                 Token = tokenData.Token,
-                Privilages = tokenData.Privilages,
+                Permissions = tokenData.Permissions,
             };
         }
         public async Task<AuthorizationResponceDTO> ResendOTP(ConfirmOTPDTO model)
@@ -247,17 +250,18 @@ namespace IdentityServer.Services
             if (!int.TryParse(model.Id, out var otpId) || !int.TryParse(model.AccountId, out var accountId))
                 throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
 
-            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId);
+            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId);
 
             var otp = _otps.Getwhere(o => o.OriginalOTPID == otpId && o.UserID == user.UserId)
                 .FirstOrDefault();
 
-            if(otp != null)
+            if (otp != null)
                 throw new OkException(Resources.Trialshaveexceededthelimit, ErrorCodes.OTP.Trialshaveexceededthelimit);
 
             var accountChannel = _accountChannels.Getwhere(ac =>
                 ac.Channel.ChannelIdentifiers.Any(ci => ci.Value == model.ChannelId))
-                .Select(ac => new { 
+                .Select(ac => new
+                {
                     ac.ID,
                     ac.Account.AccountOwner.Mobile
                 }).FirstOrDefault();
@@ -273,16 +277,15 @@ namespace IdentityServer.Services
                 Code = ErrorCodes.Success,
                 Message = Resources.Success,
                 Token = tokenData.Token,
-                Privilages = tokenData.Privilages,
+                Permissions = tokenData.Permissions,
             };
         }
 
         //Helper Method
         #region Helper Method
-        private ApplicationUser ValidateApplicationUser(string username, string password, string accountId)
+        private async Task<ApplicationUser> ValidateApplicationUser(string username, string password, string accountId)
         {
-            var user = _userManager.Users.Where(u => u.UserName == username
-                        && u.ReferenceID == accountId).FirstOrDefault();
+            var user = _userManager.Users.Where(u => u.UserName == username && u.ReferenceID == accountId).FirstOrDefault();
             var result = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
             if (user != null && result == PasswordVerificationResult.Success)
             {
@@ -295,19 +298,38 @@ namespace IdentityServer.Services
         private async Task<UserTokenRoleDTO> GetUserToken(ApplicationUser user, string accountId, string channelId, int expiry)
         {
             var userRoles = await _userManager.GetRolesAsync(user);
-            var userClaims = _userManager.GetClaimsAsync(user).Result.Where(c => c.Value == AvaliableClaimValues.True);
-            var authClaims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, user.UserId.ToString()),
-                    };
+            var userClaims = await _userManager.GetClaimsAsync(user);
+
+            var authClaims = new List<Claim> { new Claim(ClaimTypes.Name, user.UserId.ToString()) };
+            var allowdClaims = new List<Claim>();
+
             foreach (var role in userRoles)
             {
                 authClaims.Add(new Claim(ClaimTypes.Role, role));
             }
-            foreach (var claim in userClaims)
+
+            foreach (var userRole in userRoles)
             {
-                authClaims.Add(new Claim(ClaimTypes.Role, claim.Type));
+                var role = await _roleManager.FindByNameAsync(userRole);
+                var userRoleClaims = await _roleManager.GetClaimsAsync(role);
+                foreach (var userRoleClaim in userRoleClaims)
+                {
+                    if (!userClaims.Where(uc => uc.Type == "Deny")
+                        .Select(uc => new { denyList = uc.Value.Split('.').ToList() })
+                        .Any(uc => uc.denyList[1] == userRoleClaim.Value.Split('.')[1]
+                        && uc.denyList[2] == userRoleClaim.Value.Split('.')[2])
+                        )
+                    {
+                        authClaims.Add(new Claim(userRoleClaim.Type, userRoleClaim.Value));
+                        allowdClaims.Add(new Claim(userRoleClaim.Type, userRoleClaim.Value));
+                    }
+                }
             }
+
+            //foreach (var claim in userClaims)
+            //{
+            //    authClaims.Add(new Claim(claim.Type, claim.Value));
+            //}
             authClaims.Add(new Claim("channel_id", channelId));
             authClaims.Add(new Claim("account_id", accountId));
             var authSigninKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetValue<string>("IdentityServer:Secret")));
@@ -322,8 +344,7 @@ namespace IdentityServer.Services
             return new UserTokenRoleDTO
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Privilages = userClaims.Where(s => s.Value == AvaliableClaimValues.True)
-                                                    .Select(s => s.Type).ToArray()
+                Permissions = allowdClaims.Select(s => s.Value.Split('.')[1] + "." + s.Value.Split('.')[2]).ToArray()
             };
         }
         private int CreateAccountChannel(int accountId, string channelIdValue, int userId)
@@ -362,6 +383,6 @@ namespace IdentityServer.Services
             _smsService.SendMessage($"Momkn OTP: {otp}", "E", mobile);
             return otpId;
         }
-    } 
+    }
     #endregion
 }

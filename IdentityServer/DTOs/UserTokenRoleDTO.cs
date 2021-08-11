@@ -8,6 +8,6 @@ namespace IdentityServer.DTOs
     public class UserTokenRoleDTO
     {
         public string Token { get; set; }
-        public string[] Privilages { get; set; }
+        public string[] Permissions { get; set; }
     }
 }

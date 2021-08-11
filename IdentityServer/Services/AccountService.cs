@@ -79,6 +79,7 @@ namespace IdentityServer.Services
                 CommercialRegistrationNo = accountRequestDto.CommercialRegistrationNo,
                 TaxNo = accountRequestDto.TaxNo,
                 ActivityID = accountRequestDto.ActivityID,
+                CreatedBy = accountRequestDto.CreatedBy
             });
 
             _unitOfWork.SaveChanges();
@@ -98,7 +99,7 @@ namespace IdentityServer.Services
                     currentAccountRequest.AccountRequestStatus = AccountRequestStatus.Approved;
                     _account.Add(new Account
                     {
-                        Address = currentAccountRequest.TaxNo,
+                        Address = currentAccountRequest.Address,
                         TaxNo = currentAccountRequest.TaxNo,
                         ActivityID = currentAccountRequest.ActivityID,
                         CommercialRegistrationNo = currentAccountRequest.CommercialRegistrationNo,

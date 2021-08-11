@@ -144,7 +144,7 @@ namespace IdentityServer.Services
             if (!checkAccountExist)
                 throw new OkException(Resources.ThisAccountIsNotExists, ErrorCodes.ChangePassword.MobileNumberExists);
 
-            var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).FirstOrDefault();
+            var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).Include(a => a.AccountOwner).FirstOrDefault();
 
             account.Address = editAccountDTO.Address;
             account.TaxNo = editAccountDTO.TaxNo;
@@ -232,9 +232,24 @@ namespace IdentityServer.Services
                 }).FirstOrDefault();
         }
 
-        public IEnumerable<AccountDTO> GetAccounts(int pagenumber, int pageSize)
+        public IEnumerable<AccountDTO> GetAccounts(int pageNumber, int pageSize)
         {
-            throw new NotImplementedException();
+            var accountLst = _account.Getwhere(a => true).Include(a => a.AccountOwner).AsNoTracking().Select(ar => new AccountDTO
+            {
+                Id = ar.ID,
+                OwnerName = ar.AccountOwner.Name,
+                AccountName = ar.Name,
+                Mobile = ar.AccountOwner.Mobile,
+                Address = ar.Address,
+                Email = ar.AccountOwner.Email,
+                NationalID = ar.AccountOwner.NationalID,
+                CommercialRegistrationNo = ar.CommercialRegistrationNo,
+                TaxNo = ar.TaxNo,
+                ActivityID = (int)ar.ActivityID,
+                ActivityName = ar.Activity.NameAr,
+                CreationDate = ar.CreationDate
+            }).OrderBy(ar => ar.CreationDate).Skip(pageNumber - 1).Take(pageSize).ToList();
+            return accountLst;
         }
 
 

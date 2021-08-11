@@ -172,9 +172,27 @@ namespace IdentityServer.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpGet]
+        [Route("GetAccountById/{id}")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
+        public IActionResult GetAccountById(int id)
+        {
+            try
+            {
+                var result = _accountService.GetAccountById(id);
+                return Ok(Map(result));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
         [HttpGet]
         [Route("GetAccountRequestByStatus/{status}")]
-        [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
         public IActionResult GetAccountRequestByStatus([FromRoute] AccountRequestStatus status = AccountRequestStatus.UnderProcessing, int pageNumber = 1, int pageSize = 10)
         {
             try
@@ -187,6 +205,24 @@ namespace IdentityServer.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpGet]
+        [Route("GetAccounts")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
+        public IActionResult GetAccounts(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var result = _accountService.GetAccounts(pageNumber, pageSize).Select(ard => Map(ard));
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
 
         [HttpGet]
         [Route("ChangeAccountRequestStatus/{Id}/{status}")]
@@ -210,7 +246,8 @@ namespace IdentityServer.Controllers
 
         [HttpGet]
         [Route("ChangeAccountStatus/{Id}")]
-        [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
         public IActionResult ChangeAccountStatus([FromRoute] int Id)
         {
             try

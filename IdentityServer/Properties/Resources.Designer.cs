@@ -151,6 +151,15 @@ namespace IdentityServer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This account has channel type before.
+        /// </summary>
+        public static string ThisAccountHasChannelTypeBefore {
+            get {
+                return ResourceManager.GetString("ThisAccountHasChannelTypeBefore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This account is not exists.
         /// </summary>
         public static string ThisAccountIsNotExists {

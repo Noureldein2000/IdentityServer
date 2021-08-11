@@ -18,15 +18,18 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<AccountRequest, int> _accountRequests;
         private readonly IBaseRepository<Account, int> _account;
         private readonly IBaseRepository<AccountOwner, int> _accountOwner;
+        private readonly IBaseRepository<AccountChannelType, int> _accountChannelType;
         private readonly IUnitOfWork _unitOfWork;
         public AccountService(IBaseRepository<AccountRequest, int> accountRequests,
             IBaseRepository<Account, int> account,
              IBaseRepository<AccountOwner, int> accountOwner,
+             IBaseRepository<AccountChannelType, int> accountChannelType,
             IUnitOfWork unitOfWork)
         {
             _accountRequests = accountRequests;
             _account = account;
             _accountOwner = accountOwner;
+            _accountChannelType = accountChannelType;
             _unitOfWork = unitOfWork;
         }
 
@@ -62,6 +65,22 @@ namespace IdentityServer.Services
 
             _unitOfWork.SaveChanges();
             return MapEntityToDto(account);
+        }
+
+        public void AddAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO)
+        {
+           var checkExists= _accountChannelType.Any(act => act.AccountID == accountChannelTypeDTO.AccountID && act.ChannelTypeID == accountChannelTypeDTO.ChannelTypeID);
+            if(checkExists) throw new OkException(Resources.ThisAccountHasChannelTypeBefore, ErrorCodes.ChangePassword.MobileNumberExists);
+
+           _accountChannelType.Add(new AccountChannelType 
+            {
+                AccountID = accountChannelTypeDTO.AccountID,
+                ChannelTypeID = accountChannelTypeDTO.ChannelTypeID,
+                ExpirationPeriod = accountChannelTypeDTO.ExpirationPeriod,
+                HasLimitedAccess = accountChannelTypeDTO.HasLimitedAccess
+            });
+
+            _unitOfWork.SaveChanges();
         }
 
         public AccountRequestDTO AddAccountRequest(AccountRequestDTO accountRequestDto)
@@ -139,6 +158,13 @@ namespace IdentityServer.Services
             return currentAccount.Active;
         }
 
+        public void DeleteAccountChannelTypes(int id)
+        {
+            var result = _accountChannelType.Delete(id);
+            _unitOfWork.SaveChanges();
+          
+        }
+
         public AccountDTO EditAccount(AccountDTO editAccountDTO)
         {
             var checkAccountExist = _account.Any(c => c.ID == editAccountDTO.Id);
@@ -169,6 +195,16 @@ namespace IdentityServer.Services
             return MapEntityToDto(account);
         }
 
+        public AccountChannelTypeDTO EditAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO)
+        {
+            var current = _accountChannelType.Getwhere(act => act.ID == accountChannelTypeDTO.Id).FirstOrDefault();
+            current.HasLimitedAccess = accountChannelTypeDTO.HasLimitedAccess;
+            current.ExpirationPeriod = accountChannelTypeDTO.ExpirationPeriod;
+
+            _unitOfWork.SaveChanges();
+            return MapEntityToDto(current);
+        }
+
         public AccountDTO GetAccountById(int id)
         {
             return _account.Getwhere(x => x.ID == id).Include(a => a.AccountOwner).AsNoTracking()
@@ -191,6 +227,19 @@ namespace IdentityServer.Services
                    AccountTypeProfileID = ar.AccountTypeProfileID,
                    EntityID = ar.EntityID
                }).FirstOrDefault();
+        }
+
+        public IEnumerable<AccountChannelTypeDTO> GetAccountChannelTypes(int accountId)
+        {
+            return _accountChannelType.Getwhere(act => act.AccountID == accountId).Select(act => new AccountChannelTypeDTO
+            {
+                Id = act.ID,
+                AccountID = act.AccountID,
+                ChannelTypeID = act.ChannelTypeID,
+                ChannelTypeName = act.ChannelType.Name,
+                ExpirationPeriod = act.ExpirationPeriod,
+                HasLimitedAccess = act.HasLimitedAccess
+            }).ToList();
         }
 
         public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pageNumber, int pageSize)
@@ -284,6 +333,15 @@ namespace IdentityServer.Services
             Email = entityRequest.AccountOwner.Email,
             ActivityID = (int)entityRequest.ActivityID
             //ActivityName=entityRequest.Activity.Name
+        };
+
+        private AccountChannelTypeDTO MapEntityToDto(AccountChannelType entityRequest) => new AccountChannelTypeDTO
+        {
+            Id = entityRequest.ID,
+            AccountID = entityRequest.AccountID,
+            ChannelTypeID = entityRequest.ChannelTypeID,
+            ExpirationPeriod = entityRequest.ExpirationPeriod,
+            HasLimitedAccess = entityRequest.HasLimitedAccess
         };
         #endregion
     }

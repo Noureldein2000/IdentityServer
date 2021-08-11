@@ -151,6 +151,15 @@ namespace IdentityServer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This account is not exists.
+        /// </summary>
+        public static string ThisAccountIsNotExists {
+            get {
+                return ResourceManager.GetString("ThisAccountIsNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This mobile number already exists.
         /// </summary>
         public static string Thismobilenumberalreadyexists {

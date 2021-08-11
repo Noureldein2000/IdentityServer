@@ -12,8 +12,12 @@ namespace IdentityServer.Services
     {
         AccountRequestDTO AddAccountRequest(AccountRequestDTO addDTO);
         AccountDTO AddAccount(AccountDTO addDTO);
+        AccountDTO EditAccount(AccountDTO editDTO);
         IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pagenumber, int pageSize);
+        IEnumerable<AccountDTO> GetAccounts(int pagenumber, int pageSize);
         AccountRequestDTO GetAccountRequestsById(int id);
-        AccountRequestStatus ChangeAccountRequestStatus( int id, AccountRequestStatus status, int createdBy);
+        AccountDTO GetAccountById(int id);
+        AccountRequestStatus ChangeAccountRequestStatus(int id, AccountRequestStatus status, int createdBy);
+        bool ChangeAccountStatus(int id, int updatedBy);
     }
 }

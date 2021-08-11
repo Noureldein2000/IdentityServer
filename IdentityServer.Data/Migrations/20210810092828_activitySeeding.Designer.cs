@@ -4,14 +4,16 @@ using IdentityServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210810092828_activitySeeding")]
+    partial class activitySeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,8 +31,8 @@ namespace IdentityServer.Data.Migrations
                     b.Property<int?>("AccountTypeProfileID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
+                    b.Property<short>("Active")
+                        .HasColumnType("smallint");
 
                     b.Property<int?>("ActivityID")
                         .HasColumnType("int");
@@ -397,14 +399,14 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 10, 18, 46, 23, 811, DateTimeKind.Local).AddTicks(1394),
+                            CreationDate = new DateTime(2021, 8, 10, 11, 28, 27, 456, DateTimeKind.Local).AddTicks(596),
                             Name = "General",
                             NameAr = "عام"
                         },
                         new
                         {
                             ID = 2,
-                            CreationDate = new DateTime(2021, 8, 10, 18, 46, 23, 811, DateTimeKind.Local).AddTicks(1469),
+                            CreationDate = new DateTime(2021, 8, 10, 11, 28, 27, 456, DateTimeKind.Local).AddTicks(656),
                             Name = "SuperMarket",
                             NameAr = "سوبرماركت"
                         });
@@ -498,6 +500,68 @@ namespace IdentityServer.Data.Migrations
                         .HasFilter("[UserName] IS NOT NULL AND [ReferenceID] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "73102008-03f2-4198-bf7d-866c4ea0ae50",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@admin.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            MustChangePassword = false,
+                            NormalizedEmail = "ADMIN@ADMIN.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAENNOS9Z+JFUhN5hUjqe9v+5PzfQaEV+zNcg4Crsp9UskjTgm9rkdA4QIwp4TDD84zQ==",
+                            PhoneNumber = "012111111111",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "9621ae67-1544-47c9-b49b-8875dcb22871",
+                            TwoFactorEnabled = false,
+                            UserId = 0,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = "d5a9b78e-a694-4026-af7f-6d559d8a3961",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c9006941-fd4a-4246-af6b-40bf40b33381",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "manager@manager.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            MustChangePassword = false,
+                            NormalizedEmail = "MANAGER@MANAGER.COM",
+                            NormalizedUserName = "MANAGER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEVTpiYMfp0e3V0LRqrb4Q1EM1hT3F78+5EMj8y4aG0BGSuD8fumrQu/mYM2Vq5VBg==",
+                            PhoneNumber = "012222222222",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "9cb28ddf-a0b0-4118-8723-a4ef57e255cc",
+                            TwoFactorEnabled = false,
+                            UserId = 0,
+                            UserName = "manager"
+                        },
+                        new
+                        {
+                            Id = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2c298a9d-6925-4946-a9df-b6464f9dd157",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "consumer@consumer.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            MustChangePassword = false,
+                            NormalizedEmail = "CONSUMER@CONSUMER.COM",
+                            NormalizedUserName = "CONSUMER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBS+3WXt0/7xQPQFMoEZTO6i+comsMoBV6tIMgjdbRhJKvLd+V3J0SLLgSI0y+pRrA==",
+                            PhoneNumber = "01201371236",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ed08619d-ad21-47b6-bae0-f7c6611986a5",
+                            TwoFactorEnabled = false,
+                            UserId = 0,
+                            UserName = "consumer"
+                        });
                 });
 
             modelBuilder.Entity("IdentityServer.Data.Entities.Channel", b =>
@@ -759,7 +823,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 10, 18, 46, 23, 811, DateTimeKind.Local).AddTicks(2843),
+                            CreationDate = new DateTime(2021, 8, 10, 11, 28, 27, 456, DateTimeKind.Local).AddTicks(1767),
                             Name = "Momkn",
                             NameAr = "ممكن"
                         });
@@ -942,7 +1006,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 10, 18, 46, 23, 808, DateTimeKind.Local).AddTicks(5734),
+                            CreationDate = new DateTime(2021, 8, 10, 11, 28, 27, 453, DateTimeKind.Local).AddTicks(9930),
                             Name = "AccountUser"
                         });
                 });
@@ -972,6 +1036,43 @@ namespace IdentityServer.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf1",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf1",
+                            Name = "SuperAdmin",
+                            NormalizedName = "SUPERADMIN"
+                        },
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf5",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf5",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
+                        },
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf4",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf4",
+                            Name = "Consumer",
+                            NormalizedName = "CONSUMER"
+                        },
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf3",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf3",
+                            Name = "AccountAdmin",
+                            NormalizedName = "ACCOUNTADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1020,6 +1121,36 @@ namespace IdentityServer.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "DoTransaction",
+                            ClaimValue = "1",
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3949"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaimType = "FinancialReports",
+                            ClaimValue = "1",
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3949"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaimType = "SalesReports",
+                            ClaimValue = "1",
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3961"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ClaimType = "TransactionReports",
+                            ClaimValue = "1",
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3961"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -1057,6 +1188,23 @@ namespace IdentityServer.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
+                            RoleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf6"
+                        },
+                        new
+                        {
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3961",
+                            RoleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf5"
+                        },
+                        new
+                        {
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
+                            RoleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf4"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

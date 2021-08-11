@@ -44,6 +44,8 @@ namespace IdentityServer.Services
                 ActivityID = addAccountDTO.ActivityID,
                 CommercialRegistrationNo = addAccountDTO.CommercialRegistrationNo,
                 Name = addAccountDTO.AccountName,
+                Longitude = addAccountDTO.Longitude,
+                Latitude = addAccountDTO.Latitude,
                 CreatedBy = addAccountDTO.CreatedBy,
                 AccountTypeProfileID = addAccountDTO.AccountTypeProfileID,
                 RegionID = addAccountDTO.RegionID,
@@ -126,6 +128,71 @@ namespace IdentityServer.Services
             return status;
         }
 
+        public bool ChangeAccountStatus(int id, int updatedBy)
+        {
+            var currentAccount = _account.GetById(id);
+
+            currentAccount.Active = !currentAccount.Active;
+            currentAccount.UpdateBy = updatedBy;
+
+            _unitOfWork.SaveChanges();
+            return currentAccount.Active;
+        }
+
+        public AccountDTO EditAccount(AccountDTO editAccountDTO)
+        {
+            var checkAccountExist = _account.Any(c => c.ID == editAccountDTO.Id);
+            if (!checkAccountExist)
+                throw new OkException(Resources.ThisAccountIsNotExists, ErrorCodes.ChangePassword.MobileNumberExists);
+
+            var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).Include(a => a.AccountOwner).FirstOrDefault();
+
+            account.Address = editAccountDTO.Address;
+            account.TaxNo = editAccountDTO.TaxNo;
+            account.ActivityID = editAccountDTO.ActivityID;
+            account.CommercialRegistrationNo = editAccountDTO.CommercialRegistrationNo;
+            account.Name = editAccountDTO.AccountName;
+            account.Longitude = editAccountDTO.Longitude;
+            account.Latitude = editAccountDTO.Latitude;
+            account.UpdateBy = editAccountDTO.UpdatedBy;
+            account.AccountTypeProfileID = editAccountDTO.AccountTypeProfileID;
+            account.RegionID = editAccountDTO.RegionID;
+            account.EntityID = editAccountDTO.EntityID;
+
+            account.AccountOwner.Name = editAccountDTO.OwnerName;
+            account.AccountOwner.Address = editAccountDTO.Address;
+            account.AccountOwner.Email = editAccountDTO.Email;
+            account.AccountOwner.Mobile = editAccountDTO.Mobile;
+            account.AccountOwner.NationalID = editAccountDTO.NationalID;
+
+            _unitOfWork.SaveChanges();
+            return MapEntityToDto(account);
+        }
+
+        public AccountDTO GetAccountById(int id)
+        {
+            return _account.Getwhere(x => x.ID == id).Include(a => a.AccountOwner).AsNoTracking()
+               .Select(ar => new AccountDTO
+               {
+                   Id = ar.ID,
+                   OwnerName = ar.AccountOwner.Name,
+                   AccountName = ar.Name,
+                   Mobile = ar.AccountOwner.Mobile,
+                   Address = ar.AccountOwner.Address,
+                   Email = ar.AccountOwner.Email,
+                   NationalID = ar.AccountOwner.NationalID,
+                   CommercialRegistrationNo = ar.CommercialRegistrationNo,
+                   TaxNo = ar.TaxNo,
+                   Longitude = ar.Longitude,
+                   Latitude = ar.Latitude,
+                   ActivityID = (int)ar.ActivityID,
+                   ActivityName = ar.Activity.NameAr,
+                   RegionID = ar.RegionID,
+                   AccountTypeProfileID = ar.AccountTypeProfileID,
+                   EntityID = ar.EntityID
+               }).FirstOrDefault();
+        }
+
         public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pageNumber, int pageSize)
         {
             var accountRequestLst = _accountRequests.Getwhere(x => x.AccountRequestStatus == status).AsNoTracking()
@@ -164,6 +231,26 @@ namespace IdentityServer.Services
                     ActivityID = ar.ActivityID,
                     ActivityName = ar.Activity.NameAr
                 }).FirstOrDefault();
+        }
+
+        public IEnumerable<AccountDTO> GetAccounts(int pageNumber, int pageSize)
+        {
+            var accountLst = _account.Getwhere(a => true).Include(a => a.AccountOwner).AsNoTracking().Select(ar => new AccountDTO
+            {
+                Id = ar.ID,
+                OwnerName = ar.AccountOwner.Name,
+                AccountName = ar.Name,
+                Mobile = ar.AccountOwner.Mobile,
+                Address = ar.Address,
+                Email = ar.AccountOwner.Email,
+                NationalID = ar.AccountOwner.NationalID,
+                CommercialRegistrationNo = ar.CommercialRegistrationNo,
+                TaxNo = ar.TaxNo,
+                ActivityID = (int)ar.ActivityID,
+                ActivityName = ar.Activity.NameAr,
+                CreationDate = ar.CreationDate
+            }).OrderBy(ar => ar.CreationDate).Skip(pageNumber - 1).Take(pageSize).ToList();
+            return accountLst;
         }
 
 

@@ -4,14 +4,16 @@ using IdentityServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210810164624_editAccountStatus")]
+    partial class editAccountStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -498,6 +500,68 @@ namespace IdentityServer.Data.Migrations
                         .HasFilter("[UserName] IS NOT NULL AND [ReferenceID] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f9de121e-fbd2-4d84-b604-516151f3f8ac",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@admin.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            MustChangePassword = false,
+                            NormalizedEmail = "ADMIN@ADMIN.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEh2MX/DwCjsy+tEUII/N/G9FPJLm617YX/y42BqscfonjAFNrBA3ECdBnxAsJiDeA==",
+                            PhoneNumber = "012111111111",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "4aeb102d-03bb-4e90-a9b1-5a33df3933b9",
+                            TwoFactorEnabled = false,
+                            UserId = 0,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = "d5a9b78e-a694-4026-af7f-6d559d8a3961",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "672836bd-c444-4088-a785-65c70d27aa26",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "manager@manager.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            MustChangePassword = false,
+                            NormalizedEmail = "MANAGER@MANAGER.COM",
+                            NormalizedUserName = "MANAGER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEC3sZ0CJIChckS99GY9oSHvoMbxPaQq6ZuAi8UXzl9VaFz3jkE27uGlK721gqxKIBA==",
+                            PhoneNumber = "012222222222",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "d430027e-7215-4696-abcf-88de59b28ec0",
+                            TwoFactorEnabled = false,
+                            UserId = 0,
+                            UserName = "manager"
+                        },
+                        new
+                        {
+                            Id = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "93e63dba-0299-4f01-a514-3cd3d08adbea",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "consumer@consumer.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            MustChangePassword = false,
+                            NormalizedEmail = "CONSUMER@CONSUMER.COM",
+                            NormalizedUserName = "CONSUMER",
+                            PasswordHash = "AQAAAAEAACcQAAAAELiwiVP3MZW5PW7fRzbmgh/BusHnLNMSGonRhiJCSvLfHGM7dAxjlny8qguQ3kZ/Gw==",
+                            PhoneNumber = "01201371236",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f30e6608-e589-4da7-abb8-238f904bcd5b",
+                            TwoFactorEnabled = false,
+                            UserId = 0,
+                            UserName = "consumer"
+                        });
                 });
 
             modelBuilder.Entity("IdentityServer.Data.Entities.Channel", b =>
@@ -972,6 +1036,43 @@ namespace IdentityServer.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf1",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf1",
+                            Name = "SuperAdmin",
+                            NormalizedName = "SUPERADMIN"
+                        },
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf5",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf5",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
+                        },
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf4",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf4",
+                            Name = "Consumer",
+                            NormalizedName = "CONSUMER"
+                        },
+                        new
+                        {
+                            Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf3",
+                            ConcurrencyStamp = "341743f0-asd2–42de-afbf-59kmkkmk72cf3",
+                            Name = "AccountAdmin",
+                            NormalizedName = "ACCOUNTADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1020,6 +1121,36 @@ namespace IdentityServer.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "DoTransaction",
+                            ClaimValue = "1",
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3949"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaimType = "FinancialReports",
+                            ClaimValue = "1",
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3949"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaimType = "SalesReports",
+                            ClaimValue = "1",
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3961"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ClaimType = "TransactionReports",
+                            ClaimValue = "1",
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3961"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -1057,6 +1188,23 @@ namespace IdentityServer.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3950",
+                            RoleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf6"
+                        },
+                        new
+                        {
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3961",
+                            RoleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf5"
+                        },
+                        new
+                        {
+                            UserId = "d5a9b78e-a694-4026-af7f-6d559d8a3949",
+                            RoleId = "341743f0-asd2–42de-afbf-59kmkkmk72cf4"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

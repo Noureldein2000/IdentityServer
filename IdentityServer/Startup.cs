@@ -44,6 +44,7 @@ namespace IdentityServer
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAccountTypeProfileService, AccountTypeProfileService>();
             services.AddScoped<ISMSService, VictorySMSService>();
 
             services.Replace(new ServiceDescriptor(

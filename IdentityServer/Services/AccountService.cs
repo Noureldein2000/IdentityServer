@@ -72,8 +72,8 @@ namespace IdentityServer.Services
 
         public AccountChannelDTO AddAccountChannel(AccountChannelDTO accountChannelDTO)
         {
-           var checkExists= _accountChannel.Getwhere(ac => ac.AccountID == accountChannelDTO.AccountID && ac.ChannelID == accountChannelDTO.ChannelID).Any();
-            if (checkExists) throw new OkException(Resources.ThisAccountHasChannelAlready,ErrorCodes.ChangePassword.MobileNumberExists);
+            var checkExists = _accountChannel.Getwhere(ac => ac.AccountID == accountChannelDTO.AccountID && ac.ChannelID == accountChannelDTO.ChannelID).Any();
+            if (checkExists) throw new OkException(Resources.ThisAccountHasChannelAlready, ErrorCodes.ChangePassword.MobileNumberExists);
 
             var addedEntity = _accountChannel.Add(new AccountChannel
             {

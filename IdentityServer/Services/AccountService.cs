@@ -19,17 +19,20 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<Account, int> _account;
         private readonly IBaseRepository<AccountOwner, int> _accountOwner;
         private readonly IBaseRepository<AccountChannelType, int> _accountChannelType;
+        private readonly IBaseRepository<AccountChannel, int> _accountChannel;
         private readonly IUnitOfWork _unitOfWork;
         public AccountService(IBaseRepository<AccountRequest, int> accountRequests,
             IBaseRepository<Account, int> account,
              IBaseRepository<AccountOwner, int> accountOwner,
              IBaseRepository<AccountChannelType, int> accountChannelType,
+             IBaseRepository<AccountChannel, int> accountChannel,
             IUnitOfWork unitOfWork)
         {
             _accountRequests = accountRequests;
             _account = account;
             _accountOwner = accountOwner;
             _accountChannelType = accountChannelType;
+            _accountChannel = accountChannel;
             _unitOfWork = unitOfWork;
         }
 
@@ -67,12 +70,29 @@ namespace IdentityServer.Services
             return MapEntityToDto(account);
         }
 
+        public AccountChannelDTO AddAccountChannel(AccountChannelDTO accountChannelDTO)
+        {
+           var checkExists= _accountChannel.Getwhere(ac => ac.AccountID == accountChannelDTO.AccountID && ac.ChannelID == accountChannelDTO.ChannelID).Any();
+            if (checkExists) throw new OkException(Resources.ThisAccountHasChannelAlready,ErrorCodes.ChangePassword.MobileNumberExists);
+
+            var addedEntity = _accountChannel.Add(new AccountChannel
+            {
+                AccountID = accountChannelDTO.AccountID,
+                ChannelID = accountChannelDTO.ChannelID,
+                Status = accountChannelDTO.Status,
+                CreatedBy = accountChannelDTO.CreatedBy
+            });
+            _unitOfWork.SaveChanges();
+
+            return MapEntityToDto(addedEntity);
+        }
+
         public void AddAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO)
         {
-           var checkExists= _accountChannelType.Any(act => act.AccountID == accountChannelTypeDTO.AccountID && act.ChannelTypeID == accountChannelTypeDTO.ChannelTypeID);
-            if(checkExists) throw new OkException(Resources.ThisAccountHasChannelTypeBefore, ErrorCodes.ChangePassword.MobileNumberExists);
+            var checkExists = _accountChannelType.Any(act => act.AccountID == accountChannelTypeDTO.AccountID && act.ChannelTypeID == accountChannelTypeDTO.ChannelTypeID);
+            if (checkExists) throw new OkException(Resources.ThisAccountHasChannelTypeBefore, ErrorCodes.ChangePassword.MobileNumberExists);
 
-           _accountChannelType.Add(new AccountChannelType 
+            _accountChannelType.Add(new AccountChannelType
             {
                 AccountID = accountChannelTypeDTO.AccountID,
                 ChannelTypeID = accountChannelTypeDTO.ChannelTypeID,
@@ -105,6 +125,14 @@ namespace IdentityServer.Services
 
             _unitOfWork.SaveChanges();
             return MapEntityToDto(entityRequest);
+        }
+
+        public bool ChangeAccountChannelStatus(int id)
+        {
+            var current = _accountChannel.GetById(id);
+            current.Status = !current.Status;
+            _unitOfWork.SaveChanges();
+            return true;
         }
 
         public AccountRequestStatus ChangeAccountRequestStatus(int id, AccountRequestStatus status, int createdBy)
@@ -158,11 +186,17 @@ namespace IdentityServer.Services
             return currentAccount.Active;
         }
 
+        public void DeleteAccountChannel(int id)
+        {
+            _accountChannel.Delete(id);
+            _unitOfWork.SaveChanges();
+        }
+
         public void DeleteAccountChannelTypes(int id)
         {
             var result = _accountChannelType.Delete(id);
             _unitOfWork.SaveChanges();
-          
+
         }
 
         public AccountDTO EditAccount(AccountDTO editAccountDTO)
@@ -302,6 +336,19 @@ namespace IdentityServer.Services
             return accountLst;
         }
 
+        public IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId)
+        {
+            return _accountChannel.Getwhere(ac => ac.AccountID == accountId && ac.Status == true).Select(ac => new AccountChannelDTO
+            {
+                Id = ac.ID,
+                AccountID = ac.AccountID,
+                ChannelID = ac.ChannelID,
+                Status = ac.Status,
+                CreatedBy = ac.CreatedBy,
+                UpdatedBy = ac.UpdatedBy
+            }).ToList();
+        }
+
 
         #region Helper Method
         //Helper Method
@@ -342,6 +389,15 @@ namespace IdentityServer.Services
             ChannelTypeID = entityRequest.ChannelTypeID,
             ExpirationPeriod = entityRequest.ExpirationPeriod,
             HasLimitedAccess = entityRequest.HasLimitedAccess
+        };
+
+        private AccountChannelDTO MapEntityToDto(AccountChannel entityRequest) => new AccountChannelDTO
+        {
+            Id = entityRequest.ID,
+            AccountID = entityRequest.AccountID,
+            ChannelID = entityRequest.ChannelID,
+            Status = entityRequest.Status,
+            CreatedBy = entityRequest.CreatedBy
         };
         #endregion
     }

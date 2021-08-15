@@ -53,7 +53,7 @@ namespace IdentityServer.Services
             _roleManager = roleManager;
         }
 
-        public async Task<AuthorizationResponceDTO> ValidateUser(AccountChannelDTO model)
+        public async Task<AuthorizationResponceDTO> ValidateUser(AccountChannelLoginDTO model)
         {
             int otpId = 0;
             var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
@@ -83,7 +83,7 @@ namespace IdentityServer.Services
 
             var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == accountId
                 && a.ChannelTypeID == channelType
-                && a.Account.AccountChannels.Any(ac => ac.Status == ActiveStatus.True)
+                && a.Account.AccountChannels.Any(ac => ac.Status == true)
                 && a.Account.AccountChannels.Any(ac =>
                 ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
                     && ci.Value == model.ChannelId
@@ -108,7 +108,7 @@ namespace IdentityServer.Services
                 //check for first time login and send otp
                 var identifier = _channelIdentifires.Getwhere(i => i.Value == model.ChannelId
                 && i.Status == ActiveStatus.True
-                && i.Channel.AccountChannels.Any(ac => ac.Status == ActiveStatus.True
+                && i.Channel.AccountChannels.Any(ac => ac.Status == true
                 && ac.AccountID != accountId)).FirstOrDefault();
                 if (identifier == null)
                 {
@@ -159,7 +159,7 @@ namespace IdentityServer.Services
 
             var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
                    && a.ChannelTypeID == model.ChannelType
-                   && a.Account.AccountChannels.Any(ac => ac.Status == ActiveStatus.True)
+                   && a.Account.AccountChannels.Any(ac => ac.Status == true)
                    && a.Account.AccountChannels.Any(ac =>
                    ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
                 && ci.Value == model.ChannelId
@@ -226,7 +226,7 @@ namespace IdentityServer.Services
                 ac.Channel.ChannelIdentifiers.Any(ci => ci.ID == channelIdentifier.ID))
 
                 .FirstOrDefault();
-            accountChannel.Status = ActiveStatus.True;
+            accountChannel.Status = true;
 
             otp.StatusID = 2;
             otp.UpdatedBy = user.UserId;

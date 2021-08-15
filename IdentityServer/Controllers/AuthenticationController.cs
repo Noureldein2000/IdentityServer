@@ -41,7 +41,7 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                var authResponce = await _loginService.ValidateUser(new DTOs.AccountChannelDTO
+                var authResponce = await _loginService.ValidateUser(new DTOs.AccountChannelLoginDTO
                 {
                     AccountId = model.AccountId,
                     ChannelCategory = model.ChannelCategory,

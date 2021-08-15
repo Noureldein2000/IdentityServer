@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityServer.DTOs
+namespace IdentityServer.Models
 {
-    public class AccountChannelDTO
+    public class AccountChannelModel
     {
         public int Id { get; set; }
         public int AccountID { get; set; }
@@ -13,7 +13,5 @@ namespace IdentityServer.DTOs
         public bool Status { get; set; }
         public int CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
-        public DateTime CreationDate { get; set; }
-        public DateTime UpdateDate { get; set; }
     }
 }

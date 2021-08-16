@@ -178,6 +178,15 @@ namespace IdentityServer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This channel existed before.
+        /// </summary>
+        public static string ThisChannelExistedBefore {
+            get {
+                return ResourceManager.GetString("ThisChannelExistedBefore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This mobile number already exists.
         /// </summary>
         public static string Thismobilenumberalreadyexists {

@@ -73,7 +73,7 @@ namespace IdentityServer.Services
             var profileLst = _profile.GetAll().Select(p => new ProfileDTO
             {
                 Id = p.ID,
-                Name = p.Name,
+                Name = p.Name
             }).ToList();
 
             return new ListAccountTypeAndProfileDTO()

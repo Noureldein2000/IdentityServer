@@ -147,8 +147,23 @@
   <data name="Thetimehasexceedetthelimit" xml:space="preserve">
     <value>لقد تجاوز الوقت الحد المسموح به</value>
   </data>
+  <data name="ThisAccountHaschannelAlready" xml:space="preserve">
+    <value>هذا الحساب يملك قناة بالفعل</value>
+  </data>
+  <data name="ThisAccountHasChannelTypeBefore" xml:space="preserve">
+    <value>هذا الحساب يملك نوع القناة مسبقا</value>
+  </data>
+  <data name="ThisAccountIsNotExists" xml:space="preserve">
+    <value>هذا الحساب ليس موجود</value>
+  </data>
+  <data name="ThisChannelExistedBefore" xml:space="preserve">
+    <value>هذا القناة موجود مسبقاً</value>
+  </data>
   <data name="Thismobilenumberalreadyexists" xml:space="preserve">
     <value>رقم تليفون العميل موجود بالفعل</value>
+  </data>
+  <data name="ThisMobileNumberOrNationalIdAlreadyExists" xml:space="preserve">
+    <value>هذا الرقم او البطاقة القومي موجود مسبقاً</value>
   </data>
   <data name="Trialshaveexceededthelimit" xml:space="preserve">
     <value>لقد تجاوزت عدد الرسائل المسموح به</value>

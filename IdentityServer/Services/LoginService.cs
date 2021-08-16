@@ -85,9 +85,9 @@ namespace IdentityServer.Services
                 && a.ChannelTypeID == channelType
                 && a.Account.AccountChannels.Any(ac => ac.Status == true)
                 && a.Account.AccountChannels.Any(ac =>
-                ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
-                    && ci.Value == model.ChannelId
-                ))).Select(act => new
+                ac.Channel.ChannelIdentifiers.Status == true
+                    && ac.Channel.ChannelIdentifiers.Value == model.ChannelId
+                )).Select(act => new
                 {
                     act.ExpirationPeriod,
                     act.HasLimitedAccess,
@@ -107,7 +107,7 @@ namespace IdentityServer.Services
             {
                 //check for first time login and send otp
                 var identifier = _channelIdentifires.Getwhere(i => i.Value == model.ChannelId
-                && i.Status == ActiveStatus.True
+                && i.Status == true
                 && i.Channel.AccountChannels.Any(ac => ac.Status == true
                 && ac.AccountID != accountId)).FirstOrDefault();
                 if (identifier == null)
@@ -160,10 +160,9 @@ namespace IdentityServer.Services
             var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
                    && a.ChannelTypeID == model.ChannelType
                    && a.Account.AccountChannels.Any(ac => ac.Status == true)
-                   && a.Account.AccountChannels.Any(ac =>
-                   ac.Channel.ChannelIdentifiers.Any(ci => ci.Status == ActiveStatus.True
-                && ci.Value == model.ChannelId
-           ))).Select(act => new
+                   && a.Account.AccountChannels.Any(ac => ac.Channel.ChannelIdentifiers.Status == true
+                && ac.Channel.ChannelIdentifiers.Value == model.ChannelId
+           )).Select(act => new
            {
                act.ExpirationPeriod,
                act.HasLimitedAccess,
@@ -210,8 +209,8 @@ namespace IdentityServer.Services
             var otp = _otps.Getwhere(o => o.ID == otpId
             && o.OTPCode == model.OTP && o.StatusID == 1
             && o.UserID == user.UserId
-            && o.AccountChannel.Channel.ChannelIdentifiers.Any(ci => ci.Value == model.ChannelId))
-                .FirstOrDefault();
+            && o.AccountChannel.Channel.ChannelIdentifiers.Value == model.ChannelId).FirstOrDefault();
+
             if (otp == null)
                 throw new OkException(Resources.Thetimehasexceedetthelimit, ErrorCodes.OTP.TheTimeExceededLimit);
 
@@ -219,13 +218,11 @@ namespace IdentityServer.Services
                 throw new OkException(Resources.FailedTry, ErrorCodes.FailedTry);
 
             var channelIdentifier = _channelIdentifires.Getwhere(ch => ch.Value == model.ChannelId).FirstOrDefault();
-            channelIdentifier.Status = ActiveStatus.True;
+            channelIdentifier.Status = true;
             channelIdentifier.UpdatedBy = user.UserId;
 
             var accountChannel = _accountChannels.Getwhere(ac =>
-                ac.Channel.ChannelIdentifiers.Any(ci => ci.ID == channelIdentifier.ID))
-
-                .FirstOrDefault();
+                ac.Channel.ChannelIdentifiers.ID == channelIdentifier.ID).FirstOrDefault();
             accountChannel.Status = true;
 
             otp.StatusID = 2;
@@ -259,8 +256,7 @@ namespace IdentityServer.Services
                 throw new OkException(Resources.Trialshaveexceededthelimit, ErrorCodes.OTP.Trialshaveexceededthelimit);
 
             var accountChannel = _accountChannels.Getwhere(ac =>
-                ac.Channel.ChannelIdentifiers.Any(ci => ci.Value == model.ChannelId))
-                .Select(ac => new
+                ac.Channel.ChannelIdentifiers.Value == model.ChannelId).Select(ac => new
                 {
                     ac.ID,
                     ac.Account.AccountOwner.Mobile

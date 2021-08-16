@@ -32,5 +32,10 @@ namespace IdentityServer.Infrastructure
         {
             public static string UnavailableStatus = "25";
         }
+
+        public static class Channel
+        {
+            public static string SerialExists= "0";
+        }
     }
 }

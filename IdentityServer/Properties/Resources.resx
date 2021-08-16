@@ -147,7 +147,7 @@
   <data name="Thetimehasexceedetthelimit" xml:space="preserve">
     <value>The time has exceeded the limit</value>
   </data>
-  <data name="ThisAccountHaschannelAlready" xml:space="preserve">
+  <data name="ThisAccountHasChannelAlready" xml:space="preserve">
     <value>This account has channel already</value>
   </data>
   <data name="ThisAccountHasChannelTypeBefore" xml:space="preserve">
@@ -155,6 +155,9 @@
   </data>
   <data name="ThisAccountIsNotExists" xml:space="preserve">
     <value>This account is not exists</value>
+  </data>
+  <data name="ThisChannelExistedBefore" xml:space="preserve">
+    <value>This channel existed before</value>
   </data>
   <data name="Thismobilenumberalreadyexists" xml:space="preserve">
     <value>This mobile number already exists</value>

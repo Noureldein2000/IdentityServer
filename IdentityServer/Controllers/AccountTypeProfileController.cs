@@ -104,8 +104,8 @@ namespace IdentityServer.Controllers
         {
             return new AccountTypeProfileLstModel
             {
-                lstProfile = model.LstProfile,
-                lstAccountType = model.LstAccountType
+                LstProfile = model.LstProfile,
+                LstAccountType = model.LstAccountType
             };
         }
 

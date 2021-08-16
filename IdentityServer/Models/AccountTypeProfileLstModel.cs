@@ -8,7 +8,7 @@ namespace IdentityServer.Models
 {
     public class AccountTypeProfileLstModel
     {
-        public List<ProfileDTO> lstProfile { get; set; }
-        public List<AccountTypeDTO> lstAccountType { get; set; }
+        public List<ProfileDTO> LstProfile { get; set; }
+        public List<AccountTypeDTO> LstAccountType { get; set; }
     }
 }

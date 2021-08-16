@@ -23,7 +23,7 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet]
-        [Route("GetAccountTypeProfile")]
+        [Route("GetAll")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
         public IActionResult GetAll([FromQuery]int pageNumber = 1, int pageSize = 10)
@@ -40,7 +40,7 @@ namespace IdentityServer.Controllers
         }
 
         [HttpPost]
-        [Route("AddAccountTypeProfile")]
+        [Route("Add")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
         public IActionResult Add([FromBody] AccountTypeProfileModel model)
@@ -82,7 +82,7 @@ namespace IdentityServer.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteAccountTypeProfile/{id}")]
+        [Route("Delete/{id}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
         public IActionResult Delete(int id)
@@ -100,12 +100,12 @@ namespace IdentityServer.Controllers
 
         #region Helper Method
         //Helper Method
-        private AccountTypeProfileLstModel Map(AccountTypeProfileDTO model)
+        private AccountTypeProfileLstModel Map(ListAccountTypeAndProfileDTO model)
         {
             return new AccountTypeProfileLstModel
             {
-                lstProfile = model.lstProfile,
-                lstAccountType = model.lstAccountType
+                lstProfile = model.LstProfile,
+                lstAccountType = model.LstAccountType
             };
         }
 
@@ -120,8 +120,6 @@ namespace IdentityServer.Controllers
                 ProfileName = model.ProfileName
             };
         }
-
-
 
         #endregion
 

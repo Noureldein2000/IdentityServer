@@ -9,7 +9,7 @@ namespace IdentityServer.Services
    public interface IAccountTypeProfileService
     {
         AccountTypeProfileDTO AddAccountTypeProfile (AccountTypeProfileDTO accountTypeProfileDTO);
-        AccountTypeProfileDTO GetLstAccountTypeAndProfile();
+        ListAccountTypeAndProfileDTO GetLstAccountTypeAndProfile();
         void DeleteAccountTypeProfile(int id);
         IEnumerable<AccountTypeProfileDTO> GetAccountTypeProfileLst(int pageNumber, int pageSize);
     }

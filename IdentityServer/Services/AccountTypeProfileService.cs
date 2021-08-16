@@ -61,10 +61,8 @@ namespace IdentityServer.Services
 
             return results;
         }
-        public AccountTypeProfileDTO GetLstAccountTypeAndProfile()
+        public ListAccountTypeAndProfileDTO GetLstAccountTypeAndProfile()
         {
-            var returnDTO = new AccountTypeProfileDTO();
-
             var accountTypeLst = _accountType.Getwhere(at => at.Status == true).Select(at => new AccountTypeDTO
             {
                 Id = at.ID,
@@ -78,11 +76,11 @@ namespace IdentityServer.Services
                 Name = p.Name,
             }).ToList();
 
-            returnDTO.lstAccountType.AddRange(accountTypeLst);
-
-            returnDTO.lstProfile.AddRange(profileLst);
-
-            return returnDTO;
+            return new ListAccountTypeAndProfileDTO()
+            {
+                LstAccountType = accountTypeLst,
+                LstProfile = profileLst
+            };
         }
 
         #region Helper Method

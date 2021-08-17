@@ -15,7 +15,14 @@ namespace IdentityServer
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResource("roles", "User roles", new List<string> { "role" })
+                new IdentityResource
+                {
+                    Name = "SOF"
+                },
+                new IdentityResource
+                {
+                    Name = "Auth"
+                }
             };
         }
 
@@ -23,7 +30,8 @@ namespace IdentityServer
         {
             return new List<ApiScope>
             {
-                new ApiScope("api", "API")
+                new ApiScope("SOF"),
+                new ApiScope("Auth"),
             };
         }
 
@@ -31,10 +39,8 @@ namespace IdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource("api", "API")
-                {
-                    Scopes = { "api" }
-                }
+                new ApiResource("SOF"),
+                new ApiResource("Auth"),
             };
         }
 
@@ -44,20 +50,21 @@ namespace IdentityServer
             {
                 new Client
                 {
-                    ClientId = "api",
-                    ClientName = "API client",
+                    ClientId = "admin_dashboard_123",
+                    ClientName = "Admin Dashboard",
                     ClientSecrets = {new Secret("d5a9b78e-a694-4026-af7f-6d559d8a3949".Sha256()) },
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
-                    AllowedCorsOrigins = {""},
+                    RedirectUris = {"https://localhost:44328/signin-oidc"},
+                    PostLogoutRedirectUris = {"https://localhost:44328/signout-callback-oidc"},
+                    AllowedGrantTypes = GrantTypes.Code,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Email,
                         IdentityServerConstants.StandardScopes.Profile,
-                        IdentityServerConstants.StandardScopes.Address,
-                        "api"
-                    }
-                    
+                        "SOF",
+                        "Auth"
+                    },
+                    RequireConsent = false
+
                 }
             };
         }

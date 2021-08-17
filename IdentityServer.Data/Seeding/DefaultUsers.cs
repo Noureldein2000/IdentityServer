@@ -28,9 +28,9 @@ namespace IdentityServer.Data.Seeding
             var user = await userManager.FindByNameAsync(adminUser.UserName);
             if (user == null)
             {
-                await userManager.CreateAsync(adminUser);
-                var hashedPassword = userManager.PasswordHasher.HashPassword(adminUser, "P@$$w0rd123");
-                adminUser.PasswordHash = hashedPassword;
+                await userManager.CreateAsync(adminUser, "P@$$w0rd");
+                //var hashedPassword = userManager.PasswordHasher.HashPassword(adminUser, "P@$$w0rd123");
+                //adminUser.PasswordHash = hashedPassword;
                 await userManager.AddToRolesAsync(adminUser, new List<string> {
                     Roles.SuperAdmin.ToString()
                 });

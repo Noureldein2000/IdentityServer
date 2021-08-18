@@ -51,10 +51,7 @@ namespace IdentityServer.Controllers
                 {
                     Id = model.Id,
                     AccountTypeID = model.AccountTypeID,
-                    AccountTypeName = model.AccountTypeName,
                     ProfileID = model.ProfileID,
-                    ProfileName = model.ProfileName
-
                 });
                 return Ok(MaptoModel(result));
             }
@@ -115,9 +112,8 @@ namespace IdentityServer.Controllers
             {
                 Id = model.Id,
                 AccountTypeID = model.AccountTypeID,
-                AccountTypeName = model.AccountTypeName,
                 ProfileID = model.ProfileID,
-                ProfileName = model.ProfileName
+                FullName = model.FullName
             };
         }
 

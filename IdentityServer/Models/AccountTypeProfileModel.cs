@@ -9,8 +9,7 @@ namespace IdentityServer.Models
     {
         public int Id { get; set; }
         public int AccountTypeID { get; set; }
-        public string AccountTypeName { get; set; }
         public int ProfileID { get; set; }
-        public string ProfileName { get; set; }
+        public string FullName { get; set; }
     }
 }

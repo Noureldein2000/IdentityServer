@@ -21,10 +21,10 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet]
-        [Route("GetActivities")]
+        [Route("GetAll")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
-        public IActionResult GetActivities()
+        public IActionResult GetAll()
         {
             try
             {

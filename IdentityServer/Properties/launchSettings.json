@@ -17,6 +17,21 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "IISX-Production": {
+      "commandName": "IISExpress",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    },
+    "IISX-Staging": {
+      "commandName": "IISExpress",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Testing",
+        "ASPNETCORE_DETAILEDERRORS": "1"
+      }
+    },
     "IdentityServer": {
       "commandName": "Project",
       "launchBrowser": true,

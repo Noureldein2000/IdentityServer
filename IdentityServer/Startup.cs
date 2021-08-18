@@ -6,11 +6,14 @@ using IdentityServer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using System.Globalization;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
@@ -28,6 +31,8 @@ namespace IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+          
             var connectionString = Configuration.GetConnectionString("Default");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
@@ -110,9 +115,23 @@ namespace IdentityServer
                 });
             });//.AddSwaggerGenNewtonsoftSupport();
 
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedLanguages = new[]
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("ar")
+                };
+                options.DefaultRequestCulture = new RequestCulture(culture: "en", uiCulture: "en");
+                options.SupportedCultures = supportedLanguages;
+                options.SupportedUICultures = supportedLanguages;
+            });
+                
+
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                );
+                )
+                .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix);
 
         }
 
@@ -132,6 +151,9 @@ namespace IdentityServer
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "api v1");
             });
             app.UseRouting();
+            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(locOptions.Value);
+
             app.UseIdentityServer();
             app.UseAuthorization();
             //app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());

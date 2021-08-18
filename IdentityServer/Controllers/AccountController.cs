@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace IdentityServer.Controllers
 {
     [Route("api/[controller]")]
@@ -91,7 +92,8 @@ namespace IdentityServer.Controllers
                     CreatedBy = UserIdentityId,
                     AccountTypeProfileID = addAccountModel.AccountTypeProfileID,
                     RegionID = addAccountModel.RegionID,
-                    EntityID = addAccountModel.EntityID
+                    EntityID = addAccountModel.EntityID,
+                    ParentID=addAccountModel.ParentID
                 });
 
                 return Ok(Map(result));
@@ -123,7 +125,7 @@ namespace IdentityServer.Controllers
 
                 var result = _accountService.EditAccount(new AccountDTO
                 {
-                    Id=editAccountModel.Id,
+                    Id = editAccountModel.Id,
                     OwnerName = editAccountModel.OwnerName,
                     AccountName = editAccountModel.AccountName,
                     Mobile = editAccountModel.Mobile,

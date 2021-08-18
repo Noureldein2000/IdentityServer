@@ -4,14 +4,16 @@ using IdentityServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210817163546_CreateAccountRelationMapping")]
+    partial class CreateAccountRelationMapping
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,7 +249,7 @@ namespace IdentityServer.Data.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ParentId")
+                    b.Property<int>("ParentId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdateDate")
@@ -423,14 +425,14 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 17, 19, 23, 42, 821, DateTimeKind.Local).AddTicks(1682),
+                            CreationDate = new DateTime(2021, 8, 17, 18, 35, 45, 527, DateTimeKind.Local).AddTicks(681),
                             Name = "General",
                             NameAr = "عام"
                         },
                         new
                         {
                             ID = 2,
-                            CreationDate = new DateTime(2021, 8, 17, 19, 23, 42, 821, DateTimeKind.Local).AddTicks(1829),
+                            CreationDate = new DateTime(2021, 8, 17, 18, 35, 45, 527, DateTimeKind.Local).AddTicks(757),
                             Name = "SuperMarket",
                             NameAr = "سوبرماركت"
                         });
@@ -786,7 +788,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 17, 19, 23, 42, 821, DateTimeKind.Local).AddTicks(5579),
+                            CreationDate = new DateTime(2021, 8, 17, 18, 35, 45, 527, DateTimeKind.Local).AddTicks(2144),
                             Name = "Momkn",
                             NameAr = "ممكن"
                         });
@@ -969,7 +971,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 17, 19, 23, 42, 816, DateTimeKind.Local).AddTicks(3440),
+                            CreationDate = new DateTime(2021, 8, 17, 18, 35, 45, 524, DateTimeKind.Local).AddTicks(3836),
                             Name = "AccountUser"
                         });
                 });

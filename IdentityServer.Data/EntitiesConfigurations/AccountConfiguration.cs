@@ -25,6 +25,9 @@ namespace IdentityServer.Data.EntitiesConfigurations
 
             builder.HasOne(a => a.Entity).WithMany(a => a.Accounts).HasForeignKey(a => a.EntityID)
                 .OnDelete(DeleteBehavior.NoAction);
+
+           
+
         }
     }
 }

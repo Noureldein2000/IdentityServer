@@ -38,7 +38,6 @@ namespace IdentityServer.Services
 
         public AccountDTO AddAccount(AccountDTO addAccountDTO)
         {
-
             var checkExist = _accountOwner.Any(c => c.Mobile == addAccountDTO.Mobile || c.NationalID == addAccountDTO.NationalID);
             if (checkExist)
                 throw new OkException(Resources.ThisMobileNumberOrNationalIdAlreadyExists, ErrorCodes.ChangePassword.MobileNumberExists);
@@ -63,7 +62,12 @@ namespace IdentityServer.Services
                     Email = addAccountDTO.Email,
                     Mobile = addAccountDTO.Mobile,
                     NationalID = addAccountDTO.NationalID
+                },
+                AccountRelationMappings = new List<AccountRelationMapping>
+                {
+                   new AccountRelationMapping { ParentID=addAccountDTO.ParentID}
                 }
+
             });
 
             _unitOfWork.SaveChanges();

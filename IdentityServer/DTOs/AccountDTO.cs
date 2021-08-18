@@ -26,5 +26,6 @@ namespace IdentityServer.DTOs
         public int? AccountTypeProfileID { get; set; }
         public int? RegionID { get; set; }
         public int? EntityID { get; set; }
+        public int? ParentID { get; set; }
     }
 }

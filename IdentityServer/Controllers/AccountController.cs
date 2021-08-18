@@ -27,6 +27,7 @@ namespace IdentityServer.Controllers
         [HttpPost]
         [Route("AddAccountRequest")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
+        [ProducesResponseType(typeof(List<AccountRequestModel>), StatusCodes.Status200OK)]
         public IActionResult AddAccountRequest([FromBody] AddAccountRequestModel addRequestModel)
         {
             try
@@ -68,6 +69,7 @@ namespace IdentityServer.Controllers
         [Route("AddAccount")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK)]
         public IActionResult AddAccount([FromBody] AddAccountModel addAccountModel)
         {
             try
@@ -114,6 +116,7 @@ namespace IdentityServer.Controllers
         [Route("EditAccount")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK)]
         public IActionResult EditAccount([FromBody] EditAccountModel editAccountModel)
         {
             try
@@ -123,7 +126,7 @@ namespace IdentityServer.Controllers
 
                 var result = _accountService.EditAccount(new AccountDTO
                 {
-                    Id=editAccountModel.Id,
+                    Id = editAccountModel.Id,
                     OwnerName = editAccountModel.OwnerName,
                     AccountName = editAccountModel.AccountName,
                     Mobile = editAccountModel.Mobile,
@@ -160,6 +163,7 @@ namespace IdentityServer.Controllers
         [HttpGet]
         [Route("GetAccountRequestById/{id}")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [ProducesResponseType(typeof(AccountRequestModel), StatusCodes.Status200OK)]
         public IActionResult GetAccountRequestById([FromRoute] int id)
         {
             try
@@ -177,6 +181,7 @@ namespace IdentityServer.Controllers
         [Route("GetAccountById/{id}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK)]
         public IActionResult GetAccountById(int id)
         {
             try
@@ -189,6 +194,7 @@ namespace IdentityServer.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpGet]
         [Route("GetAccountRequestByStatus/{status}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
@@ -210,11 +216,12 @@ namespace IdentityServer.Controllers
         [Route("GetAccounts")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<AccountModel>), StatusCodes.Status200OK)]
         public IActionResult GetAccounts(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var result = _accountService.GetAccounts(pageNumber, pageSize).Select(ard => Map(ard));
+                var result = _accountService.GetAccounts(pageNumber, pageSize).Select(ard => Map(ard)).ToList();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -266,8 +273,7 @@ namespace IdentityServer.Controllers
         }
 
 
-        #region Helper Method
-        //Helper Method
+        [NonAction]
         private AccountRequestModel Map(AccountRequestDTO model)
         {
             return new AccountRequestModel
@@ -285,7 +291,7 @@ namespace IdentityServer.Controllers
                 ActivityName = model.ActivityName
             };
         }
-
+        [NonAction]
         private AccountModel Map(AccountDTO model)
         {
             return new AccountModel
@@ -303,6 +309,5 @@ namespace IdentityServer.Controllers
                 ActivityName = model.ActivityName
             };
         }
-        #endregion
     }
 }

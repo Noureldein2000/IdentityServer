@@ -82,6 +82,7 @@ namespace IdentityServer
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ISMSService, VictorySMSService>();
 
+
             //services.Replace(new ServiceDescriptor(
             //   serviceType: typeof(IPasswordHasher<ApplicationUser>),
             //   implementationType: typeof(MD5PasswordHasher<ApplicationUser>),
@@ -115,9 +116,12 @@ namespace IdentityServer
                         Array.Empty<string>()
                     }
                 });
-            }).AddSwaggerGenNewtonsoftSupport();
+            });//.AddSwaggerGenNewtonsoftSupport();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -130,15 +134,17 @@ namespace IdentityServer
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
-            app.UseIdentityServer();
-            //app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-            //app.UseAuthorization();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "api v1");
             });
+            app.UseRouting();
+            app.UseIdentityServer();
+            app.UseAuthorization();
+            //app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            //app.UseAuthorization();
+        
             //app.UseEndpoints(endpoints =>
             //{
             //    endpoints.MapDefaultControllerRoute();

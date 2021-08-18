@@ -36,6 +36,7 @@ namespace IdentityServer.Data
         public virtual DbSet<Region> Regions { get; set; }
         public virtual DbSet<Entity> Entities { get; set; }
         public virtual DbSet<DemonationEntity> DemonationEntities { get; set; }
+        public virtual DbSet<AccountRelationMapping> AccountRelationMappings { get; set; }
 
 
         public override int SaveChanges()

@@ -7,7 +7,7 @@ namespace IdentityServer.Data.Entities
     {
         public int AccountID { get; set; }
         public int ChannelID { get; set; }
-        public ActiveStatus Status { get; set; }
+        public bool Status { get; set; }
         public int CreatedBy { get; set; }
         public int? UpdatedBy { get; set; }
         //public virtual ApplicationUser User { get; set; }

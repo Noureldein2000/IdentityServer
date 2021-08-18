@@ -7,6 +7,16 @@
   <ItemGroup>
     <Compile Remove="Migrations\20210810120718_RemoveSeededMigration.cs" />
     <Compile Remove="Migrations\20210810120718_RemoveSeededMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210817161352_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817161352_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210817161756_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817161756_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210817162250_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817162250_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210817162959_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817162959_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210817163114_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817163114_CreateAccountRelationMapping.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

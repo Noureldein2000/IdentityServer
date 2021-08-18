@@ -13,7 +13,7 @@ namespace IdentityServer.Data.Entities
         public virtual ChannelType ChannelType { get; set; }
         public virtual ChannelPaymentMethod ChannelPaymentMethod { get; set; }
         public virtual ChannelOwner ChannelOwner { get; set; }
-        public virtual ICollection<ChannelIdentifier> ChannelIdentifiers { get; set; }
+        public virtual ChannelIdentifier ChannelIdentifiers { get; set; }
         public virtual ICollection<AccountChannel> AccountChannels { get; set; }
         public virtual ICollection<ChannelSim> ChannelSims { get; set; }
     }

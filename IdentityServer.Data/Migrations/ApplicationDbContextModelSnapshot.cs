@@ -112,8 +112,8 @@ namespace IdentityServer.Data.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -234,6 +234,32 @@ namespace IdentityServer.Data.Migrations
                     b.ToTable("AccountOwnerContacts");
                 });
 
+            modelBuilder.Entity("IdentityServer.Data.Entities.AccountRelationMapping", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("AccountRelationMappings");
+                });
+
             modelBuilder.Entity("IdentityServer.Data.Entities.AccountRequest", b =>
                 {
                     b.Property<int>("ID")
@@ -328,8 +354,8 @@ namespace IdentityServer.Data.Migrations
                     b.Property<string>("NameAr")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("TreeLevel")
                         .HasColumnType("int");
@@ -397,14 +423,14 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 10, 18, 46, 23, 811, DateTimeKind.Local).AddTicks(1394),
+                            CreationDate = new DateTime(2021, 8, 17, 19, 23, 42, 821, DateTimeKind.Local).AddTicks(1682),
                             Name = "General",
                             NameAr = "عام"
                         },
                         new
                         {
                             ID = 2,
-                            CreationDate = new DateTime(2021, 8, 10, 18, 46, 23, 811, DateTimeKind.Local).AddTicks(1469),
+                            CreationDate = new DateTime(2021, 8, 17, 19, 23, 42, 821, DateTimeKind.Local).AddTicks(1829),
                             Name = "SuperMarket",
                             NameAr = "سوبرماركت"
                         });
@@ -580,8 +606,8 @@ namespace IdentityServer.Data.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -595,7 +621,8 @@ namespace IdentityServer.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("ChannelID");
+                    b.HasIndex("ChannelID")
+                        .IsUnique();
 
                     b.ToTable("ChannelIdentifiers");
                 });
@@ -759,7 +786,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 10, 18, 46, 23, 811, DateTimeKind.Local).AddTicks(2843),
+                            CreationDate = new DateTime(2021, 8, 17, 19, 23, 42, 821, DateTimeKind.Local).AddTicks(5579),
                             Name = "Momkn",
                             NameAr = "ممكن"
                         });
@@ -942,7 +969,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 10, 18, 46, 23, 808, DateTimeKind.Local).AddTicks(5734),
+                            CreationDate = new DateTime(2021, 8, 17, 19, 23, 42, 816, DateTimeKind.Local).AddTicks(3440),
                             Name = "AccountUser"
                         });
                 });
@@ -1149,6 +1176,15 @@ namespace IdentityServer.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("IdentityServer.Data.Entities.AccountRelationMapping", b =>
+                {
+                    b.HasOne("IdentityServer.Data.Entities.Account", "Account")
+                        .WithMany("AccountRelationMappings")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("IdentityServer.Data.Entities.AccountRequest", b =>
                 {
                     b.HasOne("IdentityServer.Data.Entities.Activity", "Activity")
@@ -1210,8 +1246,8 @@ namespace IdentityServer.Data.Migrations
             modelBuilder.Entity("IdentityServer.Data.Entities.ChannelIdentifier", b =>
                 {
                     b.HasOne("IdentityServer.Data.Entities.Channel", "Channel")
-                        .WithMany("ChannelIdentifiers")
-                        .HasForeignKey("ChannelID")
+                        .WithOne("ChannelIdentifiers")
+                        .HasForeignKey("IdentityServer.Data.Entities.ChannelIdentifier", "ChannelID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });

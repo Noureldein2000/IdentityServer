@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Reflection;
 
 namespace IdentityServer
 {
@@ -25,11 +26,12 @@ namespace IdentityServer
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(option =>
-                option.UseSqlServer(Configuration.GetConnectionString("Default")));
+            var connectionString = Configuration.GetConnectionString("Default");
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -40,6 +42,31 @@ namespace IdentityServer
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+           
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "Cookie";
+                config.LoginPath = "/Auth/Login";
+            });
+
+            services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
+            })
+
+               .AddInMemoryApiResources(IdentityServer.Configuration.GetApiResources())
+               .AddInMemoryIdentityResources(IdentityServer.Configuration.GetIdentityResources())
+               //.AddInMemoryApiScopes(Config.GetApiScopes())
+               .AddInMemoryClients(IdentityServer.Configuration.GetClients())
+               .AddAspNetIdentity<ApplicationUser>()
+               .AddDeveloperSigningCredential();
+             //.AddCustomAuthorizeRequestValidator<CustomAuthorizeRequestValidator>()
+             //.AddDeveloperSigningCredential();
+
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILoginService, LoginService>();
@@ -48,26 +75,11 @@ namespace IdentityServer
             services.AddScoped<IChannelService, ChannelService>();
             services.AddScoped<ISMSService, VictorySMSService>();
 
-            services.Replace(new ServiceDescriptor(
-               serviceType: typeof(IPasswordHasher<ApplicationUser>),
-               implementationType: typeof(MD5PasswordHasher<ApplicationUser>),
-               ServiceLifetime.Scoped));
+            //services.Replace(new ServiceDescriptor(
+            //   serviceType: typeof(IPasswordHasher<ApplicationUser>),
+            //   implementationType: typeof(MD5PasswordHasher<ApplicationUser>),
+            //   ServiceLifetime.Scoped));
 
-
-
-            services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseSuccessEvents = false;
-                options.Events.RaiseFailureEvents = true;
-            })
-              .AddInMemoryClients(Config.GetClients())
-              .AddInMemoryApiResources(Config.GetApiResources())
-              //.AddInMemoryApiScopes(Config.GetApiScopes())
-              .AddInMemoryIdentityResources(Config.GetIdentityResources())
-              //.AddCustomAuthorizeRequestValidator<CustomAuthorizeRequestValidator>()
-              .AddAspNetIdentity<ApplicationUser>();
 
             services.AddSwaggerGen(c =>
             {
@@ -96,13 +108,12 @@ namespace IdentityServer
                         Array.Empty<string>()
                     }
                 });
-            }).AddSwaggerGenNewtonsoftSupport();
+            });//.AddSwaggerGenNewtonsoftSupport();
 
-            services.AddControllers(options =>
-            {
-                options.EnableEndpointRouting = false;
-                //options.Filters.Add(typeof(ValidateModelAttribute));
-            });
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -113,19 +124,33 @@ namespace IdentityServer
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseIdentityServer();
-            //app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-            app.UseAuthorization();
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "api v1");
             });
+            app.UseRouting();
+            app.UseIdentityServer();
+            app.UseAuthorization();
+            //app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            //app.UseAuthorization();
+        
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapDefaultControllerRoute();
+            //});
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                //endpoints.MapAreaControllerRoute(
+                //     name: "areaRoute",
+                //     areaName: "SuperAdmin",
+                //     pattern: "{area:exists}/{controller=Home}/{action=Index}");
+
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Auth}/{action=Login}/{id?}");
             });
         }
     }

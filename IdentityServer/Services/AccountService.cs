@@ -322,7 +322,7 @@ namespace IdentityServer.Services
 
         public IEnumerable<AccountDTO> GetAccounts(int pageNumber, int pageSize)
         {
-            var accountLst = _account.Getwhere(a => true).Include(a => a.AccountOwner).AsNoTracking().Select(ar => new AccountDTO
+            var accountLst = _account.Getwhere(a => true).Select(ar => new AccountDTO
             {
                 Id = ar.ID,
                 OwnerName = ar.AccountOwner.Name,
@@ -336,7 +336,7 @@ namespace IdentityServer.Services
                 ActivityID = (int)ar.ActivityID,
                 ActivityName = ar.Activity.NameAr,
                 CreationDate = ar.CreationDate
-            }).OrderBy(ar => ar.CreationDate).Skip(pageNumber - 1).Take(pageSize).ToList();
+            }).OrderByDescending(ar => ar.CreationDate).Skip(pageNumber - 1).Take(pageSize).AsNoTracking().ToList();
             return accountLst;
         }
 

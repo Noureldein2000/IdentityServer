@@ -1,6 +1,7 @@
 using IdentityServer.Data;
 using IdentityServer.Data.Entities;
 using IdentityServer.Data.Seeding;
+using IdentityServer.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,13 +30,14 @@ namespace IdentityServer
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     context.Database.Migrate();
-                    
+
                 }
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 await DefaultRoles.SeedRolesAsync(roleManager);
                 //await DefaultUsers.SeedConsumerUsersAsync(userManager);
                 await DefaultUsers.SeedSuperAdminUsersAsync(userManager, roleManager);
+
             }
             catch (Exception ex)
             {

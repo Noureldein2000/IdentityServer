@@ -1,4 +1,6 @@
-﻿using IdentityServer.Services;
+﻿using IdentityServer.DTOs;
+using IdentityServer.Models;
+using IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +30,7 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                var result = _entityService.GetEntities();
+                var result = _entityService.GetEntities().Select(a => Map(a));
                 return Ok(result);
             }
             catch (Exception ex)
@@ -38,18 +40,17 @@ namespace IdentityServer.Controllers
         }
 
 
-        #region Helper Method
         //Helper Method
-        //private RegionModel Map(RegionDTO model)
-        //{
-        //    return new RegionModel
-        //    {
-        //        ID = model.ID,
-        //        name = model.Name,
-        //        GovernorateID = model.GovernorateID
-        //    };
-        //}
-
+        #region Helper Method
+        private EntityModel Map(EntityDTO model)
+        {
+            return new EntityModel
+            {
+                ID = model.ID,
+                Name = model.Name,
+                NameAr = model.NameAr
+            };
+        }
         #endregion
 
     }

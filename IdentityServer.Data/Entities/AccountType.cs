@@ -11,5 +11,7 @@ namespace IdentityServer.Data.Entities
         public int? TreeLevel { get; set; }
 
         public virtual ICollection<AccountTypeProfile> AccountTypeProfiles { get; set; }
+        public virtual ICollection<AccountMappingValidation> AccountMappingValidations { get; set; }
+        
     }
 }

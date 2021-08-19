@@ -6,6 +6,7 @@ using IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,8 @@ namespace IdentityServer.Controllers
     public class AccountController : BaseController
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly IStringLocalizer<AuthenticationResource> _localizer;
+        public AccountController(IAccountService accountService,  IStringLocalizer<AuthenticationResource> localizer)
         {
             _accountService = accountService;
         }

@@ -26,8 +26,8 @@ namespace IdentityServer.Controllers
         [Route("GetAll")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
-        public IActionResult GetAll([FromQuery]int pageNumber = 1, int pageSize = 10)
-        {                                       
+        public IActionResult GetAll([FromQuery] int pageNumber = 1, int pageSize = 10)
+        {
             try
             {
                 var result = _accountTypeProfileService.GetAccountTypeProfileLst(pageNumber, pageSize).Select(ard => MaptoModel(ard));
@@ -88,6 +88,23 @@ namespace IdentityServer.Controllers
             {
                 _accountTypeProfileService.DeleteAccountTypeProfile(id);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetParentAccounts/{id}")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
+        public IActionResult GetParentAccounts(int id)
+        {
+            try
+            {
+                var result = _accountTypeProfileService.GetParentAccounts(id);
+                return Ok(result);
             }
             catch (Exception ex)
             {

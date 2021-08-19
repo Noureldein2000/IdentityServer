@@ -5,6 +5,7 @@ using IdentityServer.Infrastructure;
 using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,20 +17,23 @@ namespace IdentityServer.Services
     {
         private readonly IBaseRepository<Channel, int> _channel;
         private readonly IBaseRepository<ChannelIdentifier, int> _channelIdentifier;
+        private readonly IStringLocalizer<AuthenticationResource> _localizer;
         private readonly IUnitOfWork _unitOfWork;
         public ChannelService(IBaseRepository<Channel, int> channel,
             IBaseRepository<ChannelIdentifier, int> channelIdentifier,
-            IUnitOfWork unitOfWork)
+             IStringLocalizer<AuthenticationResource> localizer,
+        IUnitOfWork unitOfWork)
         {
             _channel = channel;
             _channelIdentifier = channelIdentifier;
+            _localizer = localizer;
             _unitOfWork = unitOfWork;
         }
 
         public ChannelDTO AddChannel(ChannelDTO addDTO)
         {
             if (_channel.Any(c => c.Serial == addDTO.Serial))
-                throw new OkException(Resources.ThisChannelExistedBefore, ErrorCodes.Channel.SerialExists);
+                throw new OkException(_localizer["ThisChannelExistedBefore"].Value, ErrorCodes.Channel.SerialExists);
 
             var addedEntity = _channel.Add(new Channel()
             {
@@ -61,7 +65,7 @@ namespace IdentityServer.Services
 
         public ChannelDTO EditChannel(ChannelDTO editDTO)
         {
-            var currentChannel = _channel.Getwhere(c => c.ID == editDTO.ChannelID).Include(c=>c.ChannelIdentifiers).FirstOrDefault();
+            var currentChannel = _channel.Getwhere(c => c.ID == editDTO.ChannelID).Include(c => c.ChannelIdentifiers).FirstOrDefault();
 
             currentChannel.Name = editDTO.Name;
             currentChannel.Serial = editDTO.Serial;

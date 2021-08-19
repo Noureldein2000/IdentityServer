@@ -19,30 +19,30 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<AccountOwner, int> _accountOwner;
         private readonly IBaseRepository<AccountChannelType, int> _accountChannelType;
         private readonly IBaseRepository<AccountChannel, int> _accountChannel;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IStringLocalizer<AuthenticationResource> _localizer;
+        private readonly IUnitOfWork _unitOfWork;
         public AccountService(IBaseRepository<AccountRequest, int> accountRequests,
             IBaseRepository<Account, int> account,
              IBaseRepository<AccountOwner, int> accountOwner,
              IBaseRepository<AccountChannelType, int> accountChannelType,
              IBaseRepository<AccountChannel, int> accountChannel,
-            IUnitOfWork unitOfWork,
-            IStringLocalizer<AuthenticationResource> localizer)
+            IStringLocalizer<AuthenticationResource> localizer,
+            IUnitOfWork unitOfWork)
         {
             _accountRequests = accountRequests;
             _account = account;
             _accountOwner = accountOwner;
             _accountChannelType = accountChannelType;
             _accountChannel = accountChannel;
-            _unitOfWork = unitOfWork;
             _localizer = localizer;
+            _unitOfWork = unitOfWork;
         }
 
         public AccountDTO AddAccount(AccountDTO addAccountDTO)
         {
             var checkExist = _accountOwner.Any(c => c.Mobile == addAccountDTO.Mobile || c.NationalID == addAccountDTO.NationalID);
             if (checkExist)
-                throw new OkException(Resources.ThisMobileNumberOrNationalIdAlreadyExists, ErrorCodes.ChangePassword.MobileNumberExists);
+                throw new OkException(_localizer["ThisMobileNumberOrNationalIdAlreadyExist"].Value , ErrorCodes.ChangePassword.MobileNumberExists);
 
             var account = _account.Add(new Account
             {
@@ -79,7 +79,7 @@ namespace IdentityServer.Services
         public AccountChannelDTO AddAccountChannel(AccountChannelDTO accountChannelDTO)
         {
             var checkExists = _accountChannel.Getwhere(ac => ac.AccountID == accountChannelDTO.AccountID && ac.ChannelID == accountChannelDTO.ChannelID).Any();
-            if (checkExists) throw new OkException(Resources.ThisAccountHasChannelAlready, ErrorCodes.ChangePassword.MobileNumberExists);
+            if (checkExists) throw new OkException(_localizer["ThisAccountHasChannelAlready"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
 
             var addedEntity = _accountChannel.Add(new AccountChannel
             {
@@ -96,7 +96,7 @@ namespace IdentityServer.Services
         public void AddAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO)
         {
             var checkExists = _accountChannelType.Any(act => act.AccountID == accountChannelTypeDTO.AccountID && act.ChannelTypeID == accountChannelTypeDTO.ChannelTypeID);
-            if (checkExists) throw new OkException(Resources.ThisAccountHasChannelTypeBefore, ErrorCodes.ChangePassword.MobileNumberExists);
+            if (checkExists) throw new OkException(_localizer["ThisAccountHasChannelTypeBefore"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
 
             _accountChannelType.Add(new AccountChannelType
             {
@@ -209,7 +209,7 @@ namespace IdentityServer.Services
         {
             var checkAccountExist = _account.Any(c => c.ID == editAccountDTO.Id);
             if (!checkAccountExist)
-                throw new OkException(Resources.ThisAccountIsNotExists, ErrorCodes.ChangePassword.MobileNumberExists);
+                throw new OkException(_localizer["ThisAccountIsNotExists"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
 
             var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).FirstOrDefault();
 

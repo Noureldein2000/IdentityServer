@@ -12,5 +12,6 @@ namespace IdentityServer.Services
         ListAccountTypeAndProfileDTO GetLstAccountTypeAndProfile();
         void DeleteAccountTypeProfile(int id);
         IEnumerable<AccountTypeProfileDTO> GetAccountTypeProfileLst(int pageNumber, int pageSize);
+        IEnumerable<AccountDTO> GetParentAccounts(int id);
     }
 }

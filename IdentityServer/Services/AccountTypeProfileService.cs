@@ -4,6 +4,7 @@ using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
 using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,22 +17,31 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<AccountTypeProfile, int> _accountTypeProfile;
         private readonly IBaseRepository<AccountType, int> _accountType;
         private readonly IBaseRepository<Profile, int> _profile;
+        private readonly IBaseRepository<AccountMappingValidation, int> _accountMappingValidation;
+        private readonly IBaseRepository<Account, int> _account;
+        private readonly IStringLocalizer<AuthenticationResource> _localizer;
         private readonly IUnitOfWork _unitOfWork;
         public AccountTypeProfileService(
             IBaseRepository<AccountTypeProfile, int> accountTypeProfile,
             IBaseRepository<AccountType, int> accountType,
             IBaseRepository<Profile, int> profile,
-            IUnitOfWork unitOfWork)
+            IBaseRepository<AccountMappingValidation, int> accountMappingValidation,
+           IBaseRepository<Account, int> account,
+           IStringLocalizer<AuthenticationResource> localizer,
+        IUnitOfWork unitOfWork)
         {
             _accountTypeProfile = accountTypeProfile;
             _accountType = accountType;
             _profile = profile;
+            _accountMappingValidation = accountMappingValidation;
+            _account = account;
+            _localizer= localizer;
             _unitOfWork = unitOfWork;
         }
         public AccountTypeProfileDTO AddAccountTypeProfile(AccountTypeProfileDTO accountTypeProfileDTO)
         {
             var checkExists = _accountTypeProfile.Getwhere(atp => atp.AccountTypeID == accountTypeProfileDTO.AccountTypeID && atp.ProfileID == accountTypeProfileDTO.ProfileID).Any();
-            if (checkExists) throw new OkException(Resources.ThisAccountIsNotExists, ErrorCodes.ChangePassword.InvalidPassword);
+            if (checkExists) throw new OkException(_localizer["ThisAccountIsNotExists"].Value, ErrorCodes.ChangePassword.InvalidPassword);
 
             var addedEntity = _accountTypeProfile.Add(new AccountTypeProfile
             {
@@ -80,6 +90,25 @@ namespace IdentityServer.Services
                 LstAccountType = accountTypeLst,
                 LstProfile = profileLst
             };
+        }
+
+        public IEnumerable<AccountDTO> GetParentAccounts(int id)
+        {
+            var accountTypeId = _accountTypeProfile.GetById(id).AccountTypeID;
+
+            var parentTypeId = _accountMappingValidation.Getwhere(amv => amv.ChildID == accountTypeId)
+                .Select(x => x.ParentID).FirstOrDefault();
+
+            var accounts = _accountTypeProfile.Getwhere(atp => atp.AccountTypeID == parentTypeId)
+                .SelectMany(atp => atp.Accounts).ToList();
+
+            return accounts.Select(a => new AccountDTO()
+            {
+                Id = a.ID,
+                AccountName = a.Name,
+            }).ToList();
+
+            //return _account.Getwhere(a => a.prof).Select().ToList();
         }
 
         #region Helper Method

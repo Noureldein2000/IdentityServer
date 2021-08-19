@@ -18,5 +18,14 @@ namespace IdentityServer.Models
         public string TaxNo { get; set; }
         public int? ActivityID { get; set; }
         public string ActivityName { get; set; }
+        public DateTime CreationDate { get; set; }
+        public int CreatedBy { get; set; }
+        public int UpdatedBy { get; set; }
+        public int? AccountTypeProfileID { get; set; }
+        public int? RegionID { get; set; }
+        public int? GovernerateID { get; set; }
+        public int? EntityID { get; set; }
+        public int? ParentID { get; set; }
+        public bool Status { get; set; }
     }
 }

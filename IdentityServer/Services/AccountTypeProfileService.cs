@@ -96,10 +96,10 @@ namespace IdentityServer.Services
         {
             var accountTypeId = _accountTypeProfile.GetById(id).AccountTypeID;
 
-            var parentTypeId = _accountMappingValidation.Getwhere(amv => amv.ChildID == accountTypeId)
-                .Select(x => x.ParentID).FirstOrDefault();
+            var parentTypeIds = _accountMappingValidation.Getwhere(amv => amv.ChildID == accountTypeId)
+                .Select(x => x.ParentID).ToList();
 
-            var accounts = _accountTypeProfile.Getwhere(atp => atp.AccountTypeID == parentTypeId)
+            var accounts = _accountTypeProfile.Getwhere(atp => parentTypeIds.Contains(atp.AccountTypeID))
                 .SelectMany(atp => atp.Accounts).ToList();
 
             return accounts.Select(a => new AccountDTO()

@@ -311,7 +311,16 @@ namespace IdentityServer.Controllers
                 CommercialRegistrationNo = model.CommercialRegistrationNo,
                 TaxNo = model.TaxNo,
                 ActivityID = model.ActivityID,
-                ActivityName = model.ActivityName
+                ActivityName = model.ActivityName,
+                CreatedBy = model.CreatedBy,
+                GovernerateID = model.GovernerateID,
+                AccountTypeProfileID = model.AccountTypeProfileID,
+                CreationDate = model.CreationDate,
+                EntityID = model.EntityID,
+                ParentID = model.ParentID,
+                RegionID = model.RegionID,
+                UpdatedBy = model.UpdatedBy,
+                Status = model.Status
             };
         }
     }

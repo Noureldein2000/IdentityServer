@@ -4,6 +4,7 @@ using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
 using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
@@ -211,7 +212,7 @@ namespace IdentityServer.Services
             if (!checkAccountExist)
                 throw new OkException(_localizer["ThisAccountIsNotExists"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
 
-            var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).FirstOrDefault();
+            var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).Include(a => a.AccountOwner).FirstOrDefault();
 
             account.Address = editAccountDTO.Address;
             account.TaxNo = editAccountDTO.TaxNo;
@@ -265,7 +266,8 @@ namespace IdentityServer.Services
                    ActivityName = ar.Activity.NameAr,
                    RegionID = ar.RegionID,
                    AccountTypeProfileID = ar.AccountTypeProfileID,
-                   EntityID = ar.EntityID
+                   EntityID = ar.EntityID,
+                   GovernerateID = ar.Region.GovernorateID
                }).FirstOrDefault();
         }
 
@@ -324,7 +326,7 @@ namespace IdentityServer.Services
 
         public IEnumerable<AccountDTO> GetAccounts(int pageNumber, int pageSize)
         {
-            var accountLst = _account.Getwhere(a => a.Active)
+            var accountLst = _account.Getwhere(a => true)
                 .Select(ar => new
                 {
                     Id = ar.ID,
@@ -338,7 +340,8 @@ namespace IdentityServer.Services
                     ar.TaxNo,
                     ActivityID = (int)ar.ActivityID,
                     ActivityName = ar.Activity.NameAr,
-                    ar.CreationDate
+                    ar.CreationDate,
+                    ar.Active
                 })
                 .OrderByDescending(ar => ar.CreationDate)
             .Skip(pageNumber - 1).Take(pageSize)
@@ -357,7 +360,8 @@ namespace IdentityServer.Services
                 TaxNo = ar.TaxNo,
                 ActivityID = ar.ActivityID,
                 ActivityName = ar.ActivityName,
-                CreationDate = ar.CreationDate
+                CreationDate = ar.CreationDate,
+                Status = ar.Active
             }).ToList();
         }
 

@@ -25,7 +25,9 @@ namespace IdentityServer.DTOs
         public int UpdatedBy { get; set; }
         public int? AccountTypeProfileID { get; set; }
         public int? RegionID { get; set; }
+        public int? GovernerateID { get; set; }
         public int? EntityID { get; set; }
         public int? ParentID { get; set; }
+        public bool Status { get; set; }
     }
 }

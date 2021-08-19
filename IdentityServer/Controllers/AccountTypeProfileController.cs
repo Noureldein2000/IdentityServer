@@ -103,6 +103,7 @@ namespace IdentityServer.Controllers
         [Route("GetParentAccounts/{id}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<AccountModel>), StatusCodes.Status200OK)]
         public IActionResult GetParentAccounts(int id)
         {
             try

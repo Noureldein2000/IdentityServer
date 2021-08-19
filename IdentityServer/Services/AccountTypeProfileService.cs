@@ -96,15 +96,19 @@ namespace IdentityServer.Services
         {
             var accountTypeId = _accountTypeProfile.GetById(id).AccountTypeID;
 
-            var parentTypeId = _accountMappingValidation.Getwhere(amv => amv.ChildID == accountTypeId).Select(x => x.ParentID).FirstOrDefault();
+            var parentTypeId = _accountMappingValidation.Getwhere(amv => amv.ChildID == accountTypeId)
+                .Select(x => x.ParentID).FirstOrDefault();
 
-            var parentAccountTypeProfileId = _accountTypeProfile.Getwhere(atp => atp.AccountTypeID == parentTypeId).Select(atp => atp.ID).ToList();
+            var accounts = _accountTypeProfile.Getwhere(atp => atp.AccountTypeID == parentTypeId)
+                .SelectMany(atp => atp.Accounts).ToList();
 
-            return _account.Getwhere(a => parentAccountTypeProfileId.Contains(a.AccountTypeProfileID.Value)).Select(a => new AccountDTO()
+            return accounts.Select(a => new AccountDTO()
             {
                 Id = a.ID,
                 AccountName = a.Name,
             }).ToList();
+
+            //return _account.Getwhere(a => a.prof).Select().ToList();
         }
 
         #region Helper Method

@@ -104,7 +104,7 @@ namespace IdentityServer.Controllers
             try
             {
                 var result = _accountTypeProfileService.GetParentAccounts(id);
-                return Ok(result);
+                return Ok(result.Select(s => Map(s)).ToList());
             }
             catch (Exception ex)
             {
@@ -114,6 +114,23 @@ namespace IdentityServer.Controllers
 
         #region Helper Method
         //Helper Method
+        private AccountModel Map(AccountDTO model)
+        {
+            return new AccountModel
+            {
+                Id = model.Id,
+                OwnerName = model.OwnerName,
+                AccountName = model.AccountName,
+                Mobile = model.Mobile,
+                Address = model.Address,
+                Email = model.Email,
+                NationalID = model.NationalID,
+                CommercialRegistrationNo = model.CommercialRegistrationNo,
+                TaxNo = model.TaxNo,
+                ActivityID = model.ActivityID,
+                ActivityName = model.ActivityName
+            };
+        }
         private AccountTypeProfileLstModel Map(ListAccountTypeAndProfileDTO model)
         {
             return new AccountTypeProfileLstModel

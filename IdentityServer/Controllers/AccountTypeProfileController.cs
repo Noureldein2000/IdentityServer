@@ -26,6 +26,7 @@ namespace IdentityServer.Controllers
         [Route("GetAll")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<AccountTypeProfileModel>), StatusCodes.Status200OK)]
         public IActionResult GetAll([FromQuery]int pageNumber = 1, int pageSize = 10)
         {                                       
             try
@@ -43,6 +44,7 @@ namespace IdentityServer.Controllers
         [Route("Add")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(AccountTypeProfileModel), StatusCodes.Status200OK)]
         public IActionResult Add([FromBody] AccountTypeProfileModel model)
         {
             try
@@ -65,6 +67,7 @@ namespace IdentityServer.Controllers
         [Route("GetAccountTypesAndProfiles")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<AccountTypeProfileLstModel>), StatusCodes.Status200OK)]
         public IActionResult GetAccountTypesAndProfiles()
         {
             try
@@ -82,6 +85,7 @@ namespace IdentityServer.Controllers
         [Route("Delete/{id}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public IActionResult Delete(int id)
         {
             try

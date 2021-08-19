@@ -25,6 +25,7 @@ namespace IdentityServer.Controllers
         [HttpGet]
         [Route("GetGovernorate")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<RegionModel>), StatusCodes.Status200OK)]
         public IActionResult GetGovernorate()
         {
             try
@@ -42,6 +43,7 @@ namespace IdentityServer.Controllers
         [Route("GetRegionByGovernorateId/{id}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<RegionModel>), StatusCodes.Status200OK)]
         public IActionResult GetRegionByGovernorateId(int id)
         {
             try

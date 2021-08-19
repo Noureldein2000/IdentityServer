@@ -79,6 +79,9 @@ namespace IdentityServer
             services.AddScoped<IAccountTypeProfileService, AccountTypeProfileService>();
             services.AddScoped<IChannelService, ChannelService>();
             services.AddScoped<ISMSService, VictorySMSService>();
+            services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<IRegionService, RegionService>();
+            services.AddScoped<IEntityService, EntityService>();
 
             //services.Replace(new ServiceDescriptor(
             //   serviceType: typeof(IPasswordHasher<ApplicationUser>),

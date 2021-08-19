@@ -55,7 +55,7 @@ namespace IdentityServer.Services
                 Id = atp.ID,
                 AccountTypeID = atp.AccountTypeID,
                 ProfileID = atp.ProfileID,
-                FullName = $"{atp.AccountType.Name} - {atp.Profile.Name}"
+                FullName = atp.AccountType.Name +" - " + atp.Profile.Name
             }).OrderBy(c => c.FullName).Skip(pageNumber - 1).Take(pageSize).ToList();
 
             return results;

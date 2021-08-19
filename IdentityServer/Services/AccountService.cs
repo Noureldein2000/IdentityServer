@@ -4,8 +4,6 @@ using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
 using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
@@ -114,7 +112,7 @@ namespace IdentityServer.Services
         public AccountRequestDTO AddAccountRequest(AccountRequestDTO accountRequestDto)
         {
             var checkExist = _accountRequests.Any(c => c.Mobile == accountRequestDto.Mobile && c.AccountRequestStatus != AccountRequestStatus.Rejected);
-            if(checkExist)
+            if (checkExist)
                 throw new OkException(_localizer["Thismobilenumberalreadyexists"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
 
             var entityRequest = _accountRequests.Add(new AccountRequest
@@ -213,7 +211,7 @@ namespace IdentityServer.Services
             if (!checkAccountExist)
                 throw new OkException(Resources.ThisAccountIsNotExists, ErrorCodes.ChangePassword.MobileNumberExists);
 
-            var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).Include(a => a.AccountOwner).FirstOrDefault();
+            var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).FirstOrDefault();
 
             account.Address = editAccountDTO.Address;
             account.TaxNo = editAccountDTO.TaxNo;
@@ -249,7 +247,7 @@ namespace IdentityServer.Services
 
         public AccountDTO GetAccountById(int id)
         {
-            return _account.Getwhere(x => x.ID == id).Include(a => a.AccountOwner).AsNoTracking()
+            return _account.Getwhere(x => x.ID == id)
                .Select(ar => new AccountDTO
                {
                    Id = ar.ID,
@@ -286,7 +284,7 @@ namespace IdentityServer.Services
 
         public IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pageNumber, int pageSize)
         {
-            var accountRequestLst = _accountRequests.Getwhere(x => x.AccountRequestStatus == status).AsNoTracking()
+            var accountRequestLst = _accountRequests.Getwhere(x => x.AccountRequestStatus == status)
                 .Select(ar => new AccountRequestDTO
                 {
                     Id = ar.ID,
@@ -307,7 +305,7 @@ namespace IdentityServer.Services
 
         public AccountRequestDTO GetAccountRequestsById(int id)
         {
-            return _accountRequests.Getwhere(x => x.ID == id).AsNoTracking()
+            return _accountRequests.Getwhere(x => x.ID == id)
                 .Select(ar => new AccountRequestDTO
                 {
                     Id = ar.ID,
@@ -326,22 +324,41 @@ namespace IdentityServer.Services
 
         public IEnumerable<AccountDTO> GetAccounts(int pageNumber, int pageSize)
         {
-            var accountLst = _account.Getwhere(a => true).Select(ar => new AccountDTO
+            var accountLst = _account.Getwhere(a => a.Active)
+                .Select(ar => new
+                {
+                    Id = ar.ID,
+                    OwnerName = ar.AccountOwner.Name,
+                    AccountName = ar.Name,
+                    ar.AccountOwner.Mobile,
+                    ar.Address,
+                    ar.AccountOwner.Email,
+                    ar.AccountOwner.NationalID,
+                    ar.CommercialRegistrationNo,
+                    ar.TaxNo,
+                    ActivityID = (int)ar.ActivityID,
+                    ActivityName = ar.Activity.NameAr,
+                    ar.CreationDate
+                })
+                .OrderByDescending(ar => ar.CreationDate)
+            .Skip(pageNumber - 1).Take(pageSize)
+            .ToList();
+            //return accountLst;
+            return accountLst.Select(ar => new AccountDTO
             {
-                Id = ar.ID,
-                OwnerName = ar.AccountOwner.Name,
-                AccountName = ar.Name,
-                Mobile = ar.AccountOwner.Mobile,
+                Id = ar.Id,
+                OwnerName = ar.OwnerName,
+                AccountName = ar.AccountName,
+                Mobile = ar.Mobile,
                 Address = ar.Address,
-                Email = ar.AccountOwner.Email,
-                NationalID = ar.AccountOwner.NationalID,
+                Email = ar.Email,
+                NationalID = ar.NationalID,
                 CommercialRegistrationNo = ar.CommercialRegistrationNo,
                 TaxNo = ar.TaxNo,
-                ActivityID = (int)ar.ActivityID,
-                ActivityName = ar.Activity.NameAr,
+                ActivityID = ar.ActivityID,
+                ActivityName = ar.ActivityName,
                 CreationDate = ar.CreationDate
-            }).OrderByDescending(ar => ar.CreationDate).Skip(pageNumber - 1).Take(pageSize).AsNoTracking().ToList();
-            return accountLst;
+            }).ToList();
         }
 
         public IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId)

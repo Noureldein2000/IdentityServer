@@ -16,7 +16,7 @@ namespace IdentityServer.Models
         public string NationalID { get; set; }
         public string CommercialRegistrationNo { get; set; }
         public string TaxNo { get; set; }
-        public int ActivityID { get; set; }
+        public int? ActivityID { get; set; }
         public string ActivityName { get; set; }
     }
 }

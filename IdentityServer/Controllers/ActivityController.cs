@@ -26,6 +26,7 @@ namespace IdentityServer.Controllers
         [Route("GetAll")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<ActivityModel>), StatusCodes.Status200OK)]
         public IActionResult GetAll()
         {
             try

@@ -223,7 +223,8 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                var result = _accountService.GetAccounts(pageNumber, pageSize).Select(ard => Map(ard)).ToList();
+                var result = _accountService.GetAccounts(pageNumber, pageSize)
+                    .Select(ard => Map(ard)).ToList();
                 return Ok(result);
             }
             catch (Exception ex)

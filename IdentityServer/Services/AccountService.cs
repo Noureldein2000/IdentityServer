@@ -2,6 +2,7 @@
 using IdentityServer.DTOs;
 using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
+using IdentityServer.Models;
 using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
@@ -324,7 +325,7 @@ namespace IdentityServer.Services
                 }).FirstOrDefault();
         }
 
-        public IEnumerable<AccountDTO> GetAccounts(int pageNumber, int pageSize)
+        public PagedResult<AccountDTO> GetAccounts(int pageNumber, int pageSize)
         {
             var accountLst = _account.Getwhere(a => true)
                 .Select(ar => new
@@ -342,27 +343,35 @@ namespace IdentityServer.Services
                     ActivityName = ar.Activity.NameAr,
                     ar.CreationDate,
                     ar.Active
-                })
-                .OrderByDescending(ar => ar.CreationDate)
+                });
+            var count = accountLst.Count();
+
+            var resultList = accountLst.OrderByDescending(ar => ar.CreationDate)
             .Skip(pageNumber - 1).Take(pageSize)
             .ToList();
+
+
             //return accountLst;
-            return accountLst.Select(ar => new AccountDTO
+            return new PagedResult<AccountDTO>
             {
-                Id = ar.Id,
-                OwnerName = ar.OwnerName,
-                AccountName = ar.AccountName,
-                Mobile = ar.Mobile,
-                Address = ar.Address,
-                Email = ar.Email,
-                NationalID = ar.NationalID,
-                CommercialRegistrationNo = ar.CommercialRegistrationNo,
-                TaxNo = ar.TaxNo,
-                ActivityID = ar.ActivityID,
-                ActivityName = ar.ActivityName,
-                CreationDate = ar.CreationDate,
-                Status = ar.Active
-            }).ToList();
+                Results = resultList.Select(ar => new AccountDTO
+                {
+                    Id = ar.Id,
+                    OwnerName = ar.OwnerName,
+                    AccountName = ar.AccountName,
+                    Mobile = ar.Mobile,
+                    Address = ar.Address,
+                    Email = ar.Email,
+                    NationalID = ar.NationalID,
+                    CommercialRegistrationNo = ar.CommercialRegistrationNo,
+                    TaxNo = ar.TaxNo,
+                    ActivityID = ar.ActivityID,
+                    ActivityName = ar.ActivityName,
+                    CreationDate = ar.CreationDate,
+                    Status = ar.Active
+                }).ToList(),
+                PageCount = count
+            };
         }
 
         public IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId)

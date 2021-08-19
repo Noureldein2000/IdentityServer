@@ -22,7 +22,7 @@ namespace IdentityServer.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IStringLocalizer<AuthenticationResource> _localizer;
-        public AccountController(IAccountService accountService,  IStringLocalizer<AuthenticationResource> localizer)
+        public AccountController(IAccountService accountService, IStringLocalizer<AuthenticationResource> localizer)
         {
             _accountService = accountService;
         }
@@ -97,7 +97,7 @@ namespace IdentityServer.Controllers
                     AccountTypeProfileID = addAccountModel.AccountTypeProfileID,
                     RegionID = addAccountModel.RegionID,
                     EntityID = addAccountModel.EntityID,
-                    ParentID=addAccountModel.ParentID
+                    ParentID = addAccountModel.ParentID
                 });
 
                 return Ok(Map(result));
@@ -220,14 +220,17 @@ namespace IdentityServer.Controllers
         [Route("GetAccounts")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(IEnumerable<AccountModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<AccountModel>), StatusCodes.Status200OK)]
         public IActionResult GetAccounts(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var result = _accountService.GetAccounts(pageNumber, pageSize)
-                    .Select(ard => Map(ard)).ToList();
-                return Ok(result);
+                var result = _accountService.GetAccounts(pageNumber, pageSize);
+                return Ok(new PagedResult<AccountModel>
+                {
+                    Results = result.Results.Select(ard => Map(ard)).ToList(),
+                    PageCount = result.PageCount
+                });
             }
             catch (Exception ex)
             {

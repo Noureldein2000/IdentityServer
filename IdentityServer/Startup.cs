@@ -73,6 +73,7 @@ namespace IdentityServer
              //.AddDeveloperSigningCredential();
 
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
+  
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IAccountService, AccountService>();

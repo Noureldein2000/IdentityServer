@@ -18,15 +18,16 @@ namespace IdentityServer.Services
         PagedResult<AccountDTO> GetAccounts(int pagenumber, int pageSize);
         AccountRequestDTO GetAccountRequestsById(int id);
         AccountDTO GetAccountById(int id);
+        AccountChannelTypeDTO GetAccountChannelTypeById(int id);
         AccountRequestStatus ChangeAccountRequestStatus(int id, AccountRequestStatus status, int createdBy);
         bool ChangeAccountStatus(int id, int updatedBy);
         IEnumerable<AccountChannelTypeDTO> GetAccountChannelTypes(int accountId);
         AccountChannelTypeDTO EditAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO);
-        void DeleteAccountChannelTypes(int id);
-        void AddAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO);
+        AccountChannelTypeDTO DeleteAccountChannelTypes(int id);
+        AccountChannelTypeDTO AddAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO);
         IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId);
         AccountChannelDTO AddAccountChannel(AccountChannelDTO accountChannelDTO);
-        void DeleteAccountChannel(int id);
-        bool ChangeAccountChannelStatus(int id);
+        AccountChannelDTO DeleteAccountChannel(int id);
+        AccountChannelDTO ChangeAccountChannelStatus(int id,int userUpdated);
     }
 }

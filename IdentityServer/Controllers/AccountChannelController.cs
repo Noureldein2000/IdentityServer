@@ -26,6 +26,7 @@ namespace IdentityServer.Controllers
         [Route("GetChannelsByAccountId/{accountId}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<AccountChannelModel>), StatusCodes.Status200OK)]
         public IActionResult GetChannelsByAccountId([FromRoute] int accountId)
         {
             try
@@ -43,6 +44,7 @@ namespace IdentityServer.Controllers
         [Route("Add")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(AccountChannelModel), StatusCodes.Status200OK)]
         public IActionResult AddAccountChannel([FromBody] AccountChannelModel model)
         {
             try
@@ -66,13 +68,13 @@ namespace IdentityServer.Controllers
         [Route("ChangeStatus/{id}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(AccountChannelModel), StatusCodes.Status200OK)]
         public IActionResult ChangeStatusAccountChannel([FromRoute] int id)
         {
             try
             {
-                var result = _accountService.ChangeAccountChannelStatus(id);
-
-                return Ok(result);
+                var result = _accountService.ChangeAccountChannelStatus(id, UserIdentityId);
+                return Ok(Map(result));
             }
             catch (Exception ex)
             {
@@ -84,13 +86,13 @@ namespace IdentityServer.Controllers
         [Route("Delete/{id}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(AccountChannelModel), StatusCodes.Status200OK)]
         public IActionResult DeleteAccountChannel([FromRoute] int id)
         {
             try
             {
-                _accountService.DeleteAccountChannel(id);
-
-                return Ok();
+                var result = _accountService.DeleteAccountChannel(id);
+                return Ok(Map(result));
             }
             catch (Exception ex)
             {
@@ -108,8 +110,10 @@ namespace IdentityServer.Controllers
                 Id = model.Id,
                 AccountID = model.AccountID,
                 ChannelID = model.ChannelID,
+                ChannelName = model.ChannelName,
                 Status = model.Status,
                 CreatedBy = model.CreatedBy,
+                CreatedName = model.CreatedName,
                 UpdatedBy = model.UpdatedBy
             };
         }

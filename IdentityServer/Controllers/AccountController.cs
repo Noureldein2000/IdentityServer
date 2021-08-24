@@ -30,7 +30,7 @@ namespace IdentityServer.Controllers
         [HttpPost]
         [Route("AddAccountRequest")]
         [Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
-        [ProducesResponseType(typeof(List<AccountRequestModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AccountRequestModel), StatusCodes.Status200OK)]
         public IActionResult AddAccountRequest([FromBody] AddAccountRequestModel addRequestModel)
         {
             try
@@ -203,6 +203,7 @@ namespace IdentityServer.Controllers
         [Route("GetAccountRequestByStatus/{status}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(PagedResult<AccountRequestModel>), StatusCodes.Status200OK)]
         public IActionResult GetAccountRequestByStatus([FromRoute] AccountRequestStatus status = AccountRequestStatus.UnderProcessing, int pageNumber = 1, int pageSize = 10)
         {
             try

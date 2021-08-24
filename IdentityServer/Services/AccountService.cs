@@ -5,6 +5,7 @@ using IdentityServer.Infrastructure;
 using IdentityServer.Models;
 using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using System;
@@ -22,6 +23,7 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<AccountChannelType, int> _accountChannelType;
         private readonly IBaseRepository<AccountChannel, int> _accountChannel;
         private readonly IStringLocalizer<AuthenticationResource> _localizer;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
         public AccountService(IBaseRepository<AccountRequest, int> accountRequests,
             IBaseRepository<Account, int> account,
@@ -29,6 +31,7 @@ namespace IdentityServer.Services
              IBaseRepository<AccountChannelType, int> accountChannelType,
              IBaseRepository<AccountChannel, int> accountChannel,
             IStringLocalizer<AuthenticationResource> localizer,
+             UserManager<ApplicationUser> userManager,
             IUnitOfWork unitOfWork)
         {
             _accountRequests = accountRequests;
@@ -36,6 +39,7 @@ namespace IdentityServer.Services
             _accountOwner = accountOwner;
             _accountChannelType = accountChannelType;
             _accountChannel = accountChannel;
+            _userManager = userManager;
             _localizer = localizer;
             _unitOfWork = unitOfWork;
         }
@@ -44,7 +48,7 @@ namespace IdentityServer.Services
         {
             var checkExist = _accountOwner.Any(c => c.Mobile == addAccountDTO.Mobile || c.NationalID == addAccountDTO.NationalID);
             if (checkExist)
-                throw new OkException(_localizer["ThisMobileNumberOrNationalIdAlreadyExist"].Value , ErrorCodes.ChangePassword.MobileNumberExists);
+                throw new OkException(_localizer["ThisMobileNumberOrNationalIdAlreadyExist"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
 
             var account = _account.Add(new Account
             {
@@ -95,12 +99,12 @@ namespace IdentityServer.Services
             return MapEntityToDto(addedEntity);
         }
 
-        public void AddAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO)
+        public AccountChannelTypeDTO AddAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO)
         {
             var checkExists = _accountChannelType.Any(act => act.AccountID == accountChannelTypeDTO.AccountID && act.ChannelTypeID == accountChannelTypeDTO.ChannelTypeID);
             if (checkExists) throw new OkException(_localizer["ThisAccountHasChannelTypeBefore"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
 
-            _accountChannelType.Add(new AccountChannelType
+            var addedentity = _accountChannelType.Add(new AccountChannelType
             {
                 AccountID = accountChannelTypeDTO.AccountID,
                 ChannelTypeID = accountChannelTypeDTO.ChannelTypeID,
@@ -109,6 +113,8 @@ namespace IdentityServer.Services
             });
 
             _unitOfWork.SaveChanges();
+
+            return (MapEntityToDto(addedentity));
         }
 
         public AccountRequestDTO AddAccountRequest(AccountRequestDTO accountRequestDto)
@@ -135,12 +141,13 @@ namespace IdentityServer.Services
             return MapEntityToDto(entityRequest);
         }
 
-        public bool ChangeAccountChannelStatus(int id)
+        public AccountChannelDTO ChangeAccountChannelStatus(int id, int userUpdated)
         {
             var current = _accountChannel.GetById(id);
             current.Status = !current.Status;
+            current.UpdatedBy = userUpdated;
             _unitOfWork.SaveChanges();
-            return true;
+            return MapEntityToDto(current);
         }
 
         public AccountRequestStatus ChangeAccountRequestStatus(int id, AccountRequestStatus status, int createdBy)
@@ -194,16 +201,18 @@ namespace IdentityServer.Services
             return currentAccount.Active;
         }
 
-        public void DeleteAccountChannel(int id)
+        public AccountChannelDTO DeleteAccountChannel(int id)
         {
-            _accountChannel.Delete(id);
+            var deletedEntity = _accountChannel.Delete(id);
             _unitOfWork.SaveChanges();
+            return MapEntityToDto(deletedEntity);
         }
 
-        public void DeleteAccountChannelTypes(int id)
+        public AccountChannelTypeDTO DeleteAccountChannelTypes(int id)
         {
             var result = _accountChannelType.Delete(id);
             _unitOfWork.SaveChanges();
+            return MapEntityToDto(result);
 
         }
 
@@ -270,6 +279,11 @@ namespace IdentityServer.Services
                    EntityID = ar.EntityID,
                    GovernerateID = ar.Region.GovernorateID
                }).FirstOrDefault();
+        }
+
+        public AccountChannelTypeDTO GetAccountChannelTypeById(int id)
+        {
+            return MapEntityToDto(_accountChannelType.GetById(id));
         }
 
         public IEnumerable<AccountChannelTypeDTO> GetAccountChannelTypes(int accountId)
@@ -376,15 +390,19 @@ namespace IdentityServer.Services
 
         public IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId)
         {
-            return _accountChannel.Getwhere(ac => ac.AccountID == accountId && ac.Status == true).Select(ac => new AccountChannelDTO
+            var result= _accountChannel.Getwhere(ac => ac.AccountID == accountId).Select(ac => new AccountChannelDTO
             {
                 Id = ac.ID,
                 AccountID = ac.AccountID,
                 ChannelID = ac.ChannelID,
+                ChannelName = ac.Channel.Name,
                 Status = ac.Status,
                 CreatedBy = ac.CreatedBy,
+                CreatedName = _userManager.Users.Where(u => u.UserId == ac.CreatedBy).FirstOrDefault().Name,
                 UpdatedBy = ac.UpdatedBy
             }).ToList();
+
+            return result;
         }
 
 

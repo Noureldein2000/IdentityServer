@@ -1,4 +1,5 @@
 ﻿using IdentityServer.DTOs;
+using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
 using IdentityServer.Models;
 using IdentityServer.Services;
@@ -28,12 +29,17 @@ namespace IdentityServer.Controllers
         [Route("GetChannels")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(PagedResult<ChannelResponseModel>), StatusCodes.Status200OK)]
         public IActionResult GetChannels(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var result = _channelService.GetChannels(pageNumber, pageSize).Select(c => Map(c));
-                return Ok(result);
+                var result = _channelService.GetChannels(pageNumber, pageSize);
+                return Ok(new PagedResult<ChannelResponseModel>()
+                {
+                    Results = result.Results.Select(ard => Map(ard)).ToList(),
+                    PageCount = result.PageCount
+                });
             }
             catch (Exception ex)
             {
@@ -45,6 +51,7 @@ namespace IdentityServer.Controllers
         [Route("Add")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(ChannelResponseModel), StatusCodes.Status200OK)]
         public IActionResult Add([FromBody] AddChannelModel model)
         {
             try
@@ -72,6 +79,7 @@ namespace IdentityServer.Controllers
         [Route("Edit")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(ChannelResponseModel), StatusCodes.Status200OK)]
         public IActionResult Edit([FromBody] EditChannelModel model)
         {
             try
@@ -117,6 +125,7 @@ namespace IdentityServer.Controllers
         [Route("GetChannelIdentitfiers/{channelId}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(ChannelResponseModel), StatusCodes.Status200OK)]
         public IActionResult GetChannelIdentitfiers(int channelId)
         {
             try
@@ -134,12 +143,17 @@ namespace IdentityServer.Controllers
         [Route("SearchChannelBySerial/{searchKey}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(PagedResult<ChannelResponseModel>), StatusCodes.Status200OK)]
         public IActionResult SearchChannelBySerial(string searchKey, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var result = _channelService.SearchChannelBySerial(searchKey, pageNumber, pageSize).Select(c => Map(c));
-                return Ok(result);
+                var result = _channelService.SearchChannelBySerial(searchKey, pageNumber, pageSize);
+                return Ok(new PagedResult<ChannelResponseModel>()
+                {
+                    Results = result.Results.Select(ard => Map(ard)).ToList(),
+                    PageCount = result.PageCount
+                });
             }
             catch (Exception ex)
             {
@@ -147,6 +161,26 @@ namespace IdentityServer.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ChangeStatus/{Id}")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
+        public IActionResult ChangeStatus([FromRoute] int Id)
+        {
+            try
+            {
+                var result = _channelService.ChangeStatus(Id, UserIdentityId);
+                return Ok(result);
+            }
+            catch (AuthorizationException ex)
+            {
+                return BadRequest(ex.ErrorCode, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
         #region Helper Method
         //Helper Method
@@ -154,11 +188,15 @@ namespace IdentityServer.Controllers
         {
             return new ChannelResponseModel
             {
+                ChannelID = model.ChannelID,
                 Name = model.Name,
                 Serial = model.Serial,
                 ChannelTypeID = model.ChannelTypeID,
+                ChannelTypeName = model.ChannelTypeName,
                 ChannelOwnerID = model.ChannelOwnerID,
+                ChannelOwnerName = model.ChannelOwnerName,
                 PaymentMethodID = model.PaymentMethodID,
+                PaymentMethodName = model.PaymentMethodName,
                 Status = model.Status,
                 Value = model.Value,
                 CreatedBy = model.CreatedBy,

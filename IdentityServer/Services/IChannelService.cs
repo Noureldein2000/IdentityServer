@@ -1,4 +1,5 @@
 ﻿using IdentityServer.DTOs;
+using IdentityServer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,11 @@ namespace IdentityServer.Services
     {
         ChannelDTO AddChannel(ChannelDTO addDTO);
         ChannelDTO EditChannel(ChannelDTO editDTO);
-        IEnumerable<ChannelDTO> GetChannels(int pageNumber, int pageSize);
+        PagedResult<ChannelDTO> GetChannels(int pageNumber, int pageSize);
         ChannelDTO GetChannelIdentitfiers(int channelId);
-        IEnumerable<ChannelDTO> SearchChannelBySerial(string searchKey, int pageNumber, int pageSize);
+        PagedResult<ChannelDTO> SearchChannelBySerial(string searchKey, int pageNumber, int pageSize);
         void DeleteChannel(int id);
+        bool ChangeStatus(int id, int updatedBy);
 
     }
 }

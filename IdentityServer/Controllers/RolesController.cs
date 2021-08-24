@@ -14,13 +14,13 @@ namespace IdentityServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class RolesController : BaseController
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         public RolesController(RoleManager<IdentityRole> roleManager)
         {
-
+            _roleManager = roleManager;
         }
         [HttpGet("GetAll")]
         [ProducesResponseType(typeof(List<IdentityRole>), StatusCodes.Status200OK)]

@@ -16,18 +16,15 @@ namespace IdentityServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationUser> _roleManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         public UsersController(
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationUser> roleManager,
-            SignInManager<ApplicationUser> signInManager)
+            RoleManager<IdentityRole> roleManager)            
         {
-            _signInManager = signInManager;
             _roleManager = roleManager;
             _userManager = userManager;
         }
@@ -40,7 +37,7 @@ namespace IdentityServer.Controllers
                 Id = u.Id,
                 Email = u.Email,
                 UserName = u.UserName,
-                Roles = string.Join(", ", _userManager.GetRolesAsync(u).Result)
+                Roles = ""//string.Join(", ", _userManager.GetRolesAsync(u).Result)
             });
 
             return Ok(new PagedResult<UserModel>
@@ -58,9 +55,9 @@ namespace IdentityServer.Controllers
                 Id = u.Id,
                 Email = u.Email,
                 UserName = u.UserName,
-                Roles = string.Join(", ", _userManager.GetRolesAsync(u).Result)
+                Roles = "" //string.Join(", ", _userManager.GetRolesAsync(u).Result)
             });
-
+            //var usersCount = users.Count();
             return Ok(new PagedResult<UserModel>
             {
                 Results = users.OrderBy(u => u.UserName).Skip(pageNumber - 1).Take(pageSize).ToList(),
@@ -104,6 +101,7 @@ namespace IdentityServer.Controllers
             return Ok(model);
         }
         [HttpGet("ManagePermissions")]
+        [ProducesResponseType(typeof(UserPermissionsModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> ManagePermissions(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -131,7 +129,7 @@ namespace IdentityServer.Controllers
             return Ok(model);
         }
         [HttpPost("ManagePermissions")]
-        [ProducesResponseType(typeof(RolePermissionsModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserPermissionsModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> ManagePermissions(UserPermissionsModel model)
         {
             var user = await _userManager.FindByIdAsync(model.UserId);

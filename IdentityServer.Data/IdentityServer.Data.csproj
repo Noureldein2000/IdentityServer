@@ -17,6 +17,8 @@
     <Compile Remove="Migrations\20210817162959_CreateAccountRelationMapping.Designer.cs" />
     <Compile Remove="Migrations\20210817163114_CreateAccountRelationMapping.cs" />
     <Compile Remove="Migrations\20210817163114_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210822120847_Fixes.cs" />
+    <Compile Remove="Migrations\20210822120847_Fixes.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

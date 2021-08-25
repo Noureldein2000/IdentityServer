@@ -11,6 +11,7 @@ namespace IdentityServer.Models
         public int AccountID { get; set; }
         public int ChannelID { get; set; }
         public string ChannelName { get; set; }
+        public string Serial { get; set; }
         public bool Status { get; set; }
         public int CreatedBy { get; set; }
         public string CreatedName { get; set; }

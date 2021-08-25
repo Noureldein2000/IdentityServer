@@ -25,6 +25,7 @@ namespace IdentityServer.Controllers
         public AccountController(IAccountService accountService, IStringLocalizer<AuthenticationResource> localizer)
         {
             _accountService = accountService;
+            _localizer = localizer;
         }
 
         [HttpPost]

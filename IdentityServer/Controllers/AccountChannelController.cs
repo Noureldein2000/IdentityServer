@@ -111,6 +111,7 @@ namespace IdentityServer.Controllers
                 AccountID = model.AccountID,
                 ChannelID = model.ChannelID,
                 ChannelName = model.ChannelName,
+                Serial=model.Serial,
                 Status = model.Status,
                 CreatedBy = model.CreatedBy,
                 CreatedName = model.CreatedName,

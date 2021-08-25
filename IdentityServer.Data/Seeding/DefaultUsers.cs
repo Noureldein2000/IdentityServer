@@ -37,6 +37,31 @@ namespace IdentityServer.Data.Seeding
             }
             await roleManager.SeedClaimsForSuperAdmin();
         }
+        public static async Task SeedAnonymousUsersAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            var anonUser = new ApplicationUser
+            {
+                Id = "d5a9b78e-a694-4027-af7f-6d569d8a3960",
+                Email = "consumer@momkn.org",
+                EmailConfirmed = true,
+                PhoneNumber = "0122222222",
+                UserName = "consumer",
+                NormalizedEmail = "consumer@momkn.org".ToUpper(),
+                NormalizedUserName = "consumer".ToUpper(),
+                LockoutEnabled = true
+            };
+            var user = await userManager.FindByNameAsync(anonUser.UserName);
+            if (user == null)
+            {
+                await userManager.CreateAsync(anonUser, "P@$$w0rd");
+                //var hashedPassword = userManager.PasswordHasher.HashPassword(adminUser, "P@$$w0rd123");
+                //adminUser.PasswordHash = hashedPassword;
+                await userManager.AddToRolesAsync(anonUser, new List<string> {
+                    Roles.Consumer.ToString()
+                });
+            }
+            //await roleManager.SeedClaimsForSuperAdmin();
+        }
         public static async Task SeedClaimsForSuperAdmin(this RoleManager<IdentityRole> roleManager)
         {
             var adminRole = await roleManager.FindByNameAsync(Roles.SuperAdmin.ToString());

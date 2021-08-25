@@ -63,7 +63,7 @@ namespace IdentityServer.Services
             var tryChannelType = int.TryParse(model.ChannelType, out var channelType);
             var tryChannelCategory = int.TryParse(model.ChannelCategory, out var channelCategory);
 
-            if (!tryAccount || !tryChannelType || tryChannelCategory)
+            if (!tryAccount || !tryChannelType || !tryChannelCategory)
             {
                 throw new OkException(_localizer["FailedTry"].Value, ErrorCodes.FailedTry);
             }

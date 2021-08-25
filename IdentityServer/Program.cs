@@ -37,6 +37,7 @@ namespace IdentityServer
                 await DefaultRoles.SeedRolesAsync(roleManager);
                 //await DefaultUsers.SeedConsumerUsersAsync(userManager);
                 await DefaultUsers.SeedSuperAdminUsersAsync(userManager, roleManager);
+                await DefaultUsers.SeedAnonymousUsersAsync(userManager, roleManager);
 
             }
             catch (Exception ex)

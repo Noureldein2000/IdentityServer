@@ -396,6 +396,7 @@ namespace IdentityServer.Services
                 AccountID = ac.AccountID,
                 ChannelID = ac.ChannelID,
                 ChannelName = ac.Channel.Name,
+                Serial=ac.Channel.Serial,
                 Status = ac.Status,
                 CreatedBy = ac.CreatedBy,
                 CreatedName = _userManager.Users.Where(u => u.UserId == ac.CreatedBy).FirstOrDefault().Name,

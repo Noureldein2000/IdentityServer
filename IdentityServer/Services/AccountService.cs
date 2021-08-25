@@ -224,6 +224,11 @@ namespace IdentityServer.Services
 
             var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).Include(a => a.AccountOwner).FirstOrDefault();
 
+            foreach (var accountRealtion in account.AccountRelationMappings.ToList())
+            {
+                account.AccountRelationMappings.Remove(accountRealtion);
+            }
+
             account.Address = editAccountDTO.Address;
             account.TaxNo = editAccountDTO.TaxNo;
             account.ActivityID = editAccountDTO.ActivityID;
@@ -241,6 +246,11 @@ namespace IdentityServer.Services
             account.AccountOwner.Email = editAccountDTO.Email;
             account.AccountOwner.Mobile = editAccountDTO.Mobile;
             account.AccountOwner.NationalID = editAccountDTO.NationalID;
+
+            account.AccountRelationMappings = new List<AccountRelationMapping>
+                {
+                   new AccountRelationMapping { ParentID=editAccountDTO.ParentID}
+                };
 
             _unitOfWork.SaveChanges();
             return MapEntityToDto(account);

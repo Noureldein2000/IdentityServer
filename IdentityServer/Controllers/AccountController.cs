@@ -73,7 +73,7 @@ namespace IdentityServer.Controllers
         [Route("AddAccount")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(AddAccountModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK)]
         public IActionResult AddAccount([FromBody] AddAccountModel addAccountModel)
         {
             try
@@ -146,7 +146,8 @@ namespace IdentityServer.Controllers
                     UpdatedBy = UserIdentityId,
                     AccountTypeProfileID = editAccountModel.AccountTypeProfileID,
                     RegionID = editAccountModel.RegionID,
-                    EntityID = editAccountModel.EntityID
+                    EntityID = editAccountModel.EntityID,
+                    ParentID = editAccountModel.ParentID
                 });
 
                 return Ok(Map(result));

@@ -73,7 +73,7 @@ namespace IdentityServer.Controllers
         [Route("AddAccount")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AddAccountModel), StatusCodes.Status200OK)]
         public IActionResult AddAccount([FromBody] AddAccountModel addAccountModel)
         {
             try

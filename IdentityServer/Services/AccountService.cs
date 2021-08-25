@@ -391,13 +391,13 @@ namespace IdentityServer.Services
 
         public IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId)
         {
-            var result= _accountChannel.Getwhere(ac => ac.AccountID == accountId).Select(ac => new AccountChannelDTO
+            var result = _accountChannel.Getwhere(ac => ac.AccountID == accountId).Select(ac => new AccountChannelDTO
             {
                 Id = ac.ID,
                 AccountID = ac.AccountID,
                 ChannelID = ac.ChannelID,
                 ChannelName = ac.Channel.Name,
-                Serial=ac.Channel.Serial,
+                Serial = ac.Channel.Serial,
                 Status = ac.Status,
                 CreatedBy = ac.CreatedBy,
                 CreatedName = _userManager.Users.Where(u => u.UserId == ac.CreatedBy).FirstOrDefault().Name,

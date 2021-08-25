@@ -22,6 +22,7 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<AccountOwner, int> _accountOwner;
         private readonly IBaseRepository<AccountChannelType, int> _accountChannelType;
         private readonly IBaseRepository<AccountChannel, int> _accountChannel;
+        private readonly IBaseRepository<AccountRelationMapping, int> _accountRelationMapping;
         private readonly IStringLocalizer<AuthenticationResource> _localizer;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
@@ -32,6 +33,7 @@ namespace IdentityServer.Services
              IBaseRepository<AccountChannel, int> accountChannel,
             IStringLocalizer<AuthenticationResource> localizer,
              UserManager<ApplicationUser> userManager,
+             IBaseRepository<AccountRelationMapping, int> accountRelationMapping,
             IUnitOfWork unitOfWork)
         {
             _accountRequests = accountRequests;
@@ -42,6 +44,7 @@ namespace IdentityServer.Services
             _userManager = userManager;
             _localizer = localizer;
             _unitOfWork = unitOfWork;
+            _accountRelationMapping = accountRelationMapping;
         }
 
         public AccountDTO AddAccount(AccountDTO addAccountDTO)
@@ -223,12 +226,13 @@ namespace IdentityServer.Services
                 throw new OkException(_localizer["ThisAccountIsNotExists"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
 
             var account = _account.Getwhere(a => a.ID == editAccountDTO.Id).Include(a => a.AccountOwner).FirstOrDefault();
-
-            foreach (var accountRealtion in account.AccountRelationMappings.ToList())
+            var accountRelationMapping = _accountRelationMapping.Getwhere(a => a.AccountID == editAccountDTO.Id).ToList();
+            foreach (var accountRealtion in accountRelationMapping)
             {
-                account.AccountRelationMappings.Remove(accountRealtion);
+                _accountRelationMapping.Delete(accountRealtion.ID);
             }
-
+         
+            //_unitOfWork.SaveChanges();
             account.Address = editAccountDTO.Address;
             account.TaxNo = editAccountDTO.TaxNo;
             account.ActivityID = editAccountDTO.ActivityID;
@@ -247,10 +251,9 @@ namespace IdentityServer.Services
             account.AccountOwner.Mobile = editAccountDTO.Mobile;
             account.AccountOwner.NationalID = editAccountDTO.NationalID;
 
-            account.AccountRelationMappings = new List<AccountRelationMapping>
-                {
-                   new AccountRelationMapping { ParentID=editAccountDTO.ParentID}
-                };
+            account.AccountRelationMappings.Add(
+                new AccountRelationMapping { AccountID = account.ID, ParentID = editAccountDTO.ParentID });
+
 
             _unitOfWork.SaveChanges();
             return MapEntityToDto(account);

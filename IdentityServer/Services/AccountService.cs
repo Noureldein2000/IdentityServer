@@ -277,7 +277,8 @@ namespace IdentityServer.Services
                    RegionID = ar.RegionID,
                    AccountTypeProfileID = ar.AccountTypeProfileID,
                    EntityID = ar.EntityID,
-                   GovernerateID = ar.Region.GovernorateID
+                   GovernerateID = ar.Region.GovernorateID,
+                   ParentID = ar.AccountRelationMappings.Select(s => s.ParentID).FirstOrDefault()
                }).FirstOrDefault();
         }
 

@@ -354,7 +354,7 @@ namespace IdentityServer.Services
                     ar.CommercialRegistrationNo,
                     ar.TaxNo,
                     ActivityID = (int)ar.ActivityID,
-                    ActivityName = ar.Activity.NameAr,
+                    ActivityName = ar.Activity.Name,
                     ar.CreationDate,
                     ar.Active
                 });

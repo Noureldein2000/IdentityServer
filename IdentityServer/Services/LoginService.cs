@@ -67,10 +67,11 @@ namespace IdentityServer.Services
             {
                 throw new OkException(_localizer["FailedTry"].Value, ErrorCodes.FailedTry);
             }
-                
 
             var account = _accountChannelTypes.Getwhere(a => a.AccountID == accountId
-                && a.ChannelTypeID == channelType).Select(a => new
+                && a.ChannelTypeID == channelType && a.Account.Active == true
+                && a.Account.AccountChannels.Any(ac => ac.Status == true 
+                && ac.Channel.ChannelIdentifiers.Value == model.ChannelId)).Select(a => new
                 {
                     a.ExpirationPeriod,
                     a.HasLimitedAccess,

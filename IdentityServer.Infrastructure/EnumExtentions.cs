@@ -49,6 +49,8 @@ namespace IdentityServer.Infrastructure
 
     public enum Modules : short
     {
-        Account = 1
+        Account = 1,
+        Services = 2,
+        Transaction = 3
     }
 }

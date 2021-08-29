@@ -231,7 +231,7 @@ namespace IdentityServer.Services
             {
                 _accountRelationMapping.Delete(accountRealtion.ID);
             }
-         
+
             //_unitOfWork.SaveChanges();
             account.Address = editAccountDTO.Address;
             account.TaxNo = editAccountDTO.TaxNo;
@@ -418,6 +418,54 @@ namespace IdentityServer.Services
             }).ToList();
 
             return result;
+        }
+
+        public PagedResult<AccountDTO> GetAccountsBySearchKey(int? accountType, string searchKey, int pageNumber, int pageSize)
+        {
+            var accountQuery = _account.Getwhere(a => true);
+            var isSearchIdValid = int.TryParse(searchKey, out var searchId);
+
+            if (accountType.HasValue)
+            {
+                accountQuery = accountQuery.Where(a => a.AccountTypeProfile.AccountTypeID == accountType);
+            }
+            if (!string.IsNullOrEmpty(searchKey))
+            {
+                accountQuery = accountQuery.Where(a => isSearchIdValid ? a.ID == searchId : a.Name.Contains(searchKey));
+            }
+
+            var count = accountQuery.Count();
+
+
+            var quey = accountQuery.Include(a => a.AccountOwner).Select(ar => new AccountDTO
+            {
+                Id = ar.ID,
+                OwnerName = ar.AccountOwner.Name,
+                AccountName = ar.Name,
+                Mobile = ar.AccountOwner.Mobile,
+                Address = ar.Address,
+                Email = ar.AccountOwner.Email,
+                NationalID = ar.AccountOwner.NationalID,
+                CommercialRegistrationNo = ar.CommercialRegistrationNo,
+                TaxNo = ar.TaxNo,
+                ActivityID = ar.ActivityID,
+                ActivityName = ar.Activity.Name,
+                CreationDate = ar.CreationDate,
+                Status = ar.Active
+            });
+           
+
+            var resultList = quey.OrderByDescending(ar => ar.CreationDate)
+            .Skip(pageNumber - 1).Take(pageSize)
+            .ToList();
+
+
+            //return accountLst;
+            return new PagedResult<AccountDTO>
+            {
+                Results = resultList,
+                PageCount = count
+            };
         }
 
 

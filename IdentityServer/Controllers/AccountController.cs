@@ -241,6 +241,28 @@ namespace IdentityServer.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetAccountsBySearchKey")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(PagedResult<AccountModel>), StatusCodes.Status200OK)]
+        public IActionResult GetAccountsBySearchKeys([FromQuery] int? accountType = null,string searchKey = null,int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var result = _accountService.GetAccountsBySearchKey(accountType,searchKey, pageNumber, pageSize);
+                return Ok(new PagedResult<AccountModel>
+                {
+                    Results = result.Results.Select(ard => Map(ard)).ToList(),
+                    PageCount = result.PageCount
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpGet]
         [Route("ChangeAccountRequestStatus/{Id}/{status}")]

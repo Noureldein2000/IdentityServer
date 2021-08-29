@@ -16,6 +16,7 @@ namespace IdentityServer.Services
         AccountDTO EditAccount(AccountDTO editDTO);
         IEnumerable<AccountRequestDTO> GetAccountRequests(AccountRequestStatus status, int pagenumber, int pageSize);
         PagedResult<AccountDTO> GetAccounts(int pagenumber, int pageSize);
+        PagedResult<AccountDTO> GetAccountsBySearchKey(int? accountType, string searchKey, int pageNumber, int pageSize);
         AccountRequestDTO GetAccountRequestsById(int id);
         AccountDTO GetAccountById(int id);
         AccountChannelTypeDTO GetAccountChannelTypeById(int id);

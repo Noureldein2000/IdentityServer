@@ -67,7 +67,7 @@ namespace IdentityServer.Controllers
         [Route("GetAccountTypesAndProfiles")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(IEnumerable<AccountTypeProfileLstModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AccountTypeProfileLstModel), StatusCodes.Status200OK)]
         public IActionResult GetAccountTypesAndProfiles()
         {
             try

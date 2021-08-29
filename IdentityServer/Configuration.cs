@@ -55,9 +55,10 @@ namespace IdentityServer
                 ClientName = "Admin Dashboard",
                 ClientSecrets = {new Secret("d5a9b78e-a694-4026-af7f-6d559d8a3949".ToSha256())},
                 AllowedGrantTypes = GrantTypes.Code,
+                RequirePkce = true,
                 RedirectUris = { "https://localhost:44328/signin-oidc" },
                 //FrontChannelLogoutUri = "https://localhost:44328/signout-oidc",
-                //PostLogoutRedirectUris = { "https://localhost:44328/signout-callback-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:44328/signout-callback-oidc" },
                 AllowedScopes =
                 {
                     "SOF",

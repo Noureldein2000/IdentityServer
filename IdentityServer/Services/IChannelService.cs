@@ -14,6 +14,7 @@ namespace IdentityServer.Services
         PagedResult<ChannelDTO> GetChannels(int pageNumber, int pageSize);
         ChannelDTO GetChannelIdentitfiers(int channelId);
         PagedResult<ChannelDTO> SearchChannelBySerial(string searchKey, int pageNumber, int pageSize);
+        PagedResult<ChannelDTO> SearchSpecificChannelBySerial(string searchKey, int pageNumber, int pageSize);
         void DeleteChannel(int id);
         bool ChangeStatus(int id, int updatedBy);
 

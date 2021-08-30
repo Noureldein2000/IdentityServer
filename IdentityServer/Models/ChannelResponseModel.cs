@@ -8,6 +8,7 @@ namespace IdentityServer.Models
     public class ChannelResponseModel
     {
         public int ChannelID { get; set; }
+        public int AccountChannelID { get; set; }
         public string Name { get; set; }
         public int ChannelTypeID { get; set; }
         public string ChannelTypeName { get; set; }

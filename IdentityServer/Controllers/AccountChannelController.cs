@@ -1,4 +1,5 @@
 ﻿using IdentityServer.DTOs;
+using IdentityServer.Infrastructure;
 using IdentityServer.Models;
 using IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -69,11 +70,11 @@ namespace IdentityServer.Controllers
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
         [ProducesResponseType(typeof(AccountChannelModel), StatusCodes.Status200OK)]
-        public IActionResult ChangeStatusAccountChannel([FromRoute] int id)
+        public IActionResult ChangeStatusAccountChannel([FromRoute] int id, AccountChannelStatus status )
         {
             try
             {
-                var result = _accountService.ChangeAccountChannelStatus(id, UserIdentityId);
+                var result = _accountService.ChangeAccountChannelStatus(id,status, UserIdentityId);
                 return Ok(Map(result));
             }
             catch (Exception ex)

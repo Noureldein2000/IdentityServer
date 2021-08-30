@@ -29,12 +29,12 @@ namespace IdentityServer.Infrastructure
     {
         AccountUser = 1,
         Employee = 2
-        
+
     }
 
     public enum AccountRequestStatus : short
     {
-        UnderProcessing=1,
+        UnderProcessing = 1,
         Approved = 2,
         Rejected = 3,
     }
@@ -52,5 +52,13 @@ namespace IdentityServer.Infrastructure
         Account = 1,
         Services = 2,
         Transaction = 3
+    }
+    public enum AccountChannelStatus : short
+    {
+        Inactive = 0,
+        Active = 1,
+        Created = 2,
+        Suspended = 3,
+        Deleted = 4
     }
 }

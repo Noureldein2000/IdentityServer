@@ -89,7 +89,7 @@ namespace IdentityServer.Services
         {
             var checkExists = _accountChannel.Getwhere(ac => ac.AccountID == accountChannelDTO.AccountID && ac.ChannelID == accountChannelDTO.ChannelID).Any();
             if (checkExists) throw new OkException(_localizer["ThisAccountHasChannelAlready"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
-
+            
             var addedEntity = _accountChannel.Add(new AccountChannel
             {
                 AccountID = accountChannelDTO.AccountID,
@@ -144,10 +144,10 @@ namespace IdentityServer.Services
             return MapEntityToDto(entityRequest);
         }
 
-        public AccountChannelDTO ChangeAccountChannelStatus(int id, int userUpdated)
+        public AccountChannelDTO ChangeAccountChannelStatus(int id, AccountChannelStatus status, int userUpdated)
         {
             var current = _accountChannel.GetById(id);
-            current.Status = !current.Status;
+            current.Status = status;
             current.UpdatedBy = userUpdated;
             _unitOfWork.SaveChanges();
             return MapEntityToDto(current);

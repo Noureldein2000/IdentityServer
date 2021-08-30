@@ -21,7 +21,7 @@ namespace IdentityServer.Services
         AccountDTO GetAccountById(int id);
         AccountChannelTypeDTO GetAccountChannelTypeById(int id);
         AccountRequestStatus ChangeAccountRequestStatus(int id, AccountRequestStatus status, int createdBy);
-        bool ChangeAccountStatus(int id, int updatedBy);
+        bool ChangeAccountStatus(int id,  int updatedBy);
         IEnumerable<AccountChannelTypeDTO> GetAccountChannelTypes(int accountId);
         AccountChannelTypeDTO EditAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO);
         AccountChannelTypeDTO DeleteAccountChannelTypes(int id);
@@ -29,6 +29,6 @@ namespace IdentityServer.Services
         IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId);
         AccountChannelDTO AddAccountChannel(AccountChannelDTO accountChannelDTO);
         AccountChannelDTO DeleteAccountChannel(int id);
-        AccountChannelDTO ChangeAccountChannelStatus(int id,int userUpdated);
+        AccountChannelDTO ChangeAccountChannelStatus(int id, AccountChannelStatus status, int userUpdated);
     }
 }

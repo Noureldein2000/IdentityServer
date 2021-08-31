@@ -210,7 +210,6 @@ namespace IdentityServer.Controllers
         {
             return new ChannelResponseModel
             {
-                AccountChannelID = (int)model.AccountChannelID,
                 ChannelID = model.ChannelID,
                 Name = model.Name,
                 Serial = model.Serial,

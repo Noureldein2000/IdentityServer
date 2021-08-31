@@ -29,6 +29,6 @@ namespace IdentityServer.Services
         IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId);
         AccountChannelDTO AddAccountChannel(AccountChannelDTO accountChannelDTO);
         AccountChannelDTO DeleteAccountChannel(int id);
-        AccountChannelDTO ChangeAccountChannelStatus(int id, AccountChannelStatus status, int userUpdated);
+        AccountChannelDTO ChangeAccountChannelStatus(int id, AccountChannelStatus status,string reason, int userUpdated);
     }
 }

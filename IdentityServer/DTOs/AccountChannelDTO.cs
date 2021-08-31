@@ -14,6 +14,7 @@ namespace IdentityServer.DTOs
         public string ChannelName { get; set; }
         public string Serial { get; set; }
         public AccountChannelStatus Status { get; set; }
+        public string Reason{ get; set; }
         public int CreatedBy { get; set; }
         public string CreatedName { get; set; }
         public int? UpdatedBy { get; set; }

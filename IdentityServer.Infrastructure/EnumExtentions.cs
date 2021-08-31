@@ -58,7 +58,7 @@ namespace IdentityServer.Infrastructure
         Inactive = 0,
         Active = 1,
         Created = 2,
-        Suspended = 3,
+        Suspend = 3,
         Deleted = 4
     }
 }

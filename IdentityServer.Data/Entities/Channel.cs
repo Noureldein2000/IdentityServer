@@ -15,6 +15,7 @@ namespace IdentityServer.Data.Entities
         public virtual ChannelOwner ChannelOwner { get; set; }
         public virtual ChannelIdentifier ChannelIdentifiers { get; set; }
         public virtual ICollection<AccountChannel> AccountChannels { get; set; }
+        public virtual ICollection<AccountChannelHistory> AccountChannelHistories { get; set; }
         public virtual ICollection<ChannelSim> ChannelSims { get; set; }
     }
 }

@@ -168,7 +168,6 @@ namespace IdentityServer.Services
             && (c.ChannelType.ChannelCategoryID == 2 || (c.ChannelType.ChannelCategoryID == 4 && c.AccountChannels.Count > 0))
             ).Select(c => new ChannelDTO
             {
-                AccountChannelID = c.AccountChannels.Select(x => x.ID).FirstOrDefault(),
                 ChannelID = c.ID,
                 Name = c.Name,
                 Serial = c.Serial,

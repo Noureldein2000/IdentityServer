@@ -22,6 +22,7 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<AccountOwner, int> _accountOwner;
         private readonly IBaseRepository<AccountChannelType, int> _accountChannelType;
         private readonly IBaseRepository<AccountChannel, int> _accountChannel;
+        private readonly IBaseRepository<AccountChannelHistory, int> _accountChannelHistory;
         private readonly IBaseRepository<AccountRelationMapping, int> _accountRelationMapping;
         private readonly IStringLocalizer<AuthenticationResource> _localizer;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -31,7 +32,8 @@ namespace IdentityServer.Services
              IBaseRepository<AccountOwner, int> accountOwner,
              IBaseRepository<AccountChannelType, int> accountChannelType,
              IBaseRepository<AccountChannel, int> accountChannel,
-            IStringLocalizer<AuthenticationResource> localizer,
+             IBaseRepository<AccountChannelHistory, int> accountChannelHistory,
+        IStringLocalizer<AuthenticationResource> localizer,
              UserManager<ApplicationUser> userManager,
              IBaseRepository<AccountRelationMapping, int> accountRelationMapping,
             IUnitOfWork unitOfWork)
@@ -41,6 +43,7 @@ namespace IdentityServer.Services
             _accountOwner = accountOwner;
             _accountChannelType = accountChannelType;
             _accountChannel = accountChannel;
+            _accountChannelHistory = accountChannelHistory;
             _userManager = userManager;
             _localizer = localizer;
             _unitOfWork = unitOfWork;
@@ -89,12 +92,19 @@ namespace IdentityServer.Services
         {
             var checkExists = _accountChannel.Getwhere(ac => ac.AccountID == accountChannelDTO.AccountID && ac.ChannelID == accountChannelDTO.ChannelID).Any();
             if (checkExists) throw new OkException(_localizer["ThisAccountHasChannelAlready"].Value, ErrorCodes.ChangePassword.MobileNumberExists);
-            
+
+            var current = _accountChannel.Getwhere(ac => ac.ChannelID == accountChannelDTO.ChannelID).FirstOrDefault();
+            if (current != null)
+            {
+                AddAccountChannelHistory(current.AccountID, current.ChannelID, current.Status, accountChannelDTO.Reason, accountChannelDTO.CreatedBy);
+                DeleteAccountChannel(current.ID);
+            }
+
             var addedEntity = _accountChannel.Add(new AccountChannel
             {
                 AccountID = accountChannelDTO.AccountID,
                 ChannelID = accountChannelDTO.ChannelID,
-                Status = accountChannelDTO.Status,
+                Status = AccountChannelStatus.Inactive,
                 CreatedBy = accountChannelDTO.CreatedBy
             });
             _unitOfWork.SaveChanges();
@@ -144,11 +154,14 @@ namespace IdentityServer.Services
             return MapEntityToDto(entityRequest);
         }
 
-        public AccountChannelDTO ChangeAccountChannelStatus(int id, AccountChannelStatus status, int userUpdated)
+        public AccountChannelDTO ChangeAccountChannelStatus(int id, AccountChannelStatus status, string reason, int userUpdated)
         {
             var current = _accountChannel.GetById(id);
+            AddAccountChannelHistory(current.AccountID, current.ChannelID, current.Status, reason, userUpdated);
+
             current.Status = status;
             current.UpdatedBy = userUpdated;
+
             _unitOfWork.SaveChanges();
             return MapEntityToDto(current);
         }
@@ -453,7 +466,7 @@ namespace IdentityServer.Services
                 CreationDate = ar.CreationDate,
                 Status = ar.Active
             });
-           
+
 
             var resultList = quey.OrderByDescending(ar => ar.CreationDate)
             .Skip(pageNumber - 1).Take(pageSize)
@@ -471,7 +484,17 @@ namespace IdentityServer.Services
 
         #region Helper Method
         //Helper Method
-
+        private void AddAccountChannelHistory(int accountId, int channelId, AccountChannelStatus status, string reason, int createdBy)
+        {
+            _accountChannelHistory.Add(new AccountChannelHistory
+            {
+                AccountID = accountId,
+                ChannelID = channelId,
+                Status = status,
+                Reason = reason,
+                CreatedBy = createdBy
+            });
+        }
         private AccountRequestDTO MapEntityToDto(AccountRequest entityRequest) => new AccountRequestDTO
         {
             Id = entityRequest.ID,

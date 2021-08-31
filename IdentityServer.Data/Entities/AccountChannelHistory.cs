@@ -1,22 +1,21 @@
 ﻿using IdentityServer.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace IdentityServer.Models
+namespace IdentityServer.Data.Entities
 {
-    public class AccountChannelModel
+   public class AccountChannelHistory : BaseEntity<int>
     {
-        public int Id { get; set; }
         public int AccountID { get; set; }
         public int ChannelID { get; set; }
-        public string ChannelName { get; set; }
-        public string Serial { get; set; }
         public AccountChannelStatus Status { get; set; }
         public string Reason { get; set; }
         public int CreatedBy { get; set; }
-        public string CreatedName { get; set; }
         public int? UpdatedBy { get; set; }
+        public virtual Channel Channel { get; set; }
+        public virtual Account Account { get; set; }
+        public virtual ICollection<OTP> OTPs { get; set; }
+
     }
 }

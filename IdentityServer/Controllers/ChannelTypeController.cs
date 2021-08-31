@@ -40,6 +40,24 @@ namespace IdentityServer.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetByChannelCategoryId")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<ChannelTypeModel>), StatusCodes.Status200OK)]
+        public IActionResult GetByChannelCategoryId(int id)
+        {
+            try
+            {
+                var result = _channelTypeService.GetByChannelCategoryId(id).Select(a => Map(a));
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         #region Helper Method
         //Helper Method

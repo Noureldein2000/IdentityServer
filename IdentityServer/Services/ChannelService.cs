@@ -133,9 +133,12 @@ namespace IdentityServer.Services
             };
         }
 
-        public PagedResult<ChannelDTO> SearchChannelBySerial(string searchKey, int pageNumber, int pageSize)
+        public PagedResult<ChannelDTO> SearchChannelBySerial(int? dropDownFilter, int? dropDownFilter2, string searchKey, int pageNumber, int pageSize)
         {
-            var searchChannelList = _channel.Getwhere(c => c.Serial.Contains(searchKey)).Select(c => new ChannelDTO
+            var searchChannelList = _channel.Getwhere(c => (searchKey != null ? c.Serial.Contains(searchKey) : true)
+            && (dropDownFilter2 != null ? c.ChannelTypeID == dropDownFilter2
+            : c.ChannelType.ChannelCategoryID == dropDownFilter)
+            ).Select(c => new ChannelDTO
             {
                 ChannelID = c.ID,
                 Name = c.Name,

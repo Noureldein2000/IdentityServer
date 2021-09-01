@@ -167,18 +167,16 @@ namespace IdentityServer.Controllers
                     Email = model.Email,
                     EmailConfirmed = true,
                     Name = model.Username,
-                    
                     UserName = model.Username,
                     MustChangePassword = ((int)model.UserRole) != ((int)Roles.Consumer),
                     ReferenceID = model.AccountId.ToString(),
                     UserId = newUserId + 1,
-                    Id = Guid.NewGuid().ToString(),
                     NormalizedEmail = model.Email.ToUpper(),
-                    NormalizedUserName = model.Username.ToUpper(),
+                    NormalizedUserName = model.Username.ToUpper()
                 };
                 await _userManager.CreateAsync(user, model.Password);
-                await _userManager.AddToRolesAsync(user, new List<string> { model.UserRole });
-                return Ok(true);
+                await _userManager.AddToRolesAsync(user, new List<string> { model.UserRole.ToString() });
+                return Ok();
             }
             catch (Exception ex)
             {

@@ -112,13 +112,13 @@ namespace IdentityServer.Services
                 Name = c.Name,
                 Serial = c.Serial,
                 ChannelTypeID = c.ChannelTypeID,
-                ChannelTypeName=c.ChannelType.Name,
+                ChannelTypeName = c.ChannelType.Name,
                 ChannelOwnerID = c.ChannelOwnerID,
-                ChannelOwnerName=c.ChannelOwner.Name,
+                ChannelOwnerName = c.ChannelOwner.Name,
                 PaymentMethodID = c.PaymentMethodID,
-                PaymentMethodName=c.ChannelPaymentMethod.Name,
+                PaymentMethodName = c.ChannelPaymentMethod.Name,
                 CreationDate = c.CreationDate,
-                Status=c.ChannelIdentifiers.Status
+                Status = c.ChannelIdentifiers.Status
             });
 
             var count = channelsList.Count();
@@ -133,11 +133,45 @@ namespace IdentityServer.Services
             };
         }
 
-        public PagedResult<ChannelDTO> SearchChannelBySerial(string searchKey, int pageNumber, int pageSize)
+        public PagedResult<ChannelDTO> SearchChannelBySerial(int? dropDownFilter, int? dropDownFilter2, string searchKey, int pageNumber, int pageSize)
         {
-            var searchChannelList = _channel.Getwhere(c => c.Serial.Contains(searchKey)).Select(c => new ChannelDTO
+            var searchChannelList = _channel.Getwhere(c => (searchKey != null ? c.Serial.Contains(searchKey) : true)
+            && (dropDownFilter2 != null ? c.ChannelTypeID == dropDownFilter2
+            : c.ChannelType.ChannelCategoryID == dropDownFilter)
+            ).Select(c => new ChannelDTO
             {
-                ChannelID=c.ID,
+                ChannelID = c.ID,
+                Name = c.Name,
+                Serial = c.Serial,
+                ChannelTypeID = c.ChannelTypeID,
+                ChannelTypeName = c.ChannelType.Name,
+                ChannelOwnerID = c.ChannelOwnerID,
+                ChannelOwnerName = c.ChannelOwner.Name,
+                PaymentMethodID = c.PaymentMethodID,
+                PaymentMethodName = c.ChannelPaymentMethod.Name,
+                CreationDate = c.CreationDate
+            });
+
+            var count = searchChannelList.Count();
+
+            var resultList = searchChannelList.OrderByDescending(ar => ar.CreationDate)
+           .Skip(pageNumber - 1).Take(pageSize)
+           .ToList();
+
+            return new PagedResult<ChannelDTO>
+            {
+                Results = resultList,
+                PageCount = count
+            };
+        }
+
+        public PagedResult<ChannelDTO> SearchSpecificChannelBySerial(string searchKey, int pageNumber, int pageSize)
+        {
+            var searchChannelList = _channel.Getwhere(c => c.Serial.Contains(searchKey)
+            && (c.ChannelType.ChannelCategoryID == 2 || (c.ChannelType.ChannelCategoryID == 4 && c.AccountChannels.Count > 0))
+            ).Select(c => new ChannelDTO
+            {
+                ChannelID = c.ID,
                 Name = c.Name,
                 Serial = c.Serial,
                 ChannelTypeID = c.ChannelTypeID,

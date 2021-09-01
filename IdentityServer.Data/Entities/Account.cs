@@ -28,6 +28,7 @@ namespace IdentityServer.Data.Entities
         public virtual AccountOwner AccountOwner { get; set; }
         public virtual ICollection<AccountRelationMapping> AccountRelationMappings { get; set; }
         public virtual ICollection<AccountChannel> AccountChannels { get; set; }
+        public virtual ICollection<AccountChannelHistory>  AccountChannelHistories{ get; set; }
         public virtual ICollection<AccountChannelType> AccountChannelTypes { get; set; }
     }
 }

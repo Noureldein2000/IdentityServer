@@ -4,14 +4,16 @@ using IdentityServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210829133843_EditAccountChannelStatus2")]
+    partial class EditAccountChannelStatus2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,46 +130,6 @@ namespace IdentityServer.Data.Migrations
                     b.HasIndex("ChannelID");
 
                     b.ToTable("AccountChannels");
-                });
-
-            modelBuilder.Entity("IdentityServer.Data.Entities.AccountChannelHistory", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccountID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChannelID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<short>("Status")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("UpdatedBy")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("AccountID");
-
-                    b.HasIndex("ChannelID");
-
-                    b.ToTable("AccountChannelHistories");
                 });
 
             modelBuilder.Entity("IdentityServer.Data.Entities.AccountChannelType", b =>
@@ -489,14 +451,14 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 31, 13, 13, 18, 500, DateTimeKind.Local).AddTicks(2113),
+                            CreationDate = new DateTime(2021, 8, 29, 15, 38, 42, 850, DateTimeKind.Local).AddTicks(1916),
                             Name = "General",
                             NameAr = "عام"
                         },
                         new
                         {
                             ID = 2,
-                            CreationDate = new DateTime(2021, 8, 31, 13, 13, 18, 500, DateTimeKind.Local).AddTicks(2171),
+                            CreationDate = new DateTime(2021, 8, 29, 15, 38, 42, 850, DateTimeKind.Local).AddTicks(1969),
                             Name = "SuperMarket",
                             NameAr = "سوبرماركت"
                         });
@@ -852,7 +814,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 31, 13, 13, 18, 500, DateTimeKind.Local).AddTicks(3193),
+                            CreationDate = new DateTime(2021, 8, 29, 15, 38, 42, 850, DateTimeKind.Local).AddTicks(2937),
                             Name = "Momkn",
                             NameAr = "ممكن"
                         });
@@ -886,9 +848,6 @@ namespace IdentityServer.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("AccountChannelHistoryID")
-                        .HasColumnType("int");
 
                     b.Property<int>("AccountChannelID")
                         .HasColumnType("int");
@@ -927,8 +886,6 @@ namespace IdentityServer.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("AccountChannelHistoryID");
 
                     b.HasIndex("AccountChannelID");
 
@@ -1040,7 +997,7 @@ namespace IdentityServer.Data.Migrations
                         new
                         {
                             ID = 1,
-                            CreationDate = new DateTime(2021, 8, 31, 13, 13, 18, 498, DateTimeKind.Local).AddTicks(1168),
+                            CreationDate = new DateTime(2021, 8, 29, 15, 38, 42, 848, DateTimeKind.Local).AddTicks(2506),
                             Name = "AccountUser"
                         });
                 });
@@ -1214,21 +1171,6 @@ namespace IdentityServer.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("IdentityServer.Data.Entities.AccountChannelHistory", b =>
-                {
-                    b.HasOne("IdentityServer.Data.Entities.Account", "Account")
-                        .WithMany("AccountChannelHistories")
-                        .HasForeignKey("AccountID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("IdentityServer.Data.Entities.Channel", "Channel")
-                        .WithMany("AccountChannelHistories")
-                        .HasForeignKey("ChannelID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("IdentityServer.Data.Entities.AccountChannelType", b =>
                 {
                     b.HasOne("IdentityServer.Data.Entities.Account", "Account")
@@ -1367,10 +1309,6 @@ namespace IdentityServer.Data.Migrations
 
             modelBuilder.Entity("IdentityServer.Data.Entities.OTP", b =>
                 {
-                    b.HasOne("IdentityServer.Data.Entities.AccountChannelHistory", null)
-                        .WithMany("OTPs")
-                        .HasForeignKey("AccountChannelHistoryID");
-
                     b.HasOne("IdentityServer.Data.Entities.AccountChannel", "AccountChannel")
                         .WithMany("OTPs")
                         .HasForeignKey("AccountChannelID")

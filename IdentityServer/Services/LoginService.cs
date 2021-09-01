@@ -70,7 +70,7 @@ namespace IdentityServer.Services
 
             var account = _accountChannelTypes.Getwhere(a => a.AccountID == accountId
                 && a.ChannelTypeID == channelType && a.Account.Active == true
-                && a.Account.AccountChannels.Any(ac => ac.Status == true 
+                && a.Account.AccountChannels.Any(ac => ac.Status == AccountChannelStatus.Active 
                 && ac.Channel.ChannelIdentifiers.Value == model.ChannelId)).Select(a => new
                 {
                     a.ExpirationPeriod,
@@ -89,7 +89,7 @@ namespace IdentityServer.Services
 
             var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == accountId
                 && a.ChannelTypeID == channelType
-                && a.Account.AccountChannels.Any(ac => ac.Status == true)
+                && a.Account.AccountChannels.Any(ac => ac.Status == AccountChannelStatus.Active)
                 && a.Account.AccountChannels.Any(ac =>
                 ac.Channel.ChannelIdentifiers.Status == true
                     && ac.Channel.ChannelIdentifiers.Value == model.ChannelId
@@ -114,7 +114,7 @@ namespace IdentityServer.Services
                 //check for first time login and send otp
                 var identifier = _channelIdentifires.Getwhere(i => i.Value == model.ChannelId
                 && i.Status == true
-                && i.Channel.AccountChannels.Any(ac => ac.Status == true
+                && i.Channel.AccountChannels.Any(ac => ac.Status == AccountChannelStatus.Active
                 && ac.AccountID != accountId)).FirstOrDefault();
                 if (identifier == null)
                 {
@@ -165,7 +165,7 @@ namespace IdentityServer.Services
 
             var accountChannelType = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
                    && a.ChannelTypeID == model.ChannelType
-                   && a.Account.AccountChannels.Any(ac => ac.Status == true)
+                   && a.Account.AccountChannels.Any(ac => ac.Status == AccountChannelStatus.Active)
                    && a.Account.AccountChannels.Any(ac => ac.Channel.ChannelIdentifiers.Status == true
                 && ac.Channel.ChannelIdentifiers.Value == model.ChannelId
            )).Select(act => new
@@ -228,7 +228,7 @@ namespace IdentityServer.Services
 
             var accountChannel = _accountChannels.Getwhere(ac =>
                 ac.Channel.ChannelIdentifiers.ID == channelIdentifier.ID).FirstOrDefault();
-            accountChannel.Status = true;
+            accountChannel.Status = AccountChannelStatus.Active;
 
             otp.StatusID = 2;
             otp.UpdatedBy = user.UserId;

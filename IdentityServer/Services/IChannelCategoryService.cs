@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Services
 {
-  public  interface IChannelTypeService
+   public interface IChannelCategoryService
     {
-        IEnumerable<ChannelTypeDTO> GetChannelTypes();
-        IEnumerable<ChannelTypeDTO> GetByChannelCategoryId(int id);
+        IEnumerable<ChannelCategoryDTO> GetChannelCategories();
     }
 }

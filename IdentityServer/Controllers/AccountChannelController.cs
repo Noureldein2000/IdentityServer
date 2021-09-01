@@ -1,4 +1,5 @@
 ﻿using IdentityServer.DTOs;
+using IdentityServer.Infrastructure;
 using IdentityServer.Models;
 using IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -49,14 +50,16 @@ namespace IdentityServer.Controllers
         {
             try
             {
+
                 var result = _accountService.AddAccountChannel(new AccountChannelDTO
                 {
                     AccountID = model.AccountID,
                     ChannelID = model.ChannelID,
                     Status = model.Status,
+                    Reason = model.Reason,
                     CreatedBy = UserIdentityId
                 });
-                return Ok(result);
+                return Ok(Map(result));
             }
             catch (Exception ex)
             {
@@ -69,11 +72,11 @@ namespace IdentityServer.Controllers
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
         [ProducesResponseType(typeof(AccountChannelModel), StatusCodes.Status200OK)]
-        public IActionResult ChangeStatusAccountChannel([FromRoute] int id)
+        public IActionResult ChangeStatusAccountChannel([FromRoute] int id, AccountChannelStatus status, string reason)
         {
             try
             {
-                var result = _accountService.ChangeAccountChannelStatus(id, UserIdentityId);
+                var result = _accountService.ChangeAccountChannelStatus(id, status, reason, UserIdentityId);
                 return Ok(Map(result));
             }
             catch (Exception ex)
@@ -82,23 +85,23 @@ namespace IdentityServer.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("Delete/{id}")]
-        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(AccountChannelModel), StatusCodes.Status200OK)]
-        public IActionResult DeleteAccountChannel([FromRoute] int id)
-        {
-            try
-            {
-                var result = _accountService.DeleteAccountChannel(id);
-                return Ok(Map(result));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
+        //[HttpDelete]
+        //[Route("Delete/{id}")]
+        ////[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        //[AllowAnonymous]
+        //[ProducesResponseType(typeof(AccountChannelModel), StatusCodes.Status200OK)]
+        //public IActionResult DeleteAccountChannel([FromRoute] int id)
+        //{
+        //    try
+        //    {
+        //        var result = _accountService.DeleteAccountChannel(id);
+        //        return Ok(Map(result));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //    }
+        //}
 
 
         #region Helper Method
@@ -111,8 +114,9 @@ namespace IdentityServer.Controllers
                 AccountID = model.AccountID,
                 ChannelID = model.ChannelID,
                 ChannelName = model.ChannelName,
-                Serial=model.Serial,
+                Serial = model.Serial,
                 Status = model.Status,
+                Reason = model.Reason,
                 CreatedBy = model.CreatedBy,
                 CreatedName = model.CreatedName,
                 UpdatedBy = model.UpdatedBy

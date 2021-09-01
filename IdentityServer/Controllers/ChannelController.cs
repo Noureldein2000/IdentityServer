@@ -140,15 +140,37 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet]
-        [Route("SearchChannelBySerial/{searchKey}")]
+        [Route("SearchChannels")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
         [ProducesResponseType(typeof(PagedResult<ChannelResponseModel>), StatusCodes.Status200OK)]
-        public IActionResult SearchChannelBySerial(string searchKey, int pageNumber = 1, int pageSize = 10)
+        public IActionResult SearchChannels(int? dropDownFilter, int? dropDownFilter2, string searchKey, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var result = _channelService.SearchChannelBySerial(searchKey, pageNumber, pageSize);
+                var result = _channelService.SearchChannelBySerial(dropDownFilter,dropDownFilter2 , searchKey, pageNumber, pageSize);
+                return Ok(new PagedResult<ChannelResponseModel>()
+                {
+                    Results = result.Results.Select(ard => Map(ard)).ToList(),
+                    PageCount = result.PageCount
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("SearchSpecificChannelBySerial/{searchKey}")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(PagedResult<ChannelResponseModel>), StatusCodes.Status200OK)]
+        public IActionResult SearchSpecificChannelBySerial(string searchKey, int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var result = _channelService.SearchSpecificChannelBySerial(searchKey, pageNumber, pageSize);
                 return Ok(new PagedResult<ChannelResponseModel>()
                 {
                     Results = result.Results.Select(ard => Map(ard)).ToList(),

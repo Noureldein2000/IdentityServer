@@ -86,6 +86,7 @@ namespace IdentityServer
             services.AddScoped<IChannelTypeService, ChannelTypeService>();
             services.AddScoped<IChannelOwnerService, ChannelOwnerService>();
             services.AddScoped<IChannelPaymentMethodService, ChannelPaymentMethodService>();
+            services.AddScoped<IChannelCategoryService, ChannelCategoryService>();
 
             //services.Replace(new ServiceDescriptor(
             //   serviceType: typeof(IPasswordHasher<ApplicationUser>),

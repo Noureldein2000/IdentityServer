@@ -17,6 +17,17 @@ namespace IdentityServer.Services
             _channelType = channelType;
             _unitOfWork = unitOfWork;
         }
+
+        public IEnumerable<ChannelTypeDTO> GetByChannelCategoryId(int id)
+        {
+            return _channelType.Getwhere(ct => ct.ChannelCategoryID == id).Select(a => new ChannelTypeDTO
+            {
+                ID = a.ID,
+                Name = a.Name,
+                NameAr = a.ArName
+            }).ToList();
+        }
+
         public IEnumerable<ChannelTypeDTO> GetChannelTypes()
         {
             return _channelType.GetAll().Select(a => new ChannelTypeDTO

@@ -25,7 +25,7 @@ namespace IdentityServer.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         public UsersController(
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)            
+            RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -156,9 +156,9 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                var alloedEnums = Enum.GetValues(typeof(Roles)).Cast<string>().ToList();
-                if (!alloedEnums.Contains(model.UserRole))
-                    return BadRequest("Role not allowed", "-2");
+                //var alloedEnums = Enum.GetValues(typeof(Roles)).Cast<string>().ToList();
+                //if (!alloedEnums.Contains(model.UserRole))
+                //    return BadRequest("Role not allowed", "-2");
                 
                 var newUserId = _userManager.Users.Max(u => u.UserId);
                 var user = new ApplicationUser
@@ -169,10 +169,13 @@ namespace IdentityServer.Controllers
                     UserName = model.Username,
                     MustChangePassword = model.UserRole != Roles.Consumer.ToString(),
                     ReferenceID = model.AccountId.ToString(),
-                    UserId = newUserId + 1
+                    UserId = newUserId + 1,
+                    Id = Guid.NewGuid().ToString(),
+                    NormalizedEmail = model.Email.ToUpper(),
+                    NormalizedUserName = model.Username.ToUpper(),
                 };
                 await _userManager.CreateAsync(user, model.Password);
-                await _userManager.AddToRoleAsync(user, model.UserRole);
+                await _userManager.AddToRolesAsync(user, new List<string> { model.UserRole });
                 return Ok(true);
             }
             catch (Exception ex)

@@ -97,7 +97,7 @@ namespace IdentityServer.Controllers
 
             var userRoles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, userRoles);
-            await _userManager.AddToRolesAsync(user, 
+            await _userManager.AddToRolesAsync(user,
                 model.Roles.Where(r => r.IsSelected).Select(r => r.DisplayName));
 
             return Ok(model);
@@ -163,11 +163,13 @@ namespace IdentityServer.Controllers
                 var newUserId = _userManager.Users.Max(u => u.UserId);
                 var user = new ApplicationUser
                 {
+                    Id = Guid.NewGuid().ToString(),
                     Email = model.Email,
                     EmailConfirmed = true,
                     Name = model.Username,
+                    
                     UserName = model.Username,
-                    MustChangePassword = model.UserRole != Roles.Consumer.ToString(),
+                    MustChangePassword = ((int)model.UserRole) != ((int)Roles.Consumer),
                     ReferenceID = model.AccountId.ToString(),
                     UserId = newUserId + 1,
                     Id = Guid.NewGuid().ToString(),
@@ -180,6 +182,7 @@ namespace IdentityServer.Controllers
             }
             catch (Exception ex)
             {
+                string x = ex.Message;
                 return BadRequest("General Error", "-1");
             }
         }

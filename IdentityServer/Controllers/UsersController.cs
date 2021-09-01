@@ -25,7 +25,7 @@ namespace IdentityServer.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         public UsersController(
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)            
+            RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -97,7 +97,7 @@ namespace IdentityServer.Controllers
 
             var userRoles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, userRoles);
-            await _userManager.AddToRolesAsync(user, 
+            await _userManager.AddToRolesAsync(user,
                 model.Roles.Where(r => r.IsSelected).Select(r => r.DisplayName));
 
             return Ok(model);
@@ -156,27 +156,30 @@ namespace IdentityServer.Controllers
         {
             try
             {
-                var alloedEnums = Enum.GetValues(typeof(Roles)).Cast<string>().ToList();
-                if (!alloedEnums.Contains(model.UserRole))
-                    return BadRequest("Role not allowed", "-2");
-                
+                //var alloedEnums = Enum.GetValues(typeof(Roles)).Cast<string>().ToList();
+                //if (!alloedEnums.Contains(model.UserRole))
+                //    return BadRequest("Role not allowed", "-2");
+
                 var newUserId = _userManager.Users.Max(u => u.UserId);
                 var user = new ApplicationUser
                 {
+                    Id = Guid.NewGuid().ToString(),
                     Email = model.Email,
                     EmailConfirmed = true,
                     Name = model.Username,
+                    
                     UserName = model.Username,
-                    MustChangePassword = model.UserRole != Roles.Consumer.ToString(),
+                    MustChangePassword = ((int)model.UserRole) != ((int)Roles.Consumer),
                     ReferenceID = model.AccountId.ToString(),
                     UserId = newUserId + 1
                 };
                 await _userManager.CreateAsync(user, model.Password);
-                await _userManager.AddToRoleAsync(user, model.UserRole);
-                return Ok(true);
+                //await _userManager.AddToRoleAsync(user, model.UserRole.ToString());
+                return Ok(new CreateUserModel());
             }
             catch (Exception ex)
             {
+                string x = ex.Message;
                 return BadRequest("General Error", "-1");
             }
         }

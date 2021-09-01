@@ -1,5 +1,6 @@
 ﻿using IdentityServer.Data.Entities;
 using IdentityServer.Data.Seeding;
+using IdentityServer.Infrastructure;
 using IdentityServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -17,7 +19,7 @@ namespace IdentityServer.Controllers
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -147,6 +149,36 @@ namespace IdentityServer.Controllers
                 await _userManager.AddClaimAsync(user, new Claim("Deny", claim.DisplayName));
             }
             return Ok(model);
+        }
+        [HttpPost("CreateUser")]
+        [ProducesResponseType(typeof(CreateUserModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CreateUser(CreateUserModel model)
+        {
+            try
+            {
+                var alloedEnums = Enum.GetValues(typeof(Roles)).Cast<string>().ToList();
+                if (!alloedEnums.Contains(model.UserRole))
+                    return BadRequest("Role not allowed", "-2");
+                
+                var newUserId = _userManager.Users.Max(u => u.UserId);
+                var user = new ApplicationUser
+                {
+                    Email = model.Email,
+                    EmailConfirmed = true,
+                    Name = model.Username,
+                    UserName = model.Username,
+                    MustChangePassword = model.UserRole != Roles.Consumer.ToString(),
+                    ReferenceID = model.AccountId.ToString(),
+                    UserId = newUserId + 1
+                };
+                await _userManager.CreateAsync(user, model.Password);
+                await _userManager.AddToRoleAsync(user, model.UserRole);
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("General Error", "-1");
+            }
         }
     }
 }

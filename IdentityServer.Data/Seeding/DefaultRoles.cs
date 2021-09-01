@@ -19,6 +19,7 @@ namespace IdentityServer.Data.Seeding
                 await roleManager.CreateAsync(new IdentityRole(Roles.Manager.ToString()));
                 await roleManager.CreateAsync(new IdentityRole(Roles.Sales.ToString()));
                 await roleManager.CreateAsync(new IdentityRole(Roles.Consumer.ToString()));
+                await roleManager.CreateAsync(new IdentityRole(Roles.AccountAdmin.ToString()));
             }
         }
     }

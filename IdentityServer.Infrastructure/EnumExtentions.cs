@@ -44,7 +44,8 @@ namespace IdentityServer.Infrastructure
         Admin = 2,
         Manager = 3,
         Sales = 4,
-        Consumer = 5
+        Consumer = 5,
+        AccountAdmin = 6
     }
 
     public enum Modules : short

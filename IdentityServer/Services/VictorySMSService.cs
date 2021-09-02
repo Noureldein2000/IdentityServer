@@ -21,26 +21,27 @@ namespace IdentityServer.Services
         {
             try
             {
-                var uri = string.Format("https://smsvas.vlserv.com/KannelSending/service.asmx/SendSMS?username={0}&password={1}&SMSText={2}&SMSLang={3}&SMSSender={4}&SMSReceiver={5}", "Momkn", "q99LMgp9i9", body, lang, "Momkn", receiver);
-                HttpWebRequest request = CreateWebRequest(uri);
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
-                    var responseValue = string.Empty;
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        string message = string.Format("POST failed. Received HTTP {0}", response.StatusCode);
-                        throw new ApplicationException(message);
-                    }
-                    //grab the response
-                    using (var responseStream = response.GetResponseStream())
-                    {
-                        using (var reader = new StreamReader(responseStream))
-                        {
-                            responseValue = reader.ReadToEnd();
-                        }
-                    }
-                    return responseValue;
-                }
+                //var uri = string.Format("https://smsvas.vlserv.com/KannelSending/service.asmx/SendSMS?username={0}&password={1}&SMSText={2}&SMSLang={3}&SMSSender={4}&SMSReceiver={5}", "Momkn", "q99LMgp9i9", body, lang, "Momkn", receiver);
+                //HttpWebRequest request = CreateWebRequest(uri);
+                //using (var response = (HttpWebResponse)request.GetResponse())
+                //{
+                //    var responseValue = string.Empty;
+                //    if (response.StatusCode != HttpStatusCode.OK)
+                //    {
+                //        string message = string.Format("POST failed. Received HTTP {0}", response.StatusCode);
+                //        throw new ApplicationException(message);
+                //    }
+                //    //grab the response
+                //    using (var responseStream = response.GetResponseStream())
+                //    {
+                //        using (var reader = new StreamReader(responseStream))
+                //        {
+                //            responseValue = reader.ReadToEnd();
+                //        }
+                //    }
+                //    return responseValue;
+                //}
+                return null;
             }
             catch
             {

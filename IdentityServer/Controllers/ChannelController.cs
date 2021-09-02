@@ -65,7 +65,8 @@ namespace IdentityServer.Controllers
                     PaymentMethodID = model.PaymentMethodID,
                     Status = model.Status,
                     Value = model.Value,
-                    CreatedBy = UserIdentityId
+                    CreatedBy = UserIdentityId,
+                    AccountId=model.AccountId
                 });
                 return Ok(Map(result));
             }

@@ -54,6 +54,15 @@ namespace IdentityServer.Services
                 }
             });
 
+            if (addDTO.AccountId.HasValue)
+            {
+                addedEntity.AccountChannels = new List<AccountChannel> {new AccountChannel
+                {
+                    AccountID = (int)addDTO.AccountId,
+                    Status = AccountChannelStatus.Created,
+                    CreatedBy = addDTO.CreatedBy
+                } };
+            }
             _unitOfWork.SaveChanges();
 
             return MapEntityToDto(addedEntity);

@@ -13,5 +13,6 @@ namespace IdentityServer.Services
         void DeleteAccountTypeProfile(int id);
         IEnumerable<AccountTypeProfileDTO> GetAccountTypeProfileLst(int pageNumber, int pageSize);
         IEnumerable<AccountDTO> GetParentAccounts(int id);
+        IEnumerable<AccountTypeProfileDTO> GetProfilesByAccountTypeId(int id);
     }
 }

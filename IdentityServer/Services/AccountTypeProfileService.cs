@@ -35,7 +35,7 @@ namespace IdentityServer.Services
             _profile = profile;
             _accountMappingValidation = accountMappingValidation;
             _account = account;
-            _localizer= localizer;
+            _localizer = localizer;
             _unitOfWork = unitOfWork;
         }
         public AccountTypeProfileDTO AddAccountTypeProfile(AccountTypeProfileDTO accountTypeProfileDTO)
@@ -65,7 +65,7 @@ namespace IdentityServer.Services
                 Id = atp.ID,
                 AccountTypeID = atp.AccountTypeID,
                 ProfileID = atp.ProfileID,
-                FullName = atp.AccountType.Name +" - " + atp.Profile.Name
+                FullName = atp.AccountType.Name + " - " + atp.Profile.Name
             }).OrderBy(c => c.FullName).Skip(pageNumber - 1).Take(pageSize).ToList();
 
             return results;
@@ -105,10 +105,23 @@ namespace IdentityServer.Services
             return accounts.Select(a => new AccountDTO()
             {
                 Id = a.ID,
-                AccountName = a.Name,
+                AccountName = a.ID + " - " + a.Name,
             }).ToList();
 
             //return _account.Getwhere(a => a.prof).Select().ToList();
+        }
+
+        public IEnumerable<AccountTypeProfileDTO> GetProfilesByAccountTypeId(int id)
+        {
+            return _accountTypeProfile.Getwhere(atp => atp.AccountTypeID == id).Select(atp => new AccountTypeProfileDTO
+            {
+                Id = atp.ID,
+                AccountTypeID = atp.AccountTypeID,
+                ProfileID = atp.ProfileID,
+                FullName = atp.AccountType.Name + " - " + atp.Profile.Name,
+                ProfileName = atp.Profile.Name
+
+            }).ToList();
         }
 
         #region Helper Method

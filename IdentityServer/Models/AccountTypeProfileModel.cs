@@ -10,6 +10,7 @@ namespace IdentityServer.Models
         public int Id { get; set; }
         public int AccountTypeID { get; set; }
         public int ProfileID { get; set; }
+        public string Profile { get; set; }
         public string FullName { get; set; }
     }
 }

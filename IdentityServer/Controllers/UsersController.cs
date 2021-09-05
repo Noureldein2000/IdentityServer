@@ -159,7 +159,12 @@ namespace IdentityServer.Controllers
                 //var alloedEnums = Enum.GetValues(typeof(Roles)).Cast<string>().ToList();
                 //if (!alloedEnums.Contains(model.UserRole))
                 //    return BadRequest("Role not allowed", "-2");
-                
+                if (model.AccountId.HasValue && _userManager.Users.Any(u => u.ReferenceID == model.AccountId.ToString() && u.UserName == model.Username))
+                    return BadRequest("-50", "Name already exists");
+
+                if(!model.AccountId.HasValue && _userManager.Users.Any(u => u.UserName == model.Username && u.UserTypeID == (int)AccountTypeStatus.AdminAccount))
+                    return BadRequest("-50", "Name already exists");
+
                 var newUserId = _userManager.Users.Max(u => u.UserId);
                 var user = new ApplicationUser
                 {

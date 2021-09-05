@@ -117,6 +117,24 @@ namespace IdentityServer.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetProfilesByAccountTypeId/{id}")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<AccountTypeProfileModel>), StatusCodes.Status200OK)]
+        public IActionResult GetProfilesByAccountTypeId(int id)
+        {
+            try
+            {
+                var result = _accountTypeProfileService.GetProfilesByAccountTypeId(id);
+                return Ok(result.Select(s => MaptoModel(s)).ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         #region Helper Method
         //Helper Method
         private AccountModel Map(AccountDTO model)
@@ -152,7 +170,8 @@ namespace IdentityServer.Controllers
                 Id = model.Id,
                 AccountTypeID = model.AccountTypeID,
                 ProfileID = model.ProfileID,
-                FullName = model.FullName
+                FullName = model.FullName,
+                Profile=model.ProfileName
             };
         }
 

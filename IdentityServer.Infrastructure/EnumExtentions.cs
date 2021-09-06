@@ -23,7 +23,7 @@ namespace IdentityServer.Infrastructure
     }
     public enum AccountTypeStatus
     {
-        UserAccount = 1,
+        ConsumerAccount = 1,
         AdminAccount = 2,
         Company = 11,
     }

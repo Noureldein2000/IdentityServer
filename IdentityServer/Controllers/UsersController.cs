@@ -162,7 +162,7 @@ namespace IdentityServer.Controllers
                 if (model.AccountId.HasValue && _userManager.Users.Any(u => u.ReferenceID == model.AccountId.ToString() && u.UserName == model.Username))
                     return BadRequest("-50", "Name already exists");
 
-                if(!model.AccountId.HasValue && _userManager.Users.Any(u => u.UserName == model.Username && u.UserTypeID == (int)AccountTypeStatus.AdminAccount))
+                if (!model.AccountId.HasValue && _userManager.Users.Any(u => u.UserName == model.Username && u.UserTypeID == (int)AccountTypeStatus.AdminAccount))
                     return BadRequest("-50", "Name already exists");
 
                 var newUserId = _userManager.Users.Max(u => u.UserId);
@@ -177,11 +177,16 @@ namespace IdentityServer.Controllers
                     ReferenceID = model.AccountId.ToString(),
                     UserId = newUserId + 1,
                     NormalizedEmail = model.Email.ToUpper(),
-                    NormalizedUserName = model.Username.ToUpper()
+                    NormalizedUserName = model.Username.ToUpper(),
+                    UserTypeID = model.AccountId == null ? (int)AccountTypeStatus.AdminAccount : (int)AccountTypeStatus.ConsumerAccount
                 };
-                await _userManager.CreateAsync(user, model.Password);
-                await _userManager.AddToRolesAsync(user, new List<string> { model.UserRole.ToString() });
-                return Ok();
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRolesAsync(user, new List<string> { model.UserRole.ToString() });
+                    return Ok();
+                }
+                return BadRequest("-51", string.Join(',', result.Errors.Select(x => x.Description).ToList()));
             }
             catch (Exception ex)
             {

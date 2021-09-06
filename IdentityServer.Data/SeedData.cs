@@ -15,7 +15,19 @@ namespace IdentityServer.Data
                 new UserType
                 {
                     ID = 1,
-                    Name = "AccountUser",
+                    Name = "ConsumerAccount",
+                    CreationDate = DateTime.Now
+                },
+                new UserType
+                {
+                    ID = 2,
+                    Name = "AdminAccount",
+                    CreationDate = DateTime.Now
+                },
+                new UserType
+                {
+                    ID = 11,
+                    Name = "Company",
                     CreationDate = DateTime.Now
                 });
 

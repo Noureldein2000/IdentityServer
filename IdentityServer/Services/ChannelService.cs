@@ -158,6 +158,7 @@ namespace IdentityServer.Services
                 ChannelOwnerName = c.ChannelOwner.Name,
                 PaymentMethodID = c.PaymentMethodID,
                 PaymentMethodName = c.ChannelPaymentMethod.Name,
+                Status=c.ChannelIdentifiers.Status,
                 CreationDate = c.CreationDate
             });
 

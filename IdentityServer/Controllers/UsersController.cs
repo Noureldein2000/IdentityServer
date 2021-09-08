@@ -174,7 +174,7 @@ namespace IdentityServer.Controllers
                     Name = model.Username,
                     UserName = model.Username,
                     MustChangePassword = ((int)model.UserRole) != ((int)Roles.Consumer),
-                    ReferenceID = model.AccountId.ToString(),
+                    ReferenceID = model.AccountId.HasValue ? model.AccountId.ToString() : null,
                     UserId = newUserId + 1,
                     NormalizedEmail = model.Email.ToUpper(),
                     NormalizedUserName = model.Username.ToUpper(),

@@ -68,6 +68,8 @@ namespace IdentityServer
                     "roles"
                 },
                 RequireConsent = false,
+                AlwaysIncludeUserClaimsInIdToken = true,
+                
                 //AllowOfflineAccess = true 
                 //puts all the claims in id_token 
                 //AlwaysIncludeUserClaimsInIdToken = true

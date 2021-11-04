@@ -40,7 +40,23 @@ namespace IdentityServer.Controllers
                 return BadRequest(ex);
             }
         }
-
+        [HttpGet]
+        [Route("GetAccountChannelsHistory/{searchKey}")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<AccountChannelHistoryModel>), StatusCodes.Status200OK)]
+        public IActionResult GetAccountChannelsHistory([FromRoute] string searchKey)
+        {
+            try
+            {
+                var result = _accountService.GetAccountChannelsHistory(searchKey).Select(ard => Map(ard));
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
         [HttpPost]
         [Route("Add")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
@@ -116,13 +132,25 @@ namespace IdentityServer.Controllers
                 ChannelName = model.ChannelName,
                 Serial = model.Serial,
                 Status = model.Status,
+                Value = model.Value,
                 Reason = model.Reason,
                 CreatedBy = model.CreatedBy,
                 CreatedName = model.CreatedName,
                 UpdatedBy = model.UpdatedBy
             };
         }
-
+        private AccountChannelHistoryModel Map(AccountChannelHistoryDTO model)
+        {
+            return new AccountChannelHistoryModel
+            {
+                AccountName = model.AccountName,
+                ChannelName = model.ChannelName,
+                ChannelValue = model.ChannelValue,
+                Status = model.Status,
+                Reason = model.Reason,
+                CreatedBy = model.CreatedBy
+            };
+        }
         #endregion
 
     }

@@ -13,6 +13,7 @@ namespace IdentityServer.DTOs
         public int ChannelID { get; set; }
         public string ChannelName { get; set; }
         public string Serial { get; set; }
+        public string Value { get; set; }
         public AccountChannelStatus Status { get; set; }
         public string Reason{ get; set; }
         public int CreatedBy { get; set; }

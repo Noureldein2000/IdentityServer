@@ -33,7 +33,7 @@ namespace IdentityServer
         {
             services.AddLocalization(options => options.ResourcesPath = "Resources");
           
-            var connectionString = Configuration.GetConnectionString("Default");
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));

@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release;Production</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20210810120718_RemoveSeededMigration.cs" />
+    <Compile Remove="Migrations\20210810120718_RemoveSeededMigration.Designer.cs" />
+    <Compile Remove="Migrations\20210817161352_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817161352_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210817161756_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817161756_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210817162250_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817162250_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210817162959_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817162959_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210817163114_CreateAccountRelationMapping.cs" />
+    <Compile Remove="Migrations\20210817163114_CreateAccountRelationMapping.Designer.cs" />
+    <Compile Remove="Migrations\20210822120847_Fixes.cs" />
+    <Compile Remove="Migrations\20210822120847_Fixes.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.16" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.16" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IdentityServer.Infrastructure\IdentityServer.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

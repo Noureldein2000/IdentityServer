@@ -1,70 +1,90 @@
-﻿using IdentityServer.Data;
+﻿using IdentityServer.Data.Entities;
+using IdentityServer.Helpers;
+using IdentityServer.Infrastructure;
 using IdentityServer.Models;
+using IdentityServer.Properties;
+using IdentityServer.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using static IdentityServer.Models.Constants;
 
 namespace IdentityServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly ILoginService _loginService;
+        private readonly IStringLocalizer<AuthenticationResource> _localizer;
         public AuthenticationController(UserManager<ApplicationUser> userManager,
-            IConfiguration configuration)
+            IConfiguration configuration, ILoginService loginService,
+            IStringLocalizer<AuthenticationResource> localizer)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _loginService = loginService;
+            _localizer = localizer;
         }
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            try
             {
-                var userRoles = await _userManager.GetRolesAsync(user);
-                var userClaims = _userManager.GetClaimsAsync(user).Result.Where(c => c.Value == AvaliableClaimValues.True);
-                var authClaims = new List<Claim>
+                var authResponce = await _loginService.ValidateUser(new DTOs.AccountChannelLoginDTO
                 {
-                    new Claim(ClaimTypes.Name, user.UserId.ToString()),
-                };
-                foreach (var role in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, role));
-                }
-                foreach (var claim in userClaims)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, claim.Type));
-                }
-                //authClaims.Add(new Claim("channel_id", "value"));
-                var authSigninKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetValue<string>("IdentityServer:Secret")));
-                var token = new JwtSecurityToken
-                (
-                    issuer: _configuration.GetValue<string>("IdentityServer:Issuer"),
-                    audience: _configuration.GetValue<string>("IdentityServer:audience"),
-                    claims: authClaims,
-                    expires: DateTime.Now.AddDays(2),
-                    signingCredentials: new SigningCredentials(authSigninKey, SecurityAlgorithms.HmacSha256)
-                 );
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    privilages = userClaims.Where(s => s.Value == AvaliableClaimValues.True)
-                                                .Select(s => s.Type).ToList()
+                    AccountId = model.AccountId,
+                    ChannelCategory = model.ChannelCategory,
+                    ChannelId = model.ChannelId,
+                    ChannelType = model.ChannelType,
+                    Password = model.Password,
+                    Username = model.Username,
+                    AccountIP = GetIPAddress(),
+                    LocalIP = GetLocalIpAddress()
                 });
+                var responce = new AuthorizationResponceModel
+                {
+                    Token = authResponce.Token,
+                    Permissions = authResponce.Permissions,
+                    ServerDate = authResponce.ServerDate,
+                    LocalDate = authResponce.LocalDate,
+                    AccountId = authResponce.AccountId,
+                    AccountName = authResponce.AccountName,
+                    AccountType = authResponce.AccountType,
+                    Code = authResponce.Code,
+                    Message = authResponce.Message,
+                    ServiceListVersion = authResponce.ServiceListVersion,
+                    Version = authResponce.Version
+                };
+                return Ok(responce);
+
             }
-            return Unauthorized();
+            catch (AuthorizationException ex)
+            {
+                return Unauthorized(ex.ErrorCode, ex.Message);
+            }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
+            }
+            catch (Exception)
+            {
+                return BadRequest(ErrorCodes.Unknown);
+            }
         }
 
         [HttpGet]
@@ -82,6 +102,88 @@ namespace IdentityServer.Controllers
             {
                 result.IsBlocked = false;
                 return Ok(result);
+            }
+        }
+
+
+        [HttpPost]
+        [Route("ChangePassword")]
+        public IActionResult ChangePassword([FromBody] ChangePasswordModel model)
+        {
+            try
+            {
+                var passData = _loginService.ChangePassword(new DTOs.ChangePasswordDTO
+                {
+                    AccountId = model.AccountId,
+                    ChannelId = model.ChannelId,
+                    ChannelType = model.ChannelType,
+                    NewPassword = model.NewPassword,
+                    Password = model.Password,
+                    Username = model.Username,
+                });
+                return Ok(passData);
+            }
+            catch (AuthorizationException ex)
+            {
+                return Unauthorized(ex.ErrorCode, ex.Message);
+            }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
+            }
+        }
+        [HttpPost]
+        [Route("ConfirmOTP")]
+        public IActionResult ConfirmOTP([FromBody] ConfirmOTPModel model)
+        {
+            try
+            {
+                var passData = _loginService.ConfirmOTP(new DTOs.ConfirmOTPDTO
+                {
+                    AccountId = model.AccountId,
+                    ChannelId = model.ChannelId,
+                    ChannelType = model.ChannelType,
+                    Password = model.Password,
+                    Username = model.Username,
+                    Id = model.Id,
+                    OTP = model.OTP
+                });
+                return Ok(passData);
+            }
+            catch (AuthorizationException ex)
+            {
+                return Unauthorized(ex.ErrorCode, ex.Message);
+            }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
+            }
+        }
+        [HttpPost]
+        [Route("ResendOTP")]
+        public IActionResult ResendOTP([FromBody] ConfirmOTPModel model)
+        {
+            try
+            {
+                var passData = _loginService.ResendOTP(new DTOs.ConfirmOTPDTO
+                {
+                    AccountId = model.AccountId,
+                    ChannelId = model.ChannelId,
+                    ChannelType = model.ChannelType,
+                    Password = model.Password,
+                    Username = model.Username,
+                    Id = model.Id,
+                    OTP = model.OTP
+                });
+                return Ok(passData);
+            }
+            catch (AuthorizationException ex)
+            {
+                return Unauthorized(ex.ErrorCode, ex.Message);
+            }
+            catch (OkException ex)
+            {
+                return Ok(ex.ErrorCode, ex.Message);
             }
         }
     }

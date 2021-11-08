@@ -56,7 +56,7 @@ namespace IdentityServer
                 //await DefaultUsers.SeedConsumerUsersAsync(userManager);
                 await DefaultUsers.SeedSuperAdminUsersAsync(userManager, roleManager);
                 await DefaultUsers.SeedAnonymousUsersAsync(userManager, roleManager);
-                Log.Information($"Seeding admin");
+                Log.Information($"Admin Seeded");
             }
             catch (Exception ex)
             {

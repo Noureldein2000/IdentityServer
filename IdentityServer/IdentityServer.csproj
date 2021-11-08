@@ -11,6 +11,18 @@
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
 	</PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
+    <EnvironmentName>Development</EnvironmentName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Production'">
+    <EnvironmentName>Production</EnvironmentName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <EnvironmentName>Release</EnvironmentName>
+  </PropertyGroup>
+  
 	<ItemGroup>
 		<Compile Remove="Entities\**" />
 		<Content Remove="Entities\**" />
@@ -51,7 +63,6 @@
 		<PackageReference Include="IdentityServer4" Version="4.1.2" />
 		<PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
 		<PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
-		<PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.9" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.16">

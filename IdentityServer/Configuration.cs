@@ -1,6 +1,7 @@
 ﻿using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace IdentityServer
                 new ApiScope("SOF")
             };
 
-        public static IEnumerable<Client> GetClients() =>
+        public static IEnumerable<Client> GetClients(IConfiguration configuration) =>
             new List<Client> {
                 new Client
             {
@@ -56,9 +57,9 @@ namespace IdentityServer
                 ClientSecrets = {new Secret("d5a9b78e-a694-4026-af7f-6d559d8a3949".ToSha256())},
                 AllowedGrantTypes = GrantTypes.Code,
                 RequirePkce = true,
-                RedirectUris = { "https://localhost:44328/signin-oidc" },
-                //FrontChannelLogoutUri = "https://localhost:44328/signout-oidc",
-                PostLogoutRedirectUris = { "https://localhost:44328/signout-callback-oidc" },
+                RedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signin-oidc" },
+                //FrontChannelLogoutUri = $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signout-oidc",
+                PostLogoutRedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signout-callback-oidc" },
                 AllowedScopes =
                 {
                     "SOF",

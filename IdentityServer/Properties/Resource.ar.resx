@@ -153,8 +153,8 @@
   <data name="ThisAccountHasChannelTypeBefore" xml:space="preserve">
     <value>هذا الحساب يملك نوع القناة مسبقا</value>
   </data>
-  <data name="ThisAccountIsNotExists" xml:space="preserve">
-    <value>هذا الحساب ليس موجود</value>
+  <data name="ThisAccountIsExists" xml:space="preserve">
+    <value>هذا الحساب موجود بالفعل</value>
   </data>
   <data name="ThisChannelExistedBefore" xml:space="preserve">
     <value>هذا القناة موجود مسبقاً</value>

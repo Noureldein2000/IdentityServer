@@ -169,11 +169,11 @@ namespace IdentityServer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This account is not exists.
+        ///   Looks up a localized string similar to This account is already exists.
         /// </summary>
-        public static string ThisAccountIsNotExists {
+        public static string ThisAccountIsExists {
             get {
-                return ResourceManager.GetString("ThisAccountIsNotExists", resourceCulture);
+                return ResourceManager.GetString("ThisAccountIsExists", resourceCulture);
             }
         }
         

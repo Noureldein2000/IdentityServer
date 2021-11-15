@@ -2,6 +2,7 @@
 using IdentityServer.DTOs;
 using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
+using IdentityServer.Models;
 using IdentityServer.Properties;
 using IdentityServer.Repositories.Base;
 using Microsoft.Extensions.Localization;
@@ -41,7 +42,7 @@ namespace IdentityServer.Services
         public AccountTypeProfileDTO AddAccountTypeProfile(AccountTypeProfileDTO accountTypeProfileDTO)
         {
             var checkExists = _accountTypeProfile.Getwhere(atp => atp.AccountTypeID == accountTypeProfileDTO.AccountTypeID && atp.ProfileID == accountTypeProfileDTO.ProfileID).Any();
-            if (checkExists) throw new OkException(_localizer["ThisAccountIsNotExists"].Value, ErrorCodes.ChangePassword.InvalidPassword);
+            if (checkExists) throw new OkException(_localizer["ThisAccountIsExists"].Value, ErrorCodes.ChangePassword.InvalidPassword);
 
             var addedEntity = _accountTypeProfile.Add(new AccountTypeProfile
             {
@@ -53,22 +54,47 @@ namespace IdentityServer.Services
 
             return MapEntityToDto(addedEntity);
         }
+
         public void DeleteAccountTypeProfile(int id)
         {
             _accountTypeProfile.Delete(id);
             _unitOfWork.SaveChanges();
         }
-        public IEnumerable<AccountTypeProfileDTO> GetAccountTypeProfileLst(int pageNumber, int pageSize)
+
+        public PagedResult<AccountTypeProfileDTO> GetAccountTypeProfileLst(int pageNumber, int pageSize)
         {
-            var results = _accountTypeProfile.Getwhere(atp => true).Select(atp => new AccountTypeProfileDTO
+            var accountTypeProfiles = _accountTypeProfile.Getwhere(atp => true).Select(atp => new
             {
                 Id = atp.ID,
                 AccountTypeID = atp.AccountTypeID,
                 ProfileID = atp.ProfileID,
-                FullName = atp.AccountType.Name + " - " + atp.Profile.Name
-            }).OrderBy(c => c.FullName).Skip(pageNumber - 1).Take(pageSize).ToList();
+                ProfileName = atp.Profile.Name,
+                AccountTypeName = atp.AccountType.NameAr,
+                FullName = atp.AccountType.Name + " - " + atp.Profile.Name,
+                CreationDate = atp.CreationDate
 
-            return results;
+            });
+
+
+            var count = accountTypeProfiles.Count();
+
+            var resultList = accountTypeProfiles.OrderByDescending(ar => ar.CreationDate)
+          .Skip(pageNumber - 1).Take(pageSize)
+          .ToList();
+
+            return new PagedResult<AccountTypeProfileDTO>
+            {
+                Results = resultList.Select(atp => new AccountTypeProfileDTO
+                {
+                    Id = atp.Id,
+                    AccountTypeID = atp.AccountTypeID,
+                    ProfileID = atp.ProfileID,
+                    ProfileName = atp.ProfileName,
+                    AccountTypeName = atp.AccountTypeName,
+                    FullName = atp.FullName
+                }).ToList(),
+                PageCount = count
+            };
         }
         public ListAccountTypeAndProfileDTO GetLstAccountTypeAndProfile()
         {

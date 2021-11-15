@@ -26,13 +26,17 @@ namespace IdentityServer.Controllers
         [Route("GetAll")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(IEnumerable<AccountTypeProfileModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<AccountTypeProfileModel>), StatusCodes.Status200OK)]
         public IActionResult GetAll([FromQuery]int pageNumber = 1, int pageSize = 10)
         {                                       
             try
             {
-                var result = _accountTypeProfileService.GetAccountTypeProfileLst(pageNumber, pageSize).Select(ard => MaptoModel(ard));
-                return Ok(result);
+                var result = _accountTypeProfileService.GetAccountTypeProfileLst(pageNumber, pageSize);
+                return Ok(new PagedResult<AccountTypeProfileModel>
+                {
+                    Results = result.Results.Select(ard => MapToModel(ard)).ToList(),
+                    PageCount = result.PageCount
+                });
             }
             catch (Exception ex)
             {
@@ -55,7 +59,7 @@ namespace IdentityServer.Controllers
                     AccountTypeID = model.AccountTypeID,
                     ProfileID = model.ProfileID,
                 });
-                return Ok(MaptoModel(result));
+                return Ok(MapToModel(result));
             }
             catch (Exception ex)
             {
@@ -127,7 +131,7 @@ namespace IdentityServer.Controllers
             try
             {
                 var result = _accountTypeProfileService.GetProfilesByAccountTypeId(id);
-                return Ok(result.Select(s => MaptoModel(s)).ToList());
+                return Ok(result.Select(s => MapToModel(s)).ToList());
             }
             catch (Exception ex)
             {
@@ -162,8 +166,7 @@ namespace IdentityServer.Controllers
                 LstAccountType = model.LstAccountType
             };
         }
-
-        private AccountTypeProfileModel MaptoModel(AccountTypeProfileDTO model)
+        private AccountTypeProfileModel MapToModel(AccountTypeProfileDTO model)
         {
             return new AccountTypeProfileModel
             {
@@ -171,6 +174,7 @@ namespace IdentityServer.Controllers
                 AccountTypeID = model.AccountTypeID,
                 ProfileID = model.ProfileID,
                 FullName = model.FullName,
+                AccountType=model.AccountTypeName,
                 Profile=model.ProfileName
             };
         }

@@ -417,20 +417,37 @@ namespace IdentityServer.Services
 
         public IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId)
         {
-            var result = _accountChannel.Getwhere(ac => ac.AccountID == accountId).Select(ac => new AccountChannelDTO
+
+            var result = _accountChannel.Getwhere(ac => ac.AccountID == accountId && ac.Status != AccountChannelStatus.Deleted)
+                .OrderByDescending(s => s.CreationDate).Select(ac => new
+                {
+                    ac.ID,
+                    ac.AccountID,
+                    ac.ChannelID,
+                    ChannelName = ac.Channel.Name,
+                    ac.Channel.Serial,
+                    ac.Channel.ChannelIdentifiers.Value,
+                    ac.Status,
+                    ac.CreatedBy,
+                    ac.UpdatedBy
+                }).ToList();
+
+            var userIds = result.Select(s => s.CreatedBy).ToList();
+            var users = _userManager.Users.Where(u => userIds.Contains(u.UserId)).ToList();
+
+            return result.Select(ac => new AccountChannelDTO
             {
                 Id = ac.ID,
                 AccountID = ac.AccountID,
                 ChannelID = ac.ChannelID,
-                ChannelName = ac.Channel.Name,
-                Serial = ac.Channel.Serial,
+                ChannelName = ac.ChannelName,
+                Serial = ac.Serial,
+                Value = ac.Value,
                 Status = ac.Status,
                 CreatedBy = ac.CreatedBy,
-                CreatedName = _userManager.Users.Where(u => u.UserId == ac.CreatedBy).FirstOrDefault().Name,
+                CreatedName = users.Where(u => u.Id == ac.CreatedBy.ToString()).Select(s => s.Name).FirstOrDefault(),
                 UpdatedBy = ac.UpdatedBy
-            }).ToList();
-
-            return result;
+            });
         }
 
         public PagedResult<AccountDTO> GetAccountsBySearchKey(int? accountType, string searchKey, int pageNumber, int pageSize)
@@ -542,7 +559,37 @@ namespace IdentityServer.Services
             CreatedBy = entityRequest.CreatedBy
         };
 
-       
+        public IEnumerable<AccountChannelHistoryDTO> GetAccountChannelsHistory(string searchKey)
+        {
+
+            var channels = _accountChannelHistory.Getwhere(s => s.Channel.ChannelIdentifiers.Value == searchKey).Select(s => new
+            {
+                AccountName = s.Account.Name,
+                ChannelName = s.Channel.Name,
+                ChannelValue = s.Channel.ChannelIdentifiers.Value,
+                s.Status,
+                s.Reason,
+                s.CreatedBy,
+                s.CreationDate
+            }).OrderByDescending(s => s.CreationDate).ToList();
+
+            var userIds = channels.Select(s => s.CreatedBy).ToList();
+            var users = _userManager.Users.Where(u => userIds.Contains(u.UserId)).ToList();
+
+            return channels.Select(s => new AccountChannelHistoryDTO
+            {
+                AccountName = s.AccountName,
+                ChannelName = s.ChannelName,
+                ChannelValue = s.ChannelValue,
+                Status = s.Status.ToString(),
+                Reason = s.Reason,
+                CreatedBy = users.Where(u => u.Id == s.CreatedBy.ToString()).Select(s => s.Name).FirstOrDefault(),
+
+            }).ToList();
+
+        }
+
+
         #endregion
     }
 }

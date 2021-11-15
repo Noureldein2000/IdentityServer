@@ -109,7 +109,7 @@ namespace IdentityServer.Controllers
             }
             catch (OkException ex)
             {
-                return Ok(ex.ErrorCode, ex.Message);
+                return BadRequest(ex.ErrorCode, ex.Message);
             }
             catch (Exception ex)
             {

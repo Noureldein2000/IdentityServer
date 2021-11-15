@@ -178,9 +178,10 @@ namespace IdentityServer.Controllers
                     UserId = newUserId + 1,
                     NormalizedEmail = model.Email.ToUpper(),
                     NormalizedUserName = model.Username.ToUpper(),
-                    UserTypeID = model.AccountId == null ? (int)AccountTypeStatus.AdminAccount : (int)AccountTypeStatus.ConsumerAccount
+                    UserTypeID = model.AccountId == null ? (int)AccountTypeStatus.AdminAccount : (int)AccountTypeStatus.ConsumerAccount,
+                    PhoneNumber = model.Mobile
                 };
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRolesAsync(user, new List<string> { model.UserRole.ToString() });

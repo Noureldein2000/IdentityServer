@@ -27,6 +27,7 @@ namespace IdentityServer.Services
         AccountChannelTypeDTO DeleteAccountChannelTypes(int id);
         AccountChannelTypeDTO AddAccountChannelTypes(AccountChannelTypeDTO accountChannelTypeDTO);
         IEnumerable<AccountChannelDTO> GetChannelsByAccountId(int accountId);
+        IEnumerable<AccountChannelHistoryDTO> GetAccountChannelsHistory(string searchKey);
         AccountChannelDTO AddAccountChannel(AccountChannelDTO accountChannelDTO);
         AccountChannelDTO DeleteAccountChannel(int id);
         AccountChannelDTO ChangeAccountChannelStatus(int id, AccountChannelStatus status,string reason, int userUpdated);

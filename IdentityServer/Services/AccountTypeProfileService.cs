@@ -136,7 +136,29 @@ namespace IdentityServer.Services
 
             //return _account.Getwhere(a => a.prof).Select().ToList();
         }
+        public AccountDTO GetParentAccounts(int id, int accountId)
+        {
+            var accountTypeId = _accountTypeProfile.GetById(id).AccountTypeID;
 
+            var parentTypeIds = _accountMappingValidation.Getwhere(amv => amv.ChildID == accountTypeId)
+                .Select(x => x.ParentID).ToList();
+
+            var parentTypeProfileIds = _accountTypeProfile.Getwhere(p => parentTypeIds.Contains(p.AccountTypeID))
+                .Select(x => x.ID).ToList();
+
+            return _account.Getwhere(a => parentTypeIds.Contains(a.AccountTypeProfile.AccountTypeID) & a.ID == accountId && parentTypeProfileIds.Contains((int)a.AccountTypeProfileID))
+                .Select(a => new AccountDTO
+                {
+                    AccountName = a.Name,
+                }).FirstOrDefault();
+        }
+        public IEnumerable<string> GetAccountMappingValidation(int id)
+        {
+            var parentTypeIds = _accountMappingValidation.Getwhere(amv => amv.ChildID == id)
+                .Select(x => x.ParentID).ToList();
+
+            return _accountType.Getwhere(a => parentTypeIds.Contains(a.ID)).Select(a => a.NameAr).ToList();
+        }
         public IEnumerable<AccountTypeProfileDTO> GetProfilesByAccountTypeId(int id)
         {
             return _accountTypeProfile.Getwhere(atp => atp.AccountTypeID == id).Select(atp => new AccountTypeProfileDTO

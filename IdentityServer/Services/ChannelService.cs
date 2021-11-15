@@ -178,7 +178,7 @@ namespace IdentityServer.Services
         public PagedResult<ChannelDTO> SearchSpecificChannelBySerial(string searchKey, int pageNumber, int pageSize)
         {
             var searchChannelList = _channel.Getwhere(c => c.Serial.Contains(searchKey)
-            && (c.ChannelType.ChannelCategoryID == 2 || (c.ChannelType.ChannelCategoryID == 4 && c.AccountChannels.Count > 0))
+            && (c.ChannelType.ChannelCategoryID == 2 || (c.ChannelType.ChannelCategoryID == 4 && c.AccountChannels.Any()))
             ).Select(c => new ChannelDTO
             {
                 ChannelID = c.ID,
@@ -205,8 +205,6 @@ namespace IdentityServer.Services
                 PageCount = count
             };
         }
-
-
         #region Helper Method
         //Helper Method
 

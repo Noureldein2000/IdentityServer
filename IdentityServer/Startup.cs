@@ -33,7 +33,7 @@ namespace IdentityServer
         {
             services.AddLocalization(options => options.ResourcesPath = "Resources");
           
-            var connectionString = Configuration.GetConnectionString("Default");
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
@@ -54,7 +54,9 @@ namespace IdentityServer
 
             services.ConfigureApplicationCookie(config =>
             {
-                config.Cookie.Name = "Cookie";
+                config.Cookie.MaxAge = TimeSpan.FromDays(1);
+                config.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Unspecified;
+                config.Cookie.Name = "Cookies";
                 config.LoginPath = "/Auth/Login";
             });
 
@@ -69,7 +71,7 @@ namespace IdentityServer
                .AddInMemoryApiResources(IdentityServer.Configuration.GetApiResources())
                .AddInMemoryIdentityResources(IdentityServer.Configuration.GetIdentityResources())
                //.AddInMemoryApiScopes(Config.GetApiScopes())
-               .AddInMemoryClients(IdentityServer.Configuration.GetClients())
+               .AddInMemoryClients(IdentityServer.Configuration.GetClients(Configuration))
                .AddAspNetIdentity<ApplicationUser>()
                .AddDeveloperSigningCredential();
              //.AddCustomAuthorizeRequestValidator<CustomAuthorizeRequestValidator>()
@@ -139,7 +141,8 @@ namespace IdentityServer
             });
                 
 
-            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+            services.AddControllersWithViews().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 )
                 .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix);

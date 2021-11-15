@@ -104,16 +104,34 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet]
-        [Route("GetParentAccounts/{id}")]
+        [Route("GetParentAccounts/{id}/{accountId}")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(IEnumerable<AccountModel>), StatusCodes.Status200OK)]
-        public IActionResult GetParentAccounts(int id)
+        [ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK)]
+        public IActionResult GetParentAccounts(int id, int accountId)
         {
             try
             {
-                var result = _accountTypeProfileService.GetParentAccounts(id);
-                return Ok(result.Select(s => Map(s)).ToList());
+                var result = _accountTypeProfileService.GetParentAccounts(id, accountId);
+                return Ok(result != null ? Map(result) : null);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAccountMappingValidation/{id}")]
+        //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.SuperAdmin)]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+        public IActionResult GetAccountMappingValidation(int id)
+        {
+            try
+            {
+                var result = _accountTypeProfileService.GetAccountMappingValidation(id).ToList();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -145,17 +163,17 @@ namespace IdentityServer.Controllers
         {
             return new AccountModel
             {
-                Id = model.Id,
-                OwnerName = model.OwnerName,
+                //Id = model.Id,
+                //OwnerName = model.OwnerName,
                 AccountName = model.AccountName,
-                Mobile = model.Mobile,
-                Address = model.Address,
-                Email = model.Email,
-                NationalID = model.NationalID,
-                CommercialRegistrationNo = model.CommercialRegistrationNo,
-                TaxNo = model.TaxNo,
-                ActivityID = model.ActivityID,
-                ActivityName = model.ActivityName
+                //Mobile = model.Mobile,
+                //Address = model.Address,
+                //Email = model.Email,
+                //NationalID = model.NationalID,
+                //CommercialRegistrationNo = model.CommercialRegistrationNo,
+                //TaxNo = model.TaxNo,
+                //ActivityID = model.ActivityID,
+                //ActivityName = model.ActivityName
             };
         }
         private AccountTypeProfileLstModel Map(ListAccountTypeAndProfileDTO model)

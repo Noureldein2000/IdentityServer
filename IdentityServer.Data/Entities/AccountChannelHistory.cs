@@ -15,7 +15,5 @@ namespace IdentityServer.Data.Entities
         public int? UpdatedBy { get; set; }
         public virtual Channel Channel { get; set; }
         public virtual Account Account { get; set; }
-        public virtual ICollection<OTP> OTPs { get; set; }
-
     }
 }

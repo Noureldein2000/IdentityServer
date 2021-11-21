@@ -153,8 +153,8 @@
   <data name="ThisAccountHasChannelTypeBefore" xml:space="preserve">
     <value>This account has channel type before</value>
   </data>
-  <data name="ThisAccountIsNotExists" xml:space="preserve">
-    <value>This account is not exists</value>
+  <data name="ThisAccountIsExists" xml:space="preserve">
+    <value>This account is already exists</value>
   </data>
   <data name="ThisChannelExistedBefore" xml:space="preserve">
     <value>This channel existed before</value>

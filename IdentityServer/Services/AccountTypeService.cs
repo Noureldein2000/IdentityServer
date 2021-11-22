@@ -80,11 +80,10 @@ namespace IdentityServer.Services
                 CreationDate = atp.CreationDate
             });
 
-
             var count = accountTypes.Count();
 
             var resultList = accountTypes.OrderByDescending(ar => ar.CreationDate)
-          .Skip(pageNumber - 1).Take(pageSize)
+          .Skip((pageNumber * pageSize) - pageSize).Take(pageSize)
           .ToList();
 
             return new PagedResult<AccountTypeDTO>
@@ -94,7 +93,7 @@ namespace IdentityServer.Services
                     Id = atp.Id,
                     Name = atp.Name,
                     NameAr = atp.NameAr,
-                    Status = atp.Status,
+                    Status = atp.Status
                 }).ToList(),
                 PageCount = count
             };

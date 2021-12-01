@@ -165,6 +165,9 @@
   <data name="ThisMobileNumberOrNationalIdAlreadyExists" xml:space="preserve">
     <value>This mobile number or Nationalid already exists</value>
   </data>
+  <data name="ThisUserIsNotFound" xml:space="preserve">
+    <value>This user is not found</value>
+  </data>
   <data name="Trialshaveexceededthelimit" xml:space="preserve">
     <value>Trials have exceeded the limit</value>
   </data>

@@ -43,7 +43,7 @@ namespace IdentityServer.Helpers
                              .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
                              .ToArray();
         }
-        public string GetM5Hash(string input)
+        public  string GetM5Hash(string input)
         {
             using (MD5 md5Hash = MD5.Create())
             {

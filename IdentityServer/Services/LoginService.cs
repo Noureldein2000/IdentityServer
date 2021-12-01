@@ -2,6 +2,7 @@
 using IdentityServer.DTOs;
 using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
+using IdentityServer.Infrastructure.Utils;
 using IdentityServer.Repositories.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,7 @@ namespace IdentityServer.Services
         private readonly IBaseRepository<AccountChannelType, int> _accountChannelTypes;
         private readonly IBaseRepository<ChannelIdentifier, int> _channelIdentifires;
         private readonly IBaseRepository<AccountChannel, int> _accountChannels;
+        private readonly IBaseRepository<AccountOwner, int> _accountOwner;
         private readonly IBaseRepository<OTP, int> _otps;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -36,6 +38,7 @@ namespace IdentityServer.Services
             IBaseRepository<AccountChannelType, int> accountChannelTypes,
             IBaseRepository<ChannelIdentifier, int> channelIdentifires,
             IBaseRepository<AccountChannel, int> accountChannels,
+            IBaseRepository<AccountOwner, int> accountOwner,
             IBaseRepository<OTP, int> otps,
             IUnitOfWork unitOfWork,
             IConfiguration configuration,
@@ -48,6 +51,7 @@ namespace IdentityServer.Services
             _accountChannelTypes = accountChannelTypes;
             _channelIdentifires = channelIdentifires;
             _accountChannels = accountChannels;
+            _accountOwner = accountOwner;
             _unitOfWork = unitOfWork;
             _smsService = smsService;
             _otps = otps;
@@ -70,7 +74,7 @@ namespace IdentityServer.Services
 
             var account = _accountChannelTypes.Getwhere(a => a.AccountID == accountId
                 && a.ChannelTypeID == channelType && a.Account.Active == true
-                && a.Account.AccountChannels.Any(ac => ac.Status == AccountChannelStatus.Active 
+                && a.Account.AccountChannels.Any(ac => ac.Status == AccountChannelStatus.Active
                 && ac.Channel.ChannelIdentifiers.Value == model.ChannelId)).Select(a => new
                 {
                     a.ExpirationPeriod,
@@ -206,7 +210,7 @@ namespace IdentityServer.Services
         {
             var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
 
-            if(user.MustChangePassword)
+            if (user.MustChangePassword)
                 throw new OkException(_localizer["MustChangePassword"].Value, ErrorCodes.ChangePassword.MustChangePassword);
 
             if (!int.TryParse(model.Id, out var otpId) || !int.TryParse(model.AccountId, out var accountId))
@@ -216,7 +220,7 @@ namespace IdentityServer.Services
             && o.OTPCode == model.OTP && o.StatusID == 1
             && o.UserID == user.UserId
             && o.AccountChannel.Channel.ChannelIdentifiers.Value == model.ChannelId).FirstOrDefault();
-            if(otp == null)
+            if (otp == null)
                 throw new OkException(_localizer["Thetimehasexceedetthelimit"].Value, ErrorCodes.OTP.TheTimeExceededLimit);
 
             if (otp.CreationDate.Subtract(DateTime.Now).Seconds > 60)
@@ -257,7 +261,7 @@ namespace IdentityServer.Services
             var otp = _otps.Getwhere(o => o.OriginalOTPID == otpId && o.UserID == user.UserId)
                 .FirstOrDefault();
 
-            if(otp != null)
+            if (otp != null)
                 throw new OkException(_localizer["Trialshaveexceededthelimit"].Value, ErrorCodes.OTP.Trialshaveexceededthelimit);
 
             var accountChannel = _accountChannels.Getwhere(ac =>
@@ -280,6 +284,28 @@ namespace IdentityServer.Services
                 Token = tokenData.Token,
                 Permissions = tokenData.Permissions,
             };
+        }
+        public async Task<bool> ResetUserPassword(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) throw new IdentityException(_localizer["ThisUserIsNotFound"].Value, "-1");
+
+            string password = GetData.GenerateRandomNumeric(6).ToString();
+            user.MustChangePassword = false;
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, password);
+
+            if (result.Succeeded)
+            {
+                string userName = user.UserName;
+                string accountId = user.ReferenceID;
+                string mobileNumber = _accountOwner.Getwhere(x => x.AccountID == int.Parse(accountId)).FirstOrDefault().Mobile;
+                string textSMS = CreateSMSText(userName, password, accountId);
+                _smsService.SendMessage(textSMS, mobileNumber);
+                return true;
+            }
+
+            return !result.Succeeded;
         }
 
         //Helper Method
@@ -383,6 +409,10 @@ namespace IdentityServer.Services
             int otpId = CreateOTP(userId, accountChannelId, localIP, accountIP, otp, sequence, originalID);
             _smsService.SendMessage($"Momkn OTP: {otp}", "E", mobile);
             return otpId;
+        }
+        private string CreateSMSText(string name, string password, string accountId)
+        {
+            return "اسم المستخدم :" + name + "وكلمة المرور :" + password + " ورقم المركز: " + accountId;
         }
     }
     #endregion

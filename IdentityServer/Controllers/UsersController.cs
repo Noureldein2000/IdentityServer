@@ -1,7 +1,10 @@
 ﻿using IdentityServer.Data.Entities;
 using IdentityServer.Data.Seeding;
+using IdentityServer.Helpers;
 using IdentityServer.Infrastructure;
+using IdentityServer.Infrastructure.Utils;
 using IdentityServer.Models;
+using IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,12 +26,15 @@ namespace IdentityServer.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILoginService _loginService;
         public UsersController(
             UserManager<ApplicationUser> userManager,
+            ILoginService loginService,
             RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _loginService = loginService;
         }
         [HttpGet("Account/{accountId}")]
         [ProducesResponseType(typeof(PagedResult<UserModel>), StatusCodes.Status200OK)]
@@ -188,6 +194,26 @@ namespace IdentityServer.Controllers
                     return Ok();
                 }
                 return BadRequest("-51", string.Join(',', result.Errors.Select(x => x.Description).ToList()));
+            }
+            catch (Exception ex)
+            {
+                string x = ex.Message;
+                return BadRequest("General Error", "-1");
+            }
+        }
+
+        [HttpPost("ResetPassword")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ResetPassword(string userId)
+        {
+            try
+            {
+                var result = await _loginService.ResetUserPassword(userId);
+                return Ok(result);
+            }
+            catch (IdentityException ex)
+            {
+                return BadRequest(ex.Message, "-1");
             }
             catch (Exception ex)
             {

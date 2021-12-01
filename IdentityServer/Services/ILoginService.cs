@@ -12,5 +12,6 @@ namespace IdentityServer.Services
         Task<AuthorizationResponceDTO> ChangePassword(ChangePasswordDTO model);
         Task<AuthorizationResponceDTO> ConfirmOTP(ConfirmOTPDTO model);
         Task<AuthorizationResponceDTO> ResendOTP(ConfirmOTPDTO model);
+        Task<bool> ResetUserPassword(string id);
     }
 }

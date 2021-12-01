@@ -38,6 +38,8 @@ namespace IdentityServer.Data
         public virtual DbSet<DemonationEntity> DemonationEntities { get; set; }
         public virtual DbSet<AccountRelationMapping> AccountRelationMappings { get; set; }
         public virtual DbSet<AccountChannelHistory> AccountChannelHistories { get; set; }
+        public virtual DbSet<ProviderSMS> ProviderSMS{ get; set; }
+        public virtual DbSet<ProviderSMSParams> ProviderSMSParams{ get; set; }
 
 
         public override int SaveChanges()

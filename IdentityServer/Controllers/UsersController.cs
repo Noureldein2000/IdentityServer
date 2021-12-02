@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +28,16 @@ namespace IdentityServer.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILoginService _loginService;
+        private readonly IStringLocalizer<AuthenticationResource> _localizer;
         public UsersController(
             UserManager<ApplicationUser> userManager,
             ILoginService loginService,
+            IStringLocalizer<AuthenticationResource> localizer,
             RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _localizer = localizer;
             _loginService = loginService;
         }
         [HttpGet("Account/{accountId}")]
@@ -202,13 +206,16 @@ namespace IdentityServer.Controllers
             }
         }
 
-        [HttpPost("ResetPassword")]
+        [HttpPost("ResetPassword/{userId}")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<IActionResult> ResetPassword(string userId)
         {
             try
             {
-                var result = await _loginService.ResetUserPassword(userId);
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null) throw new IdentityException(_localizer["ThisUserIsNotFound"].Value, "-1");
+
+                var result = await _loginService.ResetUserPassword(user);
                 return Ok(result);
             }
             catch (IdentityException ex)

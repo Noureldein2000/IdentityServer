@@ -285,11 +285,8 @@ namespace IdentityServer.Services
                 Permissions = tokenData.Permissions,
             };
         }
-        public async Task<bool> ResetUserPassword(string id)
+        public async Task<bool> ResetUserPassword(ApplicationUser user )
         {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null) throw new IdentityException(_localizer["ThisUserIsNotFound"].Value, "-1");
-
             string password = GetData.GenerateRandomNumeric(6).ToString();
             user.MustChangePassword = false;
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -298,14 +295,15 @@ namespace IdentityServer.Services
             if (result.Succeeded)
             {
                 string userName = user.UserName;
-                string accountId = user.ReferenceID;
+                var accountId = user.ReferenceID;
                 string mobileNumber = _accountOwner.Getwhere(x => x.AccountID == int.Parse(accountId)).FirstOrDefault().Mobile;
                 string textSMS = CreateSMSText(userName, password, accountId);
+
                 _smsService.SendMessage(textSMS, mobileNumber);
                 return true;
             }
 
-            return !result.Succeeded;
+            return result.Succeeded;
         }
 
         //Helper Method

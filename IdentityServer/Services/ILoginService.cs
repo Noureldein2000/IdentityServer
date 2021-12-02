@@ -1,4 +1,5 @@
-﻿using IdentityServer.DTOs;
+﻿using IdentityServer.Data.Entities;
+using IdentityServer.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace IdentityServer.Services
         Task<AuthorizationResponceDTO> ChangePassword(ChangePasswordDTO model);
         Task<AuthorizationResponceDTO> ConfirmOTP(ConfirmOTPDTO model);
         Task<AuthorizationResponceDTO> ResendOTP(ConfirmOTPDTO model);
-        Task<bool> ResetUserPassword(string id);
+        Task<bool> ResetUserPassword(ApplicationUser id);
     }
 }

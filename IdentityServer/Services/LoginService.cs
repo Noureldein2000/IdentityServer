@@ -58,7 +58,7 @@ namespace IdentityServer.Services
         public async Task<AuthorizationResponceDTO> ValidateUser(AccountChannelLoginDTO model)
         {
             int otpId = 0;
-            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
+            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
             var tryAccount = int.TryParse(model.AccountId, out var accountId);
             var tryChannelType = int.TryParse(model.ChannelType, out var channelType);
             var tryChannelCategory = int.TryParse(model.ChannelCategory, out var channelCategory);
@@ -150,7 +150,7 @@ namespace IdentityServer.Services
         }
         public async Task<AuthorizationResponceDTO> ChangePassword(ChangePasswordDTO model)
         {
-            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
+            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
             var account = _accountChannelTypes.Getwhere(a => a.AccountID == model.AccountId
                     && a.ChannelTypeID == model.ChannelType).Select(a => new
                     {
@@ -204,7 +204,7 @@ namespace IdentityServer.Services
         }
         public async Task<AuthorizationResponceDTO> ConfirmOTP(ConfirmOTPDTO model)
         {
-            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
+            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId.ToString());
 
             if(user.MustChangePassword)
                 throw new OkException(_localizer["MustChangePassword"].Value, ErrorCodes.ChangePassword.MustChangePassword);
@@ -252,7 +252,7 @@ namespace IdentityServer.Services
             if (!int.TryParse(model.Id, out var otpId) || !int.TryParse(model.AccountId, out var accountId))
                 throw new OkException(_localizer["FailedTry"].Value, ErrorCodes.FailedTry);
 
-            var user = await ValidateApplicationUser(model.Username, model.Password, model.AccountId);
+            var user = ValidateApplicationUser(model.Username, model.Password, model.AccountId);
 
             var otp = _otps.Getwhere(o => o.OriginalOTPID == otpId && o.UserID == user.UserId)
                 .FirstOrDefault();
@@ -284,11 +284,15 @@ namespace IdentityServer.Services
 
         //Helper Method
         #region Helper Method
-        private async Task<ApplicationUser> ValidateApplicationUser(string username, string password, string accountId)
+        private ApplicationUser ValidateApplicationUser(string username, string password, string accountId)
         {
             var user = _userManager.Users.Where(u => u.UserName == username && u.ReferenceID == accountId).FirstOrDefault();
+            if(user == null)
+            {
+                throw new AuthorizationException(_localizer["NoAuth"].Value, ErrorCodes.Autorization.NoAuth);
+            }
             var result = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
-            if (user != null && result == PasswordVerificationResult.Success)
+            if (result == PasswordVerificationResult.Success)
             {
                 if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
                     throw new AuthorizationException(_localizer["NoAuth"].Value, ErrorCodes.Autorization.NoAuth);

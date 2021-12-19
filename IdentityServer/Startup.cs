@@ -93,10 +93,10 @@ namespace IdentityServer
             services.AddScoped<IChannelPaymentMethodService, ChannelPaymentMethodService>();
             services.AddScoped<IChannelCategoryService, ChannelCategoryService>();
 
-            //services.Replace(new ServiceDescriptor(
-            //   serviceType: typeof(IPasswordHasher<ApplicationUser>),
-            //   implementationType: typeof(MD5PasswordHasher<ApplicationUser>),
-            //   ServiceLifetime.Scoped));
+            services.Replace(new ServiceDescriptor(
+               serviceType: typeof(IPasswordHasher<ApplicationUser>),
+               implementationType: typeof(MD5PasswordHasher<ApplicationUser>),
+               ServiceLifetime.Singleton));
 
 
             services.AddSwaggerGen(c =>

@@ -56,8 +56,9 @@ namespace IdentityServer
             {
                 config.Cookie.MaxAge = TimeSpan.FromDays(1);
                 config.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Unspecified;
-                config.Cookie.Name = "Cookies";
+                config.Cookie.Name = "Momkn.Cookies";
                 config.LoginPath = "/Auth/Login";
+                config.LogoutPath = "/Auth/Logout";
             });
 
             services.AddIdentityServer(options =>

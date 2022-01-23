@@ -57,9 +57,12 @@ namespace IdentityServer
                 ClientSecrets = {new Secret("d5a9b78e-a694-4026-af7f-6d559d8a3949".ToSha256())},
                 AllowedGrantTypes = GrantTypes.Code,
                 RequirePkce = true,
+                //RedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signin-oidc" },
                 RedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signin-oidc" },
                 //FrontChannelLogoutUri = $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signout-oidc",
-                PostLogoutRedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signout-callback-oidc" },
+                //PostLogoutRedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signout-callback-oidc" },
+                PostLogoutRedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/Home/Index" },
+                AllowedCorsOrigins = {configuration.GetValue<string>("IdentityServer:RedirectApi")},
                 AllowedScopes =
                 {
                     "SOF",

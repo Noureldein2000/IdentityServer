@@ -1,4 +1,5 @@
-﻿using IdentityServer.Data.Seeding;
+﻿using IdentityServer.Data.Entities;
+using IdentityServer.Data.Seeding;
 using IdentityServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,9 +19,11 @@ namespace IdentityServer.Controllers
     public class RolesController : BaseController
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        public RolesController(RoleManager<IdentityRole> roleManager)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
         }
         [HttpGet("GetAll")]
         [ProducesResponseType(typeof(List<IdentityRole>), StatusCodes.Status200OK)]
@@ -29,7 +32,14 @@ namespace IdentityServer.Controllers
             var roles = _roleManager.Roles.ToList();
             return Ok(roles);
         }
-
+        [HttpGet("GetUserRole")]
+        [ProducesResponseType(typeof(UserRoleModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUserRole(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var roles = await _userManager.GetRolesAsync(user);
+            return Ok(new UserRoleModel { Role = roles.FirstOrDefault() });
+        }
         [HttpPost("Add")]
         [ProducesResponseType(typeof(RoleModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> Add(RoleModel model)

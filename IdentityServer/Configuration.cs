@@ -33,6 +33,10 @@ namespace IdentityServer
                 new IdentityResource
                 {
                     Name = "Auth"
+                },
+                new IdentityResource
+                {
+                    Name = "TMS"
                 }
            };
 
@@ -45,39 +49,56 @@ namespace IdentityServer
 
         public static IEnumerable<ApiScope> GetApiScopes() =>
             new List<ApiScope> {
-                new ApiScope("SOF")
+                new ApiScope("SOF", "Source of fund"),
+                new ApiScope("TMS", "Transactions management system")
             };
 
         public static IEnumerable<Client> GetClients(IConfiguration configuration) =>
             new List<Client> {
                 new Client
-            {
-                ClientId = "admin_dashboard_123",
-                ClientName = "Admin Dashboard",
-                ClientSecrets = {new Secret("d5a9b78e-a694-4026-af7f-6d559d8a3949".ToSha256())},
-                AllowedGrantTypes = GrantTypes.Code,
-                RequirePkce = true,
-                //RedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signin-oidc" },
-                RedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signin-oidc" },
-                //FrontChannelLogoutUri = $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signout-oidc",
-                //PostLogoutRedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signout-callback-oidc" },
-                PostLogoutRedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/Home/Index" },
-                AllowedCorsOrigins = {configuration.GetValue<string>("IdentityServer:RedirectApi")},
-                AllowedScopes =
                 {
-                    "SOF",
-                    "Auth",
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    "roles"
+                    ClientId = "admin_dashboard_123",
+                    ClientName = "Admin Dashboard",
+                    ClientSecrets = {new Secret("d5a9b78e-a694-4026-af7f-6d559d8a3949".ToSha256())},
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequirePkce = true,
+                    ClientUri = $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}",
+                    RedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signin-oidc" },
+                    //FrontChannelLogoutUri = $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signout-oidc",
+                    //PostLogoutRedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/signout-callback-oidc" },
+                    PostLogoutRedirectUris = { $"{configuration.GetValue<string>("IdentityServer:RedirectApi")}/Home/Index" },
+                    AllowedCorsOrigins = {configuration.GetValue<string>("IdentityServer:RedirectApi")},
+                    AllowedScopes =
+                    {
+                        "SOF",
+                        "Auth",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "roles",
+                        "TMS"
+                    },
+                    RequireConsent = false,
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    AllowRememberConsent = false
+                    //AllowOfflineAccess = true
                 },
-                RequireConsent = false,
-                AlwaysIncludeUserClaimsInIdToken = true,
-                
-                //AllowOfflineAccess = true 
-                //puts all the claims in id_token 
-                //AlwaysIncludeUserClaimsInIdToken = true
-            }
+                new Client
+                {
+                    ClientId = "tms_123",
+                    ClientName = "TMS",
+                    ClientSecrets = {new Secret("d5a9b78e-a694-4026-af7f-6d559d8a3949".ToSha256())},
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedCorsOrigins = {configuration.GetValue<string>("IdentityServer:TMS") },
+                    AllowedScopes =
+                    {
+                        "SOF",
+                        "Auth",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "roles",
+                        "TMS"
+                    }
+                }
 
         };
     }

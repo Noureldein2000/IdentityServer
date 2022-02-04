@@ -57,6 +57,7 @@ namespace IdentityServer
                 await DefaultUsers.SeedSuperAdminUsersAsync(userManager, roleManager);
                 await DefaultUsers.SeedAnonymousUsersAsync(userManager, roleManager);
                 Log.Information($"Admin Seeded");
+                host.Run();
             }
             catch (Exception ex)
             {
@@ -66,8 +67,6 @@ namespace IdentityServer
             {
                 Log.CloseAndFlush();
             }
-
-            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -220,9 +220,9 @@ namespace IdentityServer.Controllers
                 ChannelOwnerName = model.ChannelOwnerName,
                 PaymentMethodID = model.PaymentMethodID,
                 PaymentMethodName = model.PaymentMethodName,
-                Status = model.Status,
+                Status = model.Status ?? false,
                 Value = model.Value,
-                CreatedBy = model.CreatedBy,
+                CreatedBy = model.CreatedBy ?? 0,
                 CreationDate = model.CreationDate
             };
         }

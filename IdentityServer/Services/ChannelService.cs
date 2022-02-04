@@ -48,9 +48,9 @@ namespace IdentityServer.Services
                 PaymentMethodID = addDTO.PaymentMethodID,
                 ChannelIdentifiers = new ChannelIdentifier
                 {
-                    Status = addDTO.Status,
+                    Status = addDTO.Status.Value,
                     Value = addDTO.Value,
-                    CreatedBy = addDTO.CreatedBy
+                    CreatedBy = addDTO.CreatedBy.Value
                 }
             });
 
@@ -60,7 +60,7 @@ namespace IdentityServer.Services
                 {
                     AccountID = (int)addDTO.AccountId,
                     Status = AccountChannelStatus.Created,
-                    CreatedBy = addDTO.CreatedBy
+                    CreatedBy = addDTO.CreatedBy.Value
                 } };
             }
             _unitOfWork.SaveChanges();
@@ -216,9 +216,9 @@ namespace IdentityServer.Services
             ChannelTypeID = entityRequest.ChannelTypeID,
             ChannelOwnerID = entityRequest.ChannelOwnerID,
             PaymentMethodID = entityRequest.PaymentMethodID,
-            Status = entityRequest.ChannelIdentifiers.Status,
-            Value = entityRequest.ChannelIdentifiers.Value,
-            CreatedBy = entityRequest.ChannelIdentifiers.CreatedBy,
+            Status = entityRequest.ChannelIdentifiers?.Status,
+            Value = entityRequest.ChannelIdentifiers?.Value,
+            CreatedBy = entityRequest.ChannelIdentifiers?.CreatedBy,
             CreationDate = entityRequest.CreationDate
         };
 

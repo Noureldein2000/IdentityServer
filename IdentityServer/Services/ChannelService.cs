@@ -144,7 +144,7 @@ namespace IdentityServer.Services
 
         public PagedResult<ChannelDTO> SearchChannelBySerial(int? dropDownFilter, int? dropDownFilter2, string searchKey, int pageNumber, int pageSize)
         {
-            var searchChannelList = _channel.Getwhere(c => (searchKey != null ? c.Serial.Contains(searchKey) : true)
+            var searchChannelList = _channel.Getwhere(c => (searchKey != null ? (c.Serial.Contains(searchKey) || c.ChannelIdentifiers.Value.Contains(searchKey)) : true)
             && (dropDownFilter2 != null ? c.ChannelTypeID == dropDownFilter2
             : c.ChannelType.ChannelCategoryID == dropDownFilter)
             ).Select(c => new ChannelDTO
@@ -158,7 +158,7 @@ namespace IdentityServer.Services
                 ChannelOwnerName = c.ChannelOwner.Name,
                 PaymentMethodID = c.PaymentMethodID,
                 PaymentMethodName = c.ChannelPaymentMethod.Name,
-                Status=c.ChannelIdentifiers.Status,
+                Status = c.ChannelIdentifiers.Status,
                 CreationDate = c.CreationDate
             });
 

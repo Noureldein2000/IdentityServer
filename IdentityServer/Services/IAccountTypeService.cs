@@ -9,7 +9,7 @@ namespace IdentityServer.Services
 {
     public interface IAccountTypeService
     {
-        void AddAccountType(AccountTypeDTO accountTypeDTO);
+        AccountTypeDTO AddAccountType(AccountTypeDTO accountTypeDTO);
         void DeleteAccountType(int id);
         void ChnageStatus(int id);
         AccountTypeDTO GetAccountTypeById(int id);

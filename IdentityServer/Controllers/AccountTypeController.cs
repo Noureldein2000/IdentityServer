@@ -83,7 +83,7 @@ namespace IdentityServer.Controllers
         [Route("AddAccountType")]
         //[Authorize(Roles = Constants.AvaliableRoles.Admin + "," + Constants.AvaliableRoles.Manager)]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AccountTypeModel), StatusCodes.Status200OK)]
         public IActionResult AddAccountType([FromBody] AccountTypeModel addAccountTypeModel)
         {
             try
@@ -91,7 +91,7 @@ namespace IdentityServer.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest("102", string.Join(", ", ModelState.Values));
 
-                _accountTypeService.AddAccountType(new AccountTypeDTO
+              var result=  _accountTypeService.AddAccountType(new AccountTypeDTO
                 {
                     Id = addAccountTypeModel.Id,
                     Name = addAccountTypeModel.Name,
@@ -99,7 +99,7 @@ namespace IdentityServer.Controllers
                     Status = addAccountTypeModel.Status,
                 });
 
-                return Ok();
+                return Ok(Map(result));
             }
             catch (AuthorizationException ex)
             {

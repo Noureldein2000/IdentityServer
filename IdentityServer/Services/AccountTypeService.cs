@@ -25,9 +25,9 @@ namespace IdentityServer.Services
             _unitOfWork = unitOfWork;
         }
 
-        public void AddAccountType(AccountTypeDTO accountTypeDTO)
+        public AccountTypeDTO AddAccountType(AccountTypeDTO accountTypeDTO)
         {
-            _accountType.Add(new AccountType
+            var addedEntity = _accountType.Add(new AccountType
             {
                 Name = accountTypeDTO.Name,
                 NameAr = accountTypeDTO.NameAr,
@@ -36,6 +36,11 @@ namespace IdentityServer.Services
             });
 
             _unitOfWork.SaveChanges();
+
+            accountTypeDTO.Id = addedEntity.ID;
+            accountTypeDTO.Status = addedEntity.Status;
+
+            return accountTypeDTO;
         }
 
         public void ChnageStatus(int id)

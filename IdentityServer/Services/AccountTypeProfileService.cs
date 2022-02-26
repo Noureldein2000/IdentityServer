@@ -52,7 +52,17 @@ namespace IdentityServer.Services
 
             _unitOfWork.SaveChanges();
 
-            return MapEntityToDto(addedEntity);
+            var dto = _accountTypeProfile.Getwhere(x => x.ID == addedEntity.ID).Select(atp => new AccountTypeProfileDTO()
+            {
+                Id = atp.ID,
+                AccountTypeID = atp.AccountTypeID,
+                ProfileID = atp.ProfileID,
+                ProfileName = atp.Profile.Name,
+                AccountTypeName = atp.AccountType.NameAr,
+                FullName = atp.AccountType.Name + " - " + atp.Profile.Name,
+            }).FirstOrDefault();
+            
+            return dto;
         }
 
         public void DeleteAccountTypeProfile(int id)

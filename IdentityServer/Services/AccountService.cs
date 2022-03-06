@@ -445,7 +445,7 @@ namespace IdentityServer.Services
                 Value = ac.Value,
                 Status = ac.Status,
                 CreatedBy = ac.CreatedBy,
-                CreatedName = users.Where(u => u.UserId == ac.CreatedBy.ToString()).Select(s => s.Name).FirstOrDefault(),
+                CreatedName = users.Where(u => u.UserId == ac.CreatedBy).Select(s => s.Name).FirstOrDefault(),
                 UpdatedBy = ac.UpdatedBy
             });
         }
